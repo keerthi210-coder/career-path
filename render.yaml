@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: career-path
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python CareerPathProject/manage.py collectstatic --noinput && python CareerPathProject/manage.py migrate
+    startCommand: gunicorn CareerPathProject.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "*.onrender.com"
+      - key: GOOGLE_CLIENT_ID
+        scope: project
+      - key: GOOGLE_CLIENT_SECRET
+        scope: project
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://*.onrender.com"
