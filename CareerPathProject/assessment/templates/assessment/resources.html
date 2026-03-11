@@ -1,0 +1,491 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - PersonalityPro</title>
+    <link rel="stylesheet" href="{% static 'assessment/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assessment/css/resources.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                </svg>
+                <span>PersonalityPro</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/personalities/">Personalities Types</a></li>
+                <li><a href="/assessment/">Assessment</a></li>
+                <li><a href="/resources/" class="active">Resources</a></li>
+                <li><a href="/premium/">Premium</a></li>
+            </ul>
+            <button class="btn-primary" onclick="window.location.href='/assessment/'">Take Test</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="blog-hero">
+        <div class="container">
+            <h1>Personality, Careers & Growth — A Practical Guide</h1>
+            <p>All the content you provided, presented in a clean, professional white design with interactive modules for reading and exploration.</p>
+        </div>
+        <div class="quick-insight">
+            <strong>Quick Insight</strong>
+            <p>Personality is one data point — combine it with motivations, skills and values for better career decisions.</p>
+        </div>
+    </section>
+
+    <!-- Personality Type Slider Section -->
+    <section class="personality-slider-section">
+        <div class="container">
+            <div class="section-intro">
+                <h2>What Your Personality Type Doesn't Tell You</h2>
+                <p class="section-subtitle">Now in a modern interactive slider format.</p>
+            </div>
+            
+            <div class="slider-wrapper">
+                <!-- Left Side: Card Content -->
+                <div class="slider-container">
+                    <div class="slide active">
+                        <div class="slide-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>What Your Personality Type Doesn't Tell You</h3>
+                        <p>Personality tests give insights but miss critical factors such as skills, motivation, values, and adaptability. This slider breaks down what your personality type doesn't tell you — but absolutely should.</p>
+                    </div>
+
+                    <div class="slide">
+                        <div class="slide-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Your Personality Type Doesn't Predict Success</h3>
+                        <p>Personality describes behavior — not potential. Success depends on: skills, mindset, support, environment & motivation. Two similar personalities can thrive in completely different careers.</p>
+                    </div>
+
+                    <div class="slide">
+                        <div class="slide-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <h3>Your Type Doesn't Define All Versions of You</h3>
+                        <p>Personality isn't fixed. You shift roles at work, home and socially. Future you will evolve — your confidence, skills, and goals too.</p>
+                    </div>
+
+                    <div class="slide">
+                        <div class="slide-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3>Assessments Don't Show Motivations</h3>
+                        <p>Two introverts can be entirely different. Motivation affects energy, stress, work style and long-term career satisfaction.</p>
+                    </div>
+
+                    <div class="slide">
+                        <div class="slide-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Tests Don't Tell You What You're Good At</h3>
+                        <p>Personality ≠ strengths. Skills are trained. You can be introverted but still an excellent leader, speaker, or strategist.</p>
+                    </div>
+
+                    <div class="slide">
+                        <div class="slide-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Personality Doesn't Explain Values</h3>
+                        <p>Values shape career decisions more than personality. Two people with identical personalities may choose opposite paths.</p>
+                    </div>
+
+                    <div class="slide">
+                        <div class="slide-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Personality Doesn't Capture Adaptability</h3>
+                        <p>Adaptability determines resilience, teamwork, learning ability and growth. Employers value adaptability more than personality.</p>
+                    </div>
+                    
+                    <div class="slider-controls">
+                        <button class="slider-btn prev">←</button>
+                        <button class="slider-btn next">→</button>
+                    </div>
+                </div>
+                
+                <!-- Right Side: Image -->
+                <div class="slider-image-container">
+                    <img src="{% static 'assessment/images/i_1.png' %}" alt="Personality Insight" class="slider-image active" data-slide="0">
+                    <img src="{% static 'assessment/images/i_2.png' %}" alt="Success Factors" class="slider-image" data-slide="1">
+                    <img src="{% static 'assessment/images/i_3.png' %}" alt="Personal Growth" class="slider-image" data-slide="2">
+                    <img src="{% static 'assessment/images/i_4.png' %}" alt="Motivation" class="slider-image" data-slide="3">
+                    <img src="{% static 'assessment/images/i_5.png' %}" alt="Skills" class="slider-image" data-slide="4">
+                    <img src="{% static 'assessment/images/i_6.png' %}" alt="Values" class="slider-image" data-slide="5">
+                    <img src="{% static 'assessment/images/i_7.png' %}" alt="Adaptability" class="slider-image" data-slide="6">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Science Section -->
+    <section class="career-science-section">
+        <div class="container">
+            <div class="section-intro">
+                <h2>The Science of Choosing the Right Career</h2>
+                <p class="section-subtitle">A Complete Guide for Students & Professionals</p>
+            </div>
+            
+            <div class="career-science-wrapper">
+                <!-- Left Side Images -->
+                <div class="side-images left-images">
+                    <img src="{% static 'assessment/images/img2.jpg' %}" alt="Career Path" class="side-img img-2">
+                    <img src="{% static 'assessment/images/img1.webp' %}" alt="Self Knowledge" class="side-img img-1">
+                    <img src="{% static 'assessment/images/img4.jpeg' %}" alt="Career Fit" class="side-img img-4">
+                    <img src="{% static 'assessment/images/img8.jpeg' %}" alt="Choose your career" class="side-img img-8">
+                </div>
+
+                <!-- Center Timeline Content -->
+                <div class="career-guide-grid">
+                    <div class="guide-card">
+                        <div class="guide-icon">🔍</div>
+                        <h3>1. Your Career Path Is Not Linear — It's a System</h3>
+                        <p>A system made of: identity, preferences, abilities, environment, growth pathway. A good career sits at their intersection.</p>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">🧠</div>
+                        <h3>2. The 4 Pillars of Self-Knowledge</h3>
+                        <p>Pillar 1: Your Natural Aptitudes — logical reasoning, verbal ability, spatial awareness, memory & focus, problem-solving speed. Aptitude tests are strong predictors of long-term performance.</p>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">🔬</div>
+                        <h3>3. How Career Fit Really Works</h3>
+                        <p>Career Fit = Aptitude + Personality + Interests + Values + Environment. When they match you feel engaged, confident, productive and satisfied.</p>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">🔧</div>
+                        <h3>4. Why Skills Matter More Than Degrees</h3>
+                        <p>Modern companies value problem-solving, critical thinking, communication, collaboration, AI-assisted work, digital skills, adaptability and creativity. You can learn new skills quickly via courses, bootcamps and projects.</p>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">⏳</div>
+                        <h3>5. The 5 Stages of Career Clarity</h3>
+                        <p>Stage 1: Confusion → Stage 2: Exploration → Stage 3: Direction → Stage 4: Decision → Stage 5: Action. Guide users through each stage.</p>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">🔮</div>
+                        <h3>6. The Future of Careers: What Will Change by 2030</h3>
+                        <p>AI & automation will reshape roles. Future-proof careers need analytical thinking, creativity, emotional intelligence, tech literacy, adaptive learning. New roles: AI trainer, Data storyteller, Cybersecurity strategist, Human-AI interaction designer.</p>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">🏆</div>
+                        <h3>7. A Simple Framework to Choose Your Career</h3>
+                        <p>Step 1: Aptitude test → Step 2: Personality test → Step 3: Identify interests → Step 4: Clarify values → Step 5: Match profile with careers → Step 6: Build skills → Step 7: Experiment.</p>
+                    </div>
+                </div>
+
+                <!-- Right Side Images -->
+                <div class="side-images right-images">
+                    <img src="{% static 'assessment/images/img7.jpg' %}" alt="Skills Matter" class="side-img img-7">
+                    <img src="{% static 'assessment/images/img3.jpg' %}" alt="Career Clarity" class="side-img img-3">
+                    <img src="{% static 'assessment/images/img5.jpg' %}" alt="Future Careers" class="side-img img-5">
+                    <img src="{% static 'assessment/images/img9.png' %}" alt="Whole" class="side-img img-9">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Daily Motivation Section -->
+    <section class="motivation-section">
+        <div class="container">
+            <div class="section-intro">
+                <h2>Daily Motivation & Growth</h2>
+                <p class="section-subtitle">Your Daily Source of Inspiration, Growth & Confidence</p>
+            </div>
+            
+            <div class="motivation-grid">
+                <div class="motivation-card">
+                    <h3>🔥 Daily Motivation Boost</h3>
+                    <p>Stop doubting yourself — you're capable of more than you think. Every big success story started with someone who had no idea what they were doing — but they started anyway. You don't need to be perfect to begin. You just need to be willing.</p>
+                </div>
+
+                <div class="motivation-card">
+                    <h3>📖 Short Motivational Story — The Bamboo Story</h3>
+                    <p>When you plant a bamboo seed, nothing appears for the first 5 years. Then it grows rapidly. Sometimes progress is invisible — keep watering your dreams.</p>
+                </div>
+
+                <div class="motivation-card">
+                    <h3>💡 1% Better Challenge</h3>
+                    <p>Instead of huge changes, improve 1% daily: read 10 minutes, learn one micro-skill, journal for 5 minutes. Small habits compound.</p>
+                </div>
+            </div>
+
+            <div class="quotes-reflection">
+                <div class="quotes-box">
+                    <h3>Powerful Motivational Quotes</h3>
+                    <ul>
+                        <li>"Your future needs you. Your past doesn't."</li>
+                        <li>"Small steps still take you forward."</li>
+                        <li>"One day or day one — you decide."</li>
+                    </ul>
+                </div>
+
+                <div class="reflection-box">
+                    <h3>Weekly Reflection Prompts</h3>
+                    <ul>
+                        <li>What is one thing I am proud of from this week?</li>
+                        <li>What small step can I take next week toward my goals?</li>
+                        <li>What held me back — how can I overcome it?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Exploration Section -->
+    <section class="career-exploration-section">
+        <div class="container">
+            <div class="section-intro">
+                <h2>Career Exploration Guide</h2>
+                <p class="section-subtitle">Explore careers, discover strengths and design your next steps.</p>
+            </div>
+            
+            <div class="exploration-grid">
+                <div class="exploration-card">
+                    <h3>Aptitudes</h3>
+                    <p>How quickly you learn — logical reasoning, verbal ability, spatial awareness.</p>
+                </div>
+
+                <div class="exploration-card">
+                    <h3>Personality</h3>
+                    <p>Your natural way of working and collaborating.</p>
+                </div>
+
+                <div class="exploration-card">
+                    <h3>Values</h3>
+                    <p>What matters most — freedom, impact, learning, balance.</p>
+                </div>
+            </div>
+
+            <div class="how-to-start">
+                <h3>How to Start</h3>
+                <ul>
+                    <li>Take assessments: aptitude & personality.</li>
+                    <li>Identify interests & values.</li>
+                    <li>Match careers and experiment with projects / internships.</li>
+                </ul>
+                <button class="btn-start-assessment" onclick="window.location.href='/assessment/'">Start Assessment Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories Section -->
+    <section class="success-stories-section">
+        <div class="container">
+            <div class="section-intro">
+                <h2>Inspiring Success Stories</h2>
+                <p class="section-subtitle">Real people, real struggles, real success — quick lessons to inspire action.</p>
+            </div>
+            
+            <div class="stories-grid">
+                <div class="story-card">
+                    <h3>Dr. A.P.J. Abdul Kalam</h3>
+                    <p>From newspaper seller to President — dedication and continuous learning mattered most.</p>
+                </div>
+
+                <div class="story-card">
+                    <h3>J.K. Rowling</h3>
+                    <p>Rejected multiple times — persistence turned ideas into a global phenomenon.</p>
+                </div>
+
+                <div class="story-card">
+                    <h3>Elon Musk</h3>
+                    <p>Multiple failures, high risk — but resilience and vision created lasting change.</p>
+                </div>
+
+                <div class="story-card">
+                    <h3>Mary Kom</h3>
+                    <p>From rural beginnings to world champion — grit and discipline prevailed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Myths Section -->
+    <section class="myths-section">
+        <div class="container">
+            <div class="section-intro">
+                <h2>Career Myths vs Facts</h2>
+                <p class="section-subtitle">Common myths debunked — actionable truth for students and professionals.</p>
+            </div>
+            
+            <div class="myths-grid">
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #1</div>
+                    <p class="myth-text">"You must score 90%+ to be successful."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Marks help with initial entry, but long-term success depends on skills, adaptability, and learning.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #2</div>
+                    <p class="myth-text">"Only science students get high-paying jobs."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">All streams have high-paying careers when skills are built — commerce, arts, vocational fields included.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #3</div>
+                    <p class="myth-text">"Follow what your friends choose."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Choose a career that fits your personality, interests and strengths — not your friends' choices.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #4</div>
+                    <p class="myth-text">"Arts is for weak students."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Arts lead to powerful careers — psychology, design, media, law, research and more.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #5</div>
+                    <p class="myth-text">"You must choose your career before 12th."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Many find their path later — career discovery is a lifelong journey.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #6</div>
+                    <p class="myth-text">"Changing careers is a failure."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Switching careers often means growth and better alignment — it's normal and common.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #7</div>
+                    <p class="myth-text">"You need a degree for every good job."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Many in-demand careers value practical skills — web dev, digital marketing, design, etc.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #8</div>
+                    <p class="myth-text">"Government jobs are the only secure option."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Private & tech careers with strong skills can offer excellent stability and growth.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #9</div>
+                    <p class="myth-text">"You must choose a career your parents like."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">Parents guide, but you must choose based on your dreams, strengths and values.</p>
+                </div>
+
+                <div class="myth-card">
+                    <div class="myth-label">❌ Myth #10</div>
+                    <p class="myth-text">"There is only one perfect career for you."</p>
+                    <div class="fact-label">✅ Fact</div>
+                    <p class="fact-text">You may fit many careers. Your skills evolve and options grow as you grow.</p>
+                </div>
+            </div>
+
+            <div class="final-message">
+                <p>Final message: Believing the right facts opens opportunities — guide students to choose based on strengths and values, not myths.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-box">
+                <h2>Stay Updated</h2>
+                <p>Get weekly insights, tips, and resources delivered to your inbox</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button class="btn-large" onclick="alert('Newsletter subscription coming soon!')">Subscribe</button>
+                </div>
+                <p class="newsletter-note">Join 50,000+ subscribers. Unsubscribe anytime.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-section">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    </svg>
+                    <span>PersonalityPro</span>
+                </div>
+                <p>Empowering individuals through self-discovery</p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="/assessment/">Take Test</a></li>
+                    <li><a href="/personalities/">Personality Types</a></li>
+                    <li><a href="/premium/">Premium</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="/resources/">Articles</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PersonalityPro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'assessment/js/script.js' %}"></script>
+    <script>
+        // Slider functionality
+        const slides = document.querySelectorAll('.slide');
+        const sliderImages = document.querySelectorAll('.slider-image');
+        const prevBtn = document.querySelector('.slider-btn.prev');
+        const nextBtn = document.querySelector('.slider-btn.next');
+        let currentSlide = 0;
+
+        function showSlide(n) {
+            // Remove active class from all slides and images
+            slides.forEach(slide => slide.classList.remove('active'));
+            sliderImages.forEach(img => img.classList.remove('active'));
+            
+            // Calculate new slide index
+            currentSlide = (n + slides.length) % slides.length;
+            
+            // Add active class to current slide and image
+            slides[currentSlide].classList.add('active');
+            sliderImages[currentSlide].classList.add('active');
+        }
+
+        prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+    </script>
+</body>
+</html>

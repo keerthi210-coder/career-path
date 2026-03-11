@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyzing Your Results - PersonalityPro</title>
+    <link rel="stylesheet" href="{% static 'assessment/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assessment/css/loading.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles-background">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+        <div class="particle particle-6"></div>
+        <div class="particle particle-7"></div>
+        <div class="particle particle-8"></div>
+        <div class="particle particle-9"></div>
+        <div class="particle particle-10"></div>
+        
+        <!-- Floating Circles -->
+        <div class="floating-circle circle-1"></div>
+        <div class="floating-circle circle-2"></div>
+        <div class="floating-circle circle-3"></div>
+        <div class="floating-circle circle-4"></div>
+        
+        <!-- Animated Lines -->
+        <div class="animated-line line-1"></div>
+        <div class="animated-line line-2"></div>
+        <div class="animated-line line-3"></div>
+    </div>
+    
+    <div class="loading-container">
+        <div class="loading-content">
+            <!-- Animated Logo/Icon -->
+            <div class="loading-icon">
+                <svg width="120" height="120" viewBox="0 0 120 120" class="pulse-icon">
+                    <circle cx="60" cy="60" r="50" fill="#FFD84D" class="pulse-circle"/>
+                    <path d="M60,45 L64,55 L75,57 L67.5,64.5 L69,76 L60,71 L51,76 L52.5,64.5 L45,57 L56,55 Z" fill="#111111" class="rotate-star"/>
+                </svg>
+            </div>
+
+            <!-- Loading Text -->
+            <h1 class="loading-title">Analyzing Your Personality</h1>
+            <p class="loading-subtitle" id="loading-text">Processing your responses...</p>
+
+            <!-- Progress Bar with Chick -->
+            <div class="progress-container">
+                <!-- Chick Image on Progress Bar -->
+                <div class="chick-on-bar" id="chick-on-bar">
+                    <img src="{% static 'assessment/images/chick.png' %}" alt="Loading" class="chick-gif">
+                </div>
+                
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="progress-percentage" id="progress-percentage">0%</p>
+
+            <!-- Loading Steps -->
+            <div class="loading-steps">
+                <div class="step-item" id="step-1">
+                    <div class="step-icon">✓</div>
+                    <span>Analyzing response patterns</span>
+                </div>
+                <div class="step-item" id="step-2">
+                    <div class="step-icon">⏳</div>
+                    <span>Calculating personality traits</span>
+                </div>
+                <div class="step-item" id="step-3">
+                    <div class="step-icon">⏳</div>
+                    <span>Matching career profiles</span>
+                </div>
+                <div class="step-item" id="step-4">
+                    <div class="step-icon">⏳</div>
+                    <span>Generating your report</span>
+                </div>
+            </div>
+
+            <!-- Fun Facts -->
+            <div class="fun-fact" id="fun-fact">
+                <p><strong>Did you know?</strong> Your personality type influences how you make decisions, communicate, and approach challenges.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if assessment result is available
+        let assessmentResult = sessionStorage.getItem('assessmentResult');
+        let sessionId = sessionStorage.getItem('sessionId');
+        
+        // If no session yet, wait a bit for it to be set
+        if (!sessionId) {
+            setTimeout(() => {
+                assessmentResult = sessionStorage.getItem('assessmentResult');
+                sessionId = sessionStorage.getItem('sessionId');
+                
+                if (!sessionId) {
+                    // Still no session, redirect to assessment
+                    window.location.href = '/assessment/';
+                }
+            }, 500);
+        }
+
+        // Loading animation sequence
+        let progress = 0;
+        const progressBar = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-percentage');
+        const loadingText = document.getElementById('loading-text');
+
+        const steps = [
+            { id: 'step-1', text: 'Analyzing response patterns...', duration: 1000 },
+            { id: 'step-2', text: 'Calculating personality traits...', duration: 1200 },
+            { id: 'step-3', text: 'Matching career profiles...', duration: 1000 },
+            { id: 'step-4', text: 'Generating your report...', duration: 800 }
+        ];
+
+        const funFacts = [
+            "Your personality type influences how you make decisions, communicate, and approach challenges.",
+            "There are 16 unique personality types, each with distinct strengths and preferences.",
+            "Understanding your personality can help you choose careers that align with your natural tendencies.",
+            "Personality assessments have been used for over 70 years to help people understand themselves better.",
+            "Your personality type doesn't limit you—it helps you understand your natural preferences."
+        ];
+
+        let currentStep = 0;
+        let currentFact = 0;
+
+        // Update progress bar
+        function updateProgress() {
+            if (progress < 100) {
+                progress += 1;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = progress + '%';
+                
+                // Move chick with progress
+                const chick = document.getElementById('chick-on-bar');
+                chick.style.left = progress + '%';
+                
+                setTimeout(updateProgress, 40);
+            }
+        }
+
+        // Process steps
+        function processStep(index) {
+            if (index >= steps.length) {
+                // All steps complete, redirect to results
+                setTimeout(() => {
+                    if (assessmentResult) {
+                        const result = JSON.parse(assessmentResult);
+                        window.location.href = `/profile/?type=${result.personality_type}&session=${sessionId}`;
+                    } else {
+                        window.location.href = `/profile/?session=${sessionId}`;
+                    }
+                }, 500);
+                return;
+            }
+
+            const step = steps[index];
+            loadingText.textContent = step.text;
+
+            // Mark current step as active
+            const stepElement = document.getElementById(step.id);
+            stepElement.classList.add('active');
+
+            setTimeout(() => {
+                // Mark step as complete
+                stepElement.classList.remove('active');
+                stepElement.classList.add('complete');
+                stepElement.querySelector('.step-icon').textContent = '✓';
+
+                // Move to next step
+                processStep(index + 1);
+            }, step.duration);
+        }
+
+        // Rotate fun facts
+        function rotateFunFacts() {
+            const funFactElement = document.getElementById('fun-fact');
+            setInterval(() => {
+                currentFact = (currentFact + 1) % funFacts.length;
+                funFactElement.querySelector('p').innerHTML = `<strong>Did you know?</strong> ${funFacts[currentFact]}`;
+            }, 3000);
+        }
+
+        // Start animations
+        updateProgress();
+        processStep(0);
+        rotateFunFacts();
+    </script>
+</body>
+</html>

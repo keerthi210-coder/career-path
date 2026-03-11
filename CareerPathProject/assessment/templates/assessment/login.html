@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - PersonalityPro</title>
+    <link rel="stylesheet" href="{% static 'assessment/css/login.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Left Side - Black -->
+    <div class="left-side">
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+            </svg>
+            <span>PersonalityPro</span>
+        </div>
+        
+        <div class="left-content">
+            <h1>Discover Your True Career Path</h1>
+            <p>Join thousands who have found clarity and direction through our research-based personality assessment.</p>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">⏱️</div>
+                    <span>5-10 minute interactive assessment</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <span>Personalized career recommendations</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💡</div>
+                    <span>Detailed personality insights</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <span>Research-backed results</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Side - Yellow -->
+    <div class="right-side">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Welcome Back!</h2>
+                <p>Sign in to continue your journey</p>
+            </div>
+            
+            <div class="error-message" id="error-message"></div>
+            <div class="success-message" id="success-message"></div>
+            <div class="info-message" id="info-message" style="display: none; background: #d1ecf1; color: #0c5460; padding: 12px; border-radius: 5px; margin: 10px 0; border: 1px solid #bee5eb;">
+                <strong>ℹ️ Waiting for Google Sign-In...</strong><br>
+                Please select your Google account in the popup window.
+            </div>
+            
+            <button type="button" class="btn-google" id="google-login-btn">
+                <svg class="google-icon" viewBox="0 0 20 20">
+                    <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+                    <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+                    <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+                    <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+                </svg>
+                Continue with Google
+            </button>
+            
+            <div class="divider">Secure Authentication</div>
+            
+            <div class="terms">
+                By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. We'll never post without your permission.
+            </div>
+            
+            <div class="back-link">
+                <a href="/">Back to Home</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        // Use current host for API calls to avoid CORS issues
+        const API_BASE_URL = window.location.origin + '/api';
+        const GOOGLE_CLIENT_ID = '524707988078-ob896ah0ab6ei968s01jgumjl03fm04c.apps.googleusercontent.com';
+        
+        let googleInitialized = false;
+        
+        // Initialize Google Sign-In with FedCM disabled
+        function initializeGoogleSignIn() {
+            if (typeof google !== 'undefined' && GOOGLE_CLIENT_ID) {
+                try {
+                    google.accounts.id.initialize({
+                        client_id: GOOGLE_CLIENT_ID,
+                        callback: handleGoogleSignIn,
+                        auto_select: false,
+                        cancel_on_tap_outside: false,
+                        use_fedcm_for_prompt: false  // Disable FedCM to avoid CORS issues
+                    });
+                    googleInitialized = true;
+                    console.log('Google Sign-In initialized successfully');
+                } catch (error) {
+                    console.error('Google Sign-In initialization failed:', error);
+                    showError('Failed to initialize Google Sign-In. Please refresh the page.');
+                    googleInitialized = false;
+                }
+            } else {
+                console.error('Google Sign-In library not loaded or Client ID missing');
+                showError('Google Sign-In is not available. Please check your configuration.');
+            }
+        }
+        
+        // Helper function to show error
+        function showError(message) {
+            const errorMsg = document.getElementById('error-message');
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+        }
+        
+        // Helper function to show success
+        function showSuccess(message) {
+            const successMsg = document.getElementById('success-message');
+            const infoMsg = document.getElementById('info-message');
+            infoMsg.style.display = 'none';
+            successMsg.textContent = message;
+            successMsg.style.display = 'block';
+        }
+        
+        // Handle Google Sign-In response
+        async function handleGoogleSignIn(response) {
+            const errorMsg = document.getElementById('error-message');
+            const successMsg = document.getElementById('success-message');
+            const googleBtn = document.getElementById('google-login-btn');
+            
+            // Hide previous messages
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            // Disable button and show loading state
+            googleBtn.disabled = true;
+            googleBtn.textContent = 'Signing in...';
+            
+            try {
+                // Send credential to backend for verification
+                const apiResponse = await fetch(`${API_BASE_URL}/auth/google/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: response.credential })
+                });
+                
+                const data = await apiResponse.json();
+                
+                if (apiResponse.ok && data.success) {
+                    // Store authentication data
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('userName', data.user.name || data.user.email);
+                    
+                    // Show success message
+                    showSuccess('✓ Login successful! Redirecting...');
+                    
+                    // Redirect after short delay
+                    setTimeout(() => {
+                        const redirect = new URLSearchParams(window.location.search).get('redirect');
+                        window.location.href = redirect || '/assessment/';
+                    }, 1000);
+                } else {
+                    // Show error from backend
+                    showError(data.error || 'Authentication failed. Please try again.');
+                    resetGoogleButton();
+                }
+            } catch (error) {
+                console.error('Authentication error:', error);
+                showError('Network error. Please check your connection and try again.');
+                resetGoogleButton();
+            }
+        }
+        
+        // Reset Google button to initial state
+        function resetGoogleButton() {
+            const googleBtn = document.getElementById('google-login-btn');
+            googleBtn.disabled = false;
+            googleBtn.innerHTML = `
+                <svg class="google-icon" viewBox="0 0 20 20">
+                    <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+                    <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+                    <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+                    <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+                </svg>
+                Continue with Google
+            `;
+        }
+        
+        // Google OAuth Login Button Click
+        document.getElementById('google-login-btn').addEventListener('click', () => {
+            const infoMsg = document.getElementById('info-message');
+            const errorMsg = document.getElementById('error-message');
+            const googleBtn = document.getElementById('google-login-btn');
+            
+            // Hide previous messages
+            errorMsg.style.display = 'none';
+            
+            if (googleInitialized && typeof google !== 'undefined') {
+                // Show info message
+                infoMsg.style.display = 'block';
+                googleBtn.disabled = true;
+                googleBtn.textContent = 'Opening Google Sign-In...';
+                
+                // Use renderButton instead of prompt to avoid FedCM issues
+                const buttonDiv = document.createElement('div');
+                buttonDiv.id = 'g_id_signin';
+                buttonDiv.style.display = 'none';
+                document.body.appendChild(buttonDiv);
+                
+                google.accounts.id.renderButton(
+                    buttonDiv,
+                    {
+                        theme: 'filled_blue',
+                        size: 'large',
+                        type: 'standard',
+                        text: 'signin_with',
+                        shape: 'rectangular',
+                        logo_alignment: 'left'
+                    }
+                );
+                
+                // Trigger click on the rendered button
+                setTimeout(() => {
+                    const googleBtnElement = buttonDiv.querySelector('div[role="button"]');
+                    if (googleBtnElement) {
+                        googleBtnElement.click();
+                        // Reset button after a delay
+                        setTimeout(() => {
+                            googleBtn.disabled = false;
+                            googleBtn.innerHTML = `
+                                <svg class="google-icon" viewBox="0 0 20 20">
+                                    <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+                                    <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+                                    <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+                                    <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+                                </svg>
+                                Continue with Google
+                            `;
+                        }, 3000);
+                    } else {
+                        // Fallback to prompt
+                        google.accounts.id.prompt();
+                        googleBtn.disabled = false;
+                        googleBtn.innerHTML = `
+                            <svg class="google-icon" viewBox="0 0 20 20">
+                                <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+                                <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+                                <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+                                <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+                            </svg>
+                            Continue with Google
+                        `;
+                    }
+                }, 100);
+            } else {
+                // Google Sign-In not initialized
+                showError('Google Sign-In is not available. Please refresh the page and try again.');
+                console.error('Google Sign-In not initialized. googleInitialized:', googleInitialized);
+            }
+        });
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            // Wait for Google Sign-In library to load
+            setTimeout(initializeGoogleSignIn, 500);
+        });
+        
+        // Note: We don't auto-redirect if already logged in
+        // Users must explicitly click "Continue with Google" to authenticate
+    </script>
+</body>
+</html>

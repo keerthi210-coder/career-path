@@ -1,0 +1,420 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Questions - PersonalityPro</title>
+    <link rel="stylesheet" href="{% static 'assessment/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assessment/css/questions.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                </svg>
+                <span>PersonalityPro</span>
+            </div>
+            <div class="progress-info">
+                <span class="question-counter">Question <span id="current-q">1</span> of 3</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Questions Container -->
+    <section class="questions-section">
+        <div class="split-container">
+            <!-- Left Side: Visual Content -->
+            <div class="visual-side">
+                <div class="content-overlay">
+                    <h2 class="overlay-heading">Discover Your True Potential</h2>
+                    <p class="overlay-text">Every answer reveals something unique about your personality. Our intelligent system analyzes your traits and helps you discover careers where you can truly succeed.</p>
+                    <div class="overlay-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">✔</span>
+                            <span class="feature-text">Personality insights</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✔</span>
+                            <span class="feature-text">Smart career recommendations</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✔</span>
+                            <span class="feature-text">Discover your strengths</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✔</span>
+                            <span class="feature-text">Quick and interactive test</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Question Content -->
+            <div class="content-side">
+                <div class="question-card" id="question-card">
+                    <div class="question-header">
+                        <div class="buddy-wrapper">
+                            <svg id="buddyFace" viewBox="0 0 120 120" class="buddy-face">
+                                <circle cx="60" cy="60" r="55" fill="#FFF6CC" stroke="#FFE08A" stroke-width="6"/>
+                                <ellipse id="leftEye" cx="45" cy="55" rx="6" ry="8" fill="#111"/>
+                                <ellipse id="rightEye" cx="75" cy="55" rx="6" ry="8" fill="#111"/>
+                                <path id="mouth" d="M40 75 Q60 95 80 75" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="question-number" id="question-number">Question 1</span>
+                    </div>
+
+                    <h2 class="question-text" id="question-text"></h2>
+
+                    <div class="options-container" id="options-container">
+                        <!-- Options will be dynamically inserted -->
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button class="btn-nav btn-previous" id="btn-previous" disabled>← Previous</button>
+                        <button class="btn-nav btn-next" id="btn-next" disabled>Next →</button>
+                        <button class="btn-nav btn-submit" id="btn-submit" style="display: none;">Submit Assessment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Check authentication before loading questions
+        function checkAuthentication() {
+            const authToken = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            
+            if (!authToken || !user) {
+                // User not logged in, redirect to login
+                alert('Please login to take the assessment');
+                window.location.href = '/login/?redirect=/questions/';
+                return false;
+            }
+            return true;
+        }
+        
+        // Django API Integration
+        const API_BASE_URL = 'http://localhost:8000/api';
+        let questions = [];
+        let currentQuestion = 0;
+        let answers = [];
+        let sessionId = generateSessionId();
+
+        const buddy = document.getElementById("buddyFace");
+        const mouth = document.getElementById("mouth");
+        const leftEye = document.getElementById("leftEye");
+        const rightEye = document.getElementById("rightEye");
+
+        // Blinking animation for eyes
+        function blinkEyes() {
+            // Close eyes
+            leftEye.setAttribute('ry', '1');
+            rightEye.setAttribute('ry', '1');
+            
+            // Open eyes after 150ms
+            setTimeout(() => {
+                leftEye.setAttribute('ry', '8');
+                rightEye.setAttribute('ry', '8');
+            }, 150);
+        }
+
+        // Blink every 2-3 seconds randomly
+        function startBlinking() {
+            setInterval(() => {
+                blinkEyes();
+                // Sometimes double blink
+                if (Math.random() > 0.7) {
+                    setTimeout(blinkEyes, 300);
+                }
+            }, 2000 + Math.random() * 2000); // Random interval between 2-4 seconds
+        }
+
+        // Start blinking when page loads
+        startBlinking();
+
+        // Generate unique session ID
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Initialize
+        async function init() {
+            // Check authentication first
+            if (!checkAuthentication()) {
+                return;
+            }
+            await loadQuestionsFromAPI();
+        }
+
+        // Load questions from Django API
+        async function loadQuestionsFromAPI() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/questions/`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch questions');
+                }
+                
+                questions = await response.json();
+                
+                // Update question counter
+                document.getElementById('current-q').textContent = '1';
+                const counterSpan = document.querySelector('.question-counter');
+                if (counterSpan) {
+                    counterSpan.innerHTML = `Question <span id="current-q">1</span> of ${questions.length}`;
+                }
+                
+                loadQuestion(currentQuestion);
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                alert('Failed to load questions. Please make sure the Django server is running on port 8000.');
+            }
+        }
+
+        // Load Question
+        function loadQuestion(index) {
+            const mouth = document.getElementById("mouth");
+            mouth.setAttribute("d", "M40 75 Q60 95 80 75");
+
+            if (index >= questions.length) {
+                return;
+            }
+
+            const question = questions[index];
+            document.getElementById('current-q').textContent = index + 1;
+            document.getElementById('question-number').textContent = `Question ${index + 1}`;
+            document.getElementById('question-text').textContent = question.text;
+
+            // Load options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            question.choices.forEach((choice, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option-item';
+                optionDiv.innerHTML = `
+                    <input type="radio" id="option-${i}" name="question-${question.id}" value="${choice.id}">
+                    <label for="option-${i}">${choice.text}</label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+
+                // Check if already answered
+                const existingAnswer = answers.find(a => a.question_id === question.id);
+                if (existingAnswer && existingAnswer.choice_id === choice.id) {
+                    optionDiv.querySelector('input').checked = true;
+                    optionDiv.classList.add('selected');
+                }
+
+                // Add click event
+                optionDiv.addEventListener('click', () => selectOption(question.id, choice.id, optionDiv));
+            });
+
+            // Update progress bar
+            updateProgressBar();
+
+            // Update buttons
+            updateButtons();
+        }
+
+        // Select Option
+        function selectOption(questionId, choiceId, selectedDiv) {
+            buddy.classList.add("buddy-happy");
+            mouth.setAttribute("d", "M40 75 Q60 110 80 75");
+            setTimeout(() => {
+                buddy.classList.remove("buddy-happy");
+            }, 600);
+
+            buddy.classList.remove("buddy-shake");
+            buddy.classList.add("buddy-bounce");
+            mouth.setAttribute("d", "M40 75 Q60 100 80 75"); // bigger smile
+            setTimeout(() => {
+                buddy.classList.remove("buddy-bounce");
+            }, 400);
+
+            // Remove existing answer for this question
+            answers = answers.filter(a => a.question_id !== questionId);
+
+            // Add new answer
+            answers.push({
+                question_id: questionId,
+                choice_id: choiceId
+            });
+
+            // Remove selected class from all options
+            document.querySelectorAll('.option-item').forEach(opt => opt.classList.remove('selected'));
+
+            // Add selected class to clicked option
+            selectedDiv.classList.add('selected');
+
+            // Enable next button
+            document.getElementById('btn-next').disabled = false;
+
+            // Enable submit button if on last question
+            const submitBtn = document.getElementById('btn-submit');
+            if (submitBtn && submitBtn.style.display !== 'none') {
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Update Progress Bar
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        // Update Buttons
+        function updateButtons() {
+            const prevBtn = document.getElementById('btn-previous');
+            const nextBtn = document.getElementById('btn-next');
+            const submitBtn = document.getElementById('btn-submit');
+
+            // Previous button
+            prevBtn.disabled = currentQuestion === 0;
+
+            // Check if current question is answered
+            const currentQuestionAnswered = answers.some(a => a.question_id === questions[currentQuestion].id);
+
+            // Next/Submit button
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+                submitBtn.disabled = !currentQuestionAnswered;
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+                nextBtn.disabled = !currentQuestionAnswered;
+            }
+        }
+
+        // Next Question
+        document.getElementById('btn-next').addEventListener('click', () => {
+            const currentAnswered = answers.some(a => a.question_id === questions[currentQuestion].id);
+
+            if (!currentAnswered) {
+                buddy.classList.add("buddy-shake");
+                mouth.setAttribute("d", "M40 85 Q60 70 80 85");
+                setTimeout(() => {
+                    buddy.classList.remove("buddy-shake");
+                }, 400);
+                return;
+            }
+
+            buddy.classList.add("buddy-bounce");
+            buddy.classList.add("buddy-happy");
+            mouth.setAttribute("d", "M40 75 Q60 105 80 75");
+
+            const nextBtn = document.getElementById('btn-next');
+            createConfettiFromButton(nextBtn);
+
+            setTimeout(() => {
+                buddy.classList.remove("buddy-bounce", "buddy-happy");
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    loadQuestion(currentQuestion);
+                }
+            }, 500);
+        });
+
+        // Previous Question
+        document.getElementById('btn-previous').addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion(currentQuestion);
+            }
+        });
+
+        // Submit Assessment
+        document.getElementById('btn-submit').addEventListener('click', async () => {
+            try {
+                // Disable submit button to prevent double submission
+                const submitBtn = document.getElementById('btn-submit');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+
+                const response = await fetch(`${API_BASE_URL}/submit-assessment/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        answers: answers
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit assessment');
+                }
+
+                const result = await response.json();
+
+                // Store result in sessionStorage
+                sessionStorage.setItem('assessmentResult', JSON.stringify(result));
+                sessionStorage.setItem('sessionId', sessionId);
+
+                // Now redirect to loading page
+                window.location.href = '/loading/';
+
+            } catch (error) {
+                console.error('Error submitting assessment:', error);
+                alert('Failed to submit assessment. Please try again.');
+                
+                // Re-enable button on error
+                const submitBtn = document.getElementById('btn-submit');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Assessment';
+            }
+        });
+
+        function createConfettiFromButton(button) {
+            const rect = button.getBoundingClientRect();
+            const originX = rect.left + rect.width / 2;
+            const originY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 25; i++) {
+                const confetti = document.createElement("div");
+                confetti.style.position = "fixed";
+                confetti.style.width = "8px";
+                confetti.style.height = "8px";
+                confetti.style.background = "#FFD84D";
+                confetti.style.top = originY + "px";
+                confetti.style.left = originX + "px";
+                confetti.style.borderRadius = "50%";
+                confetti.style.pointerEvents = "none";
+                confetti.style.zIndex = "9999";
+                document.body.appendChild(confetti);
+
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 150 + 50;
+
+                confetti.animate([
+                    { transform: "translate(0,0)", opacity: 1 },
+                    {
+                        transform: `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: 700,
+                    easing: "ease-out"
+                });
+
+                setTimeout(() => confetti.remove(), 700);
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

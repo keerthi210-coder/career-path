@@ -1,0 +1,251 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Left Side - Black */
+.left-side {
+    flex: 1;
+    background: #111111;
+    color: white;
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 60px;
+}
+
+.logo svg {
+    width: 40px;
+    height: 40px;
+}
+
+.logo span {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+}
+
+.left-content h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+}
+
+.left-content p {
+    font-size: 18px;
+    color: #cccccc;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 500px;
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+}
+
+.feature-icon {
+    width: 32px;
+    height: 32px;
+    background: #FFD84D;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Right Side - Yellow */
+.right-side {
+    flex: 1;
+    background: #FFD84D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-card {
+    background: white;
+    padding: 50px 45px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111111;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    font-size: 15px;
+    color: #666666;
+}
+
+.btn-google {
+    width: 100%;
+    padding: 16px 24px;
+    background: white;
+    color: #444444;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.btn-google:hover {
+    background: #f8f8f8;
+    border-color: #d0d0d0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.btn-google:active {
+    transform: translateY(0);
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.divider {
+    text-align: center;
+    margin: 24px 0;
+    color: #999999;
+    font-size: 14px;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.terms {
+    text-align: center;
+    font-size: 12px;
+    color: #999999;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.terms a {
+    color: #666666;
+    text-decoration: none;
+}
+
+.terms a:hover {
+    text-decoration: underline;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-link a {
+    color: #FFD84D;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none;
+    font-size: 14px;
+}
+
+.success-message {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none;
+    font-size: 14px;
+}
+
+@media (max-width: 968px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .left-side {
+        padding: 40px 30px;
+    }
+    
+    .left-content h1 {
+        font-size: 32px;
+    }
+    
+    .right-side {
+        padding: 30px 20px;
+    }
+    
+    .login-card {
+        padding: 40px 30px;
+    }
+}

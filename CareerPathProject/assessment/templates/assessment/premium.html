@@ -1,0 +1,440 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - PersonalityPro</title>
+    <link rel="stylesheet" href="{% static 'assessment/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assessment/css/premium.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                </svg>
+                <span>PersonalityPro</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/personalities/">Personalities Types</a></li>
+                <li><a href="/assessment/">Assessment</a></li>
+                <li><a href="/resources/">Resources</a></li>
+                <li><a href="/premium/" class="active">Premium</a></li>
+            </ul>
+            <button class="btn-primary" onclick="window.location.href='/assessment/'">Take Test</button>
+        </div>
+    </nav>
+
+    <section class="pricing-hero">
+        <div class="container">
+            <div class="premium-badge">✨ UPGRADE</div>
+            <h1>Choose Your Plan</h1>
+            <p>Get deeper career insights, personalized guidance, and exclusive resources</p>
+            <div class="hero-cta">
+                <button class="btn-large hero-upgrade-btn" onclick="window.location.href='#pricing'">View Plans</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Free</h3>
+                        <div class="price">
+                            <span class="amount">$0</span>
+                            <span class="period">/forever</span>
+                        </div>
+                    </div>
+                    <ul class="features-list">
+                        <li class="included">✓ Basic personality test</li>
+                        <li class="included">✓ Personality type description</li>
+                        <li class="included">✓ Basic career suggestions</li>
+                        <li class="included">✓ Community access</li>
+                        <li class="excluded">✗ Detailed reports</li>
+                        <li class="excluded">✗ Career coaching</li>
+                        <li class="excluded">✗ Premium resources</li>
+                    </ul>
+                    <button class="btn-outline">Current Plan</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="plan-header">
+                        <h3>Premium</h3>
+                        <div class="price">
+                            <span class="amount">$9.99</span>
+                            <span class="period">/month</span>
+                        </div>
+                    </div>
+                    <ul class="features-list">
+                        <li class="included">✓ Everything in Free</li>
+                        <li class="included">✓ Detailed personality reports</li>
+                        <li class="included">✓ Career path analysis</li>
+                        <li class="included">✓ Relationship compatibility</li>
+                        <li class="included">✓ Personal growth tracker</li>
+                        <li class="included">✓ Monthly coaching session</li>
+                        <li class="included">✓ Premium resources library</li>
+                    </ul>
+                    <button class="btn-large" onclick="window.location.href='#'">Upgrade Now</button>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Lifetime</h3>
+                        <div class="price">
+                            <span class="amount">$199</span>
+                            <span class="period">/one-time</span>
+                        </div>
+                    </div>
+                    <ul class="features-list">
+                        <li class="included">✓ Everything in Premium</li>
+                        <li class="included">✓ Lifetime access</li>
+                        <li class="included">✓ Priority support</li>
+                        <li class="included">✓ Early access to features</li>
+                        <li class="included">✓ Exclusive workshops</li>
+                        <li class="included">✓ Team assessments</li>
+                        <li class="included">✓ Custom reports</li>
+                    </ul>
+                    <button class="btn-outline" onclick="window.location.href='#'">Get Lifetime</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="premium-features">
+        <div class="container">
+            <h2>What You Get with Premium</h2>
+            <div class="features-showcase">
+                <div class="showcase-item">
+                    <div class="showcase-visual">
+                        <div class="visual-icon">📊</div>
+                    </div>
+                    <div class="showcase-content">
+                        <h3>Comprehensive Reports</h3>
+                        <p>Get 50+ page detailed reports covering every aspect of your personality, including strengths, weaknesses, career paths, and relationship dynamics</p>
+                        <ul class="benefit-list">
+                            <li>In-depth trait analysis</li>
+                            <li>Career compatibility scores</li>
+                            <li>Communication style guide</li>
+                            <li>Leadership potential assessment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="showcase-item reverse">
+                    <div class="showcase-content">
+                        <h3>Personal Growth Coaching</h3>
+                        <p>Work with certified personality coaches who understand your type and can help you achieve your goals</p>
+                        <ul class="benefit-list">
+                            <li>Monthly 1-on-1 sessions</li>
+                            <li>Personalized action plans</li>
+                            <li>Progress tracking</li>
+                            <li>Email support</li>
+                        </ul>
+                    </div>
+                    <div class="showcase-visual">
+                        <div class="visual-icon">🎯</div>
+                    </div>
+                </div>
+
+                <div class="showcase-item">
+                    <div class="showcase-visual">
+                        <div class="visual-icon">📚</div>
+                    </div>
+                    <div class="showcase-content">
+                        <h3>Exclusive Resources</h3>
+                        <p>Access our library of premium content designed specifically for your personality type</p>
+                        <ul class="benefit-list">
+                            <li>Video courses & workshops</li>
+                            <li>Downloadable workbooks</li>
+                            <li>Career transition guides</li>
+                            <li>Relationship advice articles</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials-premium">
+        <div class="container">
+            <h2>What Premium Members Say</h2>
+            
+            <div class="testimonials-slider-container">
+                <div class="testimonials-slider">
+                    <div class="testimonial-card-premium">
+                        <div class="premium-icon">👑</div>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"The coaching sessions were game-changing. I finally understand how to leverage my strengths in my career!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MR</div>
+                            <div>
+                                <strong>Michael Rodriguez</strong>
+                                <span>Premium Member · 6 months</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-premium">
+                        <div class="premium-icon">👑</div>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"The detailed reports helped me make a confident career switch. Best investment I've made in myself!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">LT</div>
+                            <div>
+                                <strong>Lisa Thompson</strong>
+                                <span>Lifetime Member · 1 year</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-premium">
+                        <div class="premium-icon">👑</div>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"The relationship compatibility insights saved my marriage. We now understand each other so much better!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">DK</div>
+                            <div>
+                                <strong>David Kim</strong>
+                                <span>Premium Member · 8 months</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-premium">
+                        <div class="premium-icon">👑</div>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"Premium unlocked career paths I never knew existed. The personalized guidance was incredible!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">SJ</div>
+                            <div>
+                                <strong>Sarah Johnson</strong>
+                                <span>Premium Member · 4 months</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-premium">
+                        <div class="premium-icon">👑</div>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"The growth tracker helped me stay motivated and see real progress in my personal development journey."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AP</div>
+                            <div>
+                                <strong>Alex Parker</strong>
+                                <span>Lifetime Member · 2 years</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-premium">
+                        <div class="premium-icon">👑</div>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"As a team leader, the premium insights helped me understand my team better and improve our collaboration."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">RW</div>
+                            <div>
+                                <strong>Rachel Williams</strong>
+                                <span>Premium Member · 10 months</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-premium">
+                        <div class="premium-icon">👑</div>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"The exclusive workshops and resources gave me tools I use daily. Worth every penny!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">JM</div>
+                            <div>
+                                <strong>James Miller</strong>
+                                <span>Lifetime Member · 18 months</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="comparison-table">
+        <div class="container">
+            <h2>Compare Plans</h2>
+            <div class="table-wrapper">
+                <table class="comparison">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Free</th>
+                            <th class="highlight-col">Premium</th>
+                            <th>Lifetime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Personality Test</td>
+                            <td>✓</td>
+                            <td class="highlight-col">✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Basic Type Description</td>
+                            <td>✓</td>
+                            <td class="highlight-col">✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Detailed Reports (50+ pages)</td>
+                            <td>✗</td>
+                            <td class="highlight-col">✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Career Path Analysis</td>
+                            <td>✗</td>
+                            <td class="highlight-col">✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Relationship Compatibility</td>
+                            <td>✗</td>
+                            <td class="highlight-col">✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Personal Growth Tracker</td>
+                            <td>✗</td>
+                            <td class="highlight-col">✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Monthly Coaching Sessions</td>
+                            <td>✗</td>
+                            <td class="highlight-col">1 session</td>
+                            <td>2 sessions</td>
+                        </tr>
+                        <tr>
+                            <td>Premium Resources</td>
+                            <td>✗</td>
+                            <td class="highlight-col">✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Priority Support</td>
+                            <td>✗</td>
+                            <td class="highlight-col">✗</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr>
+                            <td>Early Feature Access</td>
+                            <td>✗</td>
+                            <td class="highlight-col">✗</td>
+                            <td>✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>Can I cancel anytime?</h4>
+                    <p>Yes! You can cancel your Premium subscription at any time. You'll continue to have access until the end of your billing period.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What payment methods do you accept?</h4>
+                    <p>We accept all major credit cards, PayPal, and Apple Pay for your convenience.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Is there a money-back guarantee?</h4>
+                    <p>Absolutely! We offer a 30-day money-back guarantee. If you're not satisfied, we'll refund you in full.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I upgrade from Premium to Lifetime?</h4>
+                    <p>Yes! We'll credit your previous Premium payments toward the Lifetime plan.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Do you offer team or corporate plans?</h4>
+                    <p>Yes! Contact our sales team for custom enterprise solutions for teams of 10 or more.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How do coaching sessions work?</h4>
+                    <p>Sessions are 45 minutes via video call with certified coaches. You can schedule them at your convenience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Ready to Transform Your Life?</h2>
+                <p>Join thousands of Premium members who've unlocked their potential</p>
+                <button class="btn-large" onclick="window.location.href='#'">Start Your Premium Journey</button>
+                <p class="cta-note">✓ 30-day money-back guarantee · ✓ Cancel anytime · ✓ Instant access</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-section">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    </svg>
+                    <span>PersonalityPro</span>
+                </div>
+                <p>Empowering individuals through self-discovery</p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="/assessment/">Take Test</a></li>
+                    <li><a href="/personalities/">Personality Types</a></li>
+                    <li><a href="/premium/">Premium</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="/resources/">Articles</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PersonalityPro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'assessment/js/script.js' %}"></script>
+    <script>
+        // Duplicate testimonials for seamless infinite scroll
+        const testimonialsSlider = document.querySelector('.testimonials-slider');
+        const originalCards = testimonialsSlider.innerHTML;
+        testimonialsSlider.innerHTML = originalCards + originalCards; // Duplicate for seamless loop
+    </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+/* Results Section */
+.results-section {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 40px 60px 40px;
+    background: #000000;
+    position: relative;
+    overflow: hidden;
+}
+
+.results-section .container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 60px;
+}
+
+.results-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--yellow-main);
+    margin-bottom: 12px;
+}
+
+.results-subtitle {
+    text-align: center;
+    font-size: 18px;
+    color: var(--gray-light);
+    margin-bottom: 40px;
+}
+
+/* Results Content - Side by Side Layout */
+.results-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Speedometer Container */
+.speedometer-container {
+    flex: 0 0 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.speedometer-wrapper {
+    position: relative;
+    width: 450px;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+    border-radius: 50%;
+}
+
+.speedometer-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Needle */
+.needle {
+    position: absolute;
+    width: 5px;
+    height: 140px;
+    background: linear-gradient(to top, #444444, #333333);
+    bottom: 35%;
+    left: 50%;
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(-90deg);
+    border-radius: 3px 3px 0 0;
+    transition: transform 0.05s ease-out;
+    z-index: 15;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.needle::before {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background: #333333;
+    border-radius: 50%;
+    border: 3px solid #666666;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 16;
+}
+
+.needle::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background: #444444;
+    border-radius: 50%;
+    z-index: 17;
+}
+
+/* Score Display */
+.score-display {
+    position: absolute;
+    bottom: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--yellow-main);
+    text-shadow: 0 4px 8px rgba(255, 216, 77, 0.5);
+    z-index: 20;
+    pointer-events: none;
+}
+
+/* Personality Type */
+.personality-type {
+    flex: 1;
+    max-width: 600px;
+    text-align: left;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 216, 77, 0.2);
+    border-top: 6px solid var(--yellow-main);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+    font-size: 24px;
+    color: var(--gray-light);
+    font-weight: 500;
+}
+
+/* Type Content */
+.type-content {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.personality-type h2 {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.personality-type #type-code {
+    color: var(--black);
+    background: var(--yellow-main);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 42px;
+    display: inline-block;
+}
+
+.personality-type p {
+    font-size: 28px;
+    color: var(--gray-light);
+    font-weight: 500;
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+}
+
+.action-buttons .btn-primary {
+    background: var(--yellow-main);
+    color: var(--black);
+    padding: 16px 36px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-buttons .btn-primary:hover {
+    background: var(--yellow-border);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 216, 77, 0.4);
+}
+
+.action-buttons .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 16px 36px;
+    border: 2px solid var(--yellow-main);
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-buttons .btn-secondary:hover {
+    background: var(--yellow-main);
+    color: var(--black);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 216, 77, 0.4);
+}
+
+/* Confetti Canvas */
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .results-section .container {
+        padding: 0 40px;
+    }
+    
+    .results-content {
+        gap: 60px;
+    }
+    
+    .speedometer-container {
+        flex: 0 0 400px;
+    }
+    
+    .speedometer-wrapper {
+        width: 400px;
+        height: 400px;
+    }
+}
+
+@media (max-width: 968px) {
+    .results-section {
+        padding: 100px 20px 60px 20px;
+    }
+    
+    .results-section .container {
+        padding: 0 20px;
+    }
+    
+    .results-content {
+        flex-direction: column;
+        gap: 40px;
+    }
+    
+    .results-title {
+        font-size: 32px;
+    }
+    
+    .results-subtitle {
+        font-size: 16px;
+    }
+    
+    .speedometer-container {
+        flex: 0 0 auto;
+    }
+    
+    .speedometer-wrapper {
+        width: 350px;
+        height: 350px;
+    }
+    
+    .needle {
+        height: 120px;
+    }
+    
+    .score-display {
+        font-size: 48px;
+        bottom: 70px;
+    }
+    
+    .personality-type {
+        text-align: center;
+        max-width: 100%;
+    }
+    
+    .personality-type h2 {
+        font-size: 32px;
+    }
+    
+    .personality-type #type-code {
+        font-size: 32px;
+        padding: 10px 20px;
+    }
+    
+    .personality-type p {
+        font-size: 22px;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+}

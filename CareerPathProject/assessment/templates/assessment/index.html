@@ -1,0 +1,534 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PersonalityPro - Discover Your True Self</title>
+    <link rel="stylesheet" href="{% static 'assessment/css/styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                </svg>
+                <span>PersonalityPro</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/personalities/">Personalities Types</a></li>
+                <li><a href="/assessment/">Assessment</a></li>
+                <li><a href="/resources/">Resources</a></li>
+                <li><a href="/premium/">Premium</a></li>
+            </ul>
+            <button class="btn-primary" onclick="checkAuthAndStartTest()">Take Test</button>
+        </div>
+    </nav>
+
+    <main>
+
+    <section class="hero">
+        <div class="hero-bg-elements">
+            <!-- Top Left Large Circle (partial) -->
+            <div class="large-circle top-left"></div>
+            
+            <!-- Top Right Large Circle (partial) -->
+            <div class="large-circle top-right"></div>
+            
+            <!-- Small Circles -->
+            <div class="small-circle circle-1"></div>
+            <div class="small-circle circle-2"></div>
+            <div class="small-circle circle-3"></div>
+            <div class="small-circle circle-4"></div>
+            <div class="small-circle circle-5"></div>
+            <div class="small-circle circle-6"></div>
+            <div class="small-circle circle-7"></div>
+            
+            <!-- Ring Circles (outline only) -->
+            <div class="ring-circle ring-1"></div>
+            <div class="ring-circle ring-2"></div>
+            <div class="ring-circle ring-3"></div>
+            <div class="ring-circle ring-4"></div>
+            
+            <!-- Triangles (filled) -->
+            <div class="filled-triangle tri-1"></div>
+            <div class="filled-triangle tri-2"></div>
+            <div class="filled-triangle tri-3"></div>
+            <div class="filled-triangle tri-4"></div>
+            
+            <!-- Diagonal Lines -->
+            <div class="diagonal-lines lines-1"></div>
+            <div class="diagonal-lines lines-2"></div>
+            
+            <!-- Dot Grids -->
+            <div class="dot-grid grid-1">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="dot-grid grid-2">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="dot-grid grid-3">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="dot-grid grid-4">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            
+            <!-- Plus Signs -->
+            <div class="plus-grid plus-1">
+                <span>+</span><span>+</span><span>+</span><span>+</span>
+                <span>+</span><span>+</span><span>+</span><span>+</span>
+                <span>+</span><span>+</span><span>+</span><span>+</span>
+            </div>
+            <div class="plus-grid plus-2">
+                <span>+</span><span>+</span>
+                <span>+</span><span>+</span>
+            </div>
+            <div class="plus-grid plus-3">
+                <span>+</span><span>+</span><span>+</span>
+                <span>+</span><span>+</span><span>+</span>
+            </div>
+            
+            <!-- Wave Pattern Bottom - Multiple Layers -->
+            <svg class="wave-bottom" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:rgba(255, 216, 77, 0.08);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:rgba(255, 216, 77, 0.01);stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <!-- Main filled wave -->
+                <path class="wave-path-1" d="M0,150 Q300,100 600,150 T1200,150 L1200,300 L0,300 Z" fill="url(#waveGradient)"/>
+                <!-- Multiple wave lines -->
+                <path class="wave-path-2" d="M0,160 Q300,110 600,160 T1200,160" stroke="rgba(255, 216, 77, 0.15)" stroke-width="1" fill="none"/>
+                <path class="wave-path-3" d="M0,170 Q300,120 600,170 T1200,170" stroke="rgba(255, 216, 77, 0.12)" stroke-width="1" fill="none"/>
+                <path class="wave-path-4" d="M0,180 Q300,130 600,180 T1200,180" stroke="rgba(255, 216, 77, 0.1)" stroke-width="1" fill="none"/>
+                <path class="wave-path-5" d="M0,190 Q300,140 600,190 T1200,190" stroke="rgba(255, 216, 77, 0.08)" stroke-width="1" fill="none"/>
+                <path class="wave-path-6" d="M0,200 Q300,150 600,200 T1200,200" stroke="rgba(255, 216, 77, 0.06)" stroke-width="1" fill="none"/>
+            </svg>
+            
+            <!-- Curved Wave Top Left -->
+            <svg class="wave-top-left" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,200 Q150,100 300,200 T600,200" stroke="rgba(255, 216, 77, 0.15)" stroke-width="2" fill="none"/>
+                <path d="M0,220 Q150,120 300,220 T600,220" stroke="rgba(255, 216, 77, 0.1)" stroke-width="1.5" fill="none"/>
+            </svg>
+        </div>
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge">✨ Discover who you really are</div>
+                <h1>Discover Your <span class="highlight">True Career Path</span></h1>
+                <p class="hero-subtitle">A 5–10 minute interactive assessment gives you a tailored career profile and next steps. Understand your strengths, personality, and values to find work that truly fits you.</p>
+                <div class="hero-cta">
+                    <button class="btn-large" onclick="checkAuthAndStartTest()">Start Free Assessment</button>
+                    <button class="btn-secondary" onclick="document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'})">Watch How It Works</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <strong>5-10 min</strong>
+                        <span>Interactive test</span>
+                    </div>
+                    <div class="stat">
+                        <strong>16 Types</strong>
+                        <span>Career profiles</span>
+                    </div>
+                    <div class="stat">
+                        <strong>Research</strong>
+                        <span>Based insights</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <!-- Main character image -->
+                <img src="{% static 'assessment/images/hero_image.png' %}" alt="Professional at work" class="hero-image" />
+                
+                <!-- 4 Personality Category Bubbles -->
+                <div class="personality-bubbles">
+                    <!-- Top Left - Analysts -->
+                    <div class="trait-bubble bubble-1">
+                        <div class="bubble-circle" style="background: #FFD84D;">
+                            <svg viewBox="0 0 50 50" class="bubble-icon">
+                                <path d="M 20 23 Q 18 20 20 18 Q 22 16 25 19 Q 28 16 30 18 Q 32 20 30 23 Q 32 26 30 28 Q 28 30 25 27 Q 22 30 20 28 Q 18 26 20 23" fill="#111111" stroke="#111111" stroke-width="1.5"/>
+                                <circle cx="22" cy="22" r="1" fill="#FFD84D"/>
+                                <circle cx="28" cy="22" r="1" fill="#FFD84D"/>
+                                <circle cx="25" cy="26" r="1" fill="#FFD84D"/>
+                            </svg>
+                        </div>
+                        <span class="bubble-label">ANALYSTS</span>
+                    </div>
+                    
+                    <!-- Top Right - Diplomats -->
+                    <div class="trait-bubble bubble-2">
+                        <div class="bubble-circle" style="background: #FFE08A;">
+                            <svg viewBox="0 0 50 50" class="bubble-icon">
+                                <path d="M 25 30 L 18 22 Q 18 17 22 17 Q 25 20 25 20 Q 25 20 28 17 Q 32 17 32 22 Z" fill="#111111"/>
+                            </svg>
+                        </div>
+                        <span class="bubble-label">DIPLOMATS</span>
+                    </div>
+                    
+                    <!-- Bottom Left - Sentinels -->
+                    <div class="trait-bubble bubble-3">
+                        <div class="bubble-circle" style="background: #FFF6CC;">
+                            <svg viewBox="0 0 50 50" class="bubble-icon">
+                                <path d="M 25 15 L 17 20 L 17 32 Q 17 38 25 40 Q 33 38 33 32 L 33 20 Z" fill="#FFD84D" stroke="#111111" stroke-width="1.5"/>
+                                <line x1="25" y1="20" x2="25" y2="37" stroke="#111111" stroke-width="1.2"/>
+                            </svg>
+                        </div>
+                        <span class="bubble-label">SENTINELS</span>
+                    </div>
+                    
+                    <!-- Bottom Right - Explorers -->
+                    <div class="trait-bubble bubble-4">
+                        <div class="bubble-circle" style="background: #FFD84D;">
+                            <svg viewBox="0 0 50 50" class="bubble-icon">
+                                <circle cx="25" cy="25" r="12" stroke="#111111" stroke-width="1.5" fill="none"/>
+                                <path d="M 25 15 L 22 25 L 25 35" fill="#111111"/>
+                                <path d="M 25 15 L 28 25 L 25 35" fill="#333333"/>
+                                <circle cx="25" cy="25" r="2" fill="#111111"/>
+                                <line x1="25" y1="13" x2="25" y2="17" stroke="#111111" stroke-width="1.5"/>
+                                <line x1="25" y1="33" x2="25" y2="37" stroke="#111111" stroke-width="1.5"/>
+                                <line x1="13" y1="25" x2="17" y2="25" stroke="#111111" stroke-width="1.5"/>
+                                <line x1="33" y1="25" x2="37" y2="25" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        <span class="bubble-label">EXPLORERS</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-understanding">
+        <div class="container">
+            <div class="why-understanding-content">
+                <div class="why-text">
+                    <h2>Why Understanding Yourself Matters</h2>
+                    <p>Career satisfaction comes from working in roles aligned with your strengths, personality, and values. Our assessment reveals what energizes you, how you make decisions, and which environments help you thrive.</p>
+                    
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <span class="check-icon">✔</span>
+                            <span>Discover your strengths & ideal work style</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="check-icon">✔</span>
+                            <span>Get clarity on career paths that truly fit you</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="check-icon">✔</span>
+                            <span>Learn what motivates you and what drains you</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="check-icon">✔</span>
+                            <span>Make smarter choices about study & career options</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="why-visual">
+                    <img src="{% static 'assessment/images/thinking.jpg' %}" alt="Understanding Yourself" class="thinking-image" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="trust-section">
+        <div class="container">
+            <h2 class="section-title">Why Thousands Trust Our Assessment</h2>
+            <p class="trust-subtitle">Built on research-backed psychometrics and real user insights, our system delivers accurate, reliable, and practical guidance.</p>
+            
+            <div class="trust-features">
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg viewBox="0 0 60 60" class="icon-svg">
+                            <rect x="10" y="15" width="40" height="30" rx="5" fill="#3498db" opacity="0.2"/>
+                            <rect x="15" y="20" width="30" height="4" rx="2" fill="#3498db"/>
+                            <rect x="15" y="28" width="25" height="4" rx="2" fill="#3498db"/>
+                            <rect x="15" y="36" width="20" height="4" rx="2" fill="#3498db"/>
+                            <circle cx="45" cy="45" r="8" fill="#FFD84D"/>
+                            <path d="M 41 45 L 44 48 L 49 40" stroke="#111111" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>📊 Research-Based</h3>
+                    <p>Designed using proven psychological models for better accuracy.</p>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg viewBox="0 0 60 60" class="icon-svg">
+                            <circle cx="20" cy="25" r="12" fill="#1abc9c" opacity="0.2"/>
+                            <circle cx="40" cy="25" r="12" fill="#e67e22" opacity="0.2"/>
+                            <circle cx="30" cy="40" r="12" fill="#9b59b6" opacity="0.2"/>
+                            <circle cx="20" cy="25" r="6" fill="#FFF6CC"/>
+                            <circle cx="40" cy="25" r="6" fill="#FFF6CC"/>
+                            <circle cx="30" cy="40" r="6" fill="#FFF6CC"/>
+                            <path d="M 25 30 Q 30 35 35 30" stroke="#FFD84D" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>🌍 Loved by Many</h3>
+                    <p>Thousands have used our system to discover clarity and direction.</p>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg viewBox="0 0 60 60" class="icon-svg">
+                            <rect x="15" y="20" width="30" height="25" rx="5" fill="#f39c12" opacity="0.2"/>
+                            <circle cx="30" cy="32" r="8" fill="#FFF6CC"/>
+                            <circle cx="27" cy="30" r="2" fill="#111111"/>
+                            <circle cx="33" cy="30" r="2" fill="#111111"/>
+                            <path d="M 27 35 Q 30 37 33 35" stroke="#111111" stroke-width="2" fill="none"/>
+                            <path d="M 20 15 Q 30 10 40 15" stroke="#FFD84D" stroke-width="3" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>💬 Real Stories</h3>
+                    <p>Personal journeys that inspire confidence and action.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works yellow-bg" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <p style="text-align: center; color: var(--gray-dark); margin-bottom: 48px;"></p>
+            <div class="steps-flow">
+                <div class="step-circle">
+                    <div class="circle-content">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">
+                            <svg viewBox="0 0 60 60" class="step-svg">
+                                <circle cx="30" cy="25" r="12" fill="#FFF6CC"/>
+                                <path d="M 22 22 Q 22 18 30 17 Q 38 18 38 22" fill="#111111"/>
+                                <circle cx="27" cy="24" r="1.5" fill="#111111"/>
+                                <circle cx="33" cy="24" r="1.5" fill="#111111"/>
+                                <path d="M 27 28 Q 30 30 33 28" stroke="#111111" stroke-width="1.5" fill="none"/>
+                                <rect x="20" y="37" width="20" height="15" rx="5" fill="#FFD84D"/>
+                                <rect x="15" y="42" width="8" height="10" rx="4" fill="#FFD84D"/>
+                                <rect x="37" y="42" width="8" height="10" rx="4" fill="#FFD84D"/>
+                            </svg>
+                        </div>
+                        <h3>Start</h3>
+                        <p>5–10 minutes interactive assessment</p>
+                    </div>
+                    <div class="connector-line"></div>
+                </div>
+                
+                <div class="step-circle">
+                    <div class="circle-content">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">
+                            <svg viewBox="0 0 60 60" class="step-svg">
+                                <circle cx="30" cy="25" r="12" fill="#FFF6CC"/>
+                                <path d="M 22 20 Q 22 16 30 15 Q 38 16 38 20" fill="#8e44ad"/>
+                                <circle cx="27" cy="24" r="1.5" fill="#111111"/>
+                                <circle cx="33" cy="24" r="1.5" fill="#111111"/>
+                                <path d="M 27 28 Q 30 30 33 28" stroke="#111111" stroke-width="1.5" fill="none"/>
+                                <rect x="22" y="37" width="16" height="12" rx="3" fill="#9b59b6"/>
+                                <text x="30" y="45" font-size="6" font-weight="bold" text-anchor="middle" fill="#ffffff">TYPE</text>
+                            </svg>
+                        </div>
+                        <h3>Profile</h3>
+                        <p>Get your personality type & strengths</p>
+                    </div>
+                    <div class="connector-line"></div>
+                </div>
+                
+                <div class="step-circle">
+                    <div class="circle-content">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">
+                            <svg viewBox="0 0 60 60" class="step-svg">
+                                <circle cx="30" cy="25" r="12" fill="#FFF6CC"/>
+                                <path d="M 22 20 Q 22 16 30 15 Q 38 16 38 20" fill="#e67e22"/>
+                                <circle cx="27" cy="24" r="1.5" fill="#111111"/>
+                                <circle cx="33" cy="24" r="1.5" fill="#111111"/>
+                                <path d="M 27 28 Q 30 30 33 28" stroke="#111111" stroke-width="1.5" fill="none"/>
+                                <rect x="18" y="37" width="24" height="12" rx="4" fill="#f39c12"/>
+                                <circle cx="15" cy="30" r="3" fill="#FFD84D"/>
+                                <circle cx="45" cy="30" r="3" fill="#FFD84D"/>
+                                <text x="30" y="45" font-size="5" font-weight="bold" text-anchor="middle" fill="#ffffff">CAREERS</text>
+                            </svg>
+                        </div>
+                        <h3>Matches</h3>
+                        <p>Discover ideal career paths for you</p>
+                    </div>
+                    <div class="connector-line"></div>
+                </div>
+                
+                <div class="step-circle">
+                    <div class="circle-content">
+                        <div class="step-number">4</div>
+                        <div class="step-icon">
+                            <svg viewBox="0 0 60 60" class="step-svg">
+                                <rect x="18" y="15" width="24" height="30" rx="4" fill="#1abc9c"/>
+                                <rect x="22" y="20" width="16" height="2" rx="1" fill="#ffffff"/>
+                                <rect x="22" y="25" width="12" height="2" rx="1" fill="#ffffff"/>
+                                <rect x="22" y="30" width="16" height="2" rx="1" fill="#ffffff"/>
+                                <rect x="22" y="35" width="10" height="2" rx="1" fill="#ffffff"/>
+                                <circle cx="30" cy="50" r="4" fill="#FFD84D"/>
+                                <path d="M 28 50 L 29 51 L 32 48" stroke="#111111" stroke-width="1.5" fill="none"/>
+                            </svg>
+                        </div>
+                        <h3>Action</h3>
+                        <p>Get resources & guidance to succeed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What People Say</h2>
+            <p style="text-align: center; color: var(--gray-light); margin-bottom: 48px;">Real feedback from real users</p>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <svg viewBox="0 0 80 80" class="avatar-illustration">
+                            <circle cx="40" cy="40" r="35" fill="#FFD84D" opacity="0.2"/>
+                            <circle cx="40" cy="35" r="18" fill="#FFF6CC"/>
+                            <path d="M 28 32 Q 28 24 40 22 Q 52 24 52 32" fill="#e67e22"/>
+                            <circle cx="35" cy="34" r="2" fill="#111111"/>
+                            <circle cx="45" cy="34" r="2" fill="#111111"/>
+                            <path d="M 35 40 Q 40 43 45 40" stroke="#111111" stroke-width="2" fill="none"/>
+                            <rect x="25" y="53" width="30" height="25" rx="8" fill="#f39c12"/>
+                        </svg>
+                    </div>
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p>"This feels like someone handed me a mirror — finally I understand why I am the way I am."</p>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <strong>Anonymous User</strong>
+                            <span>Career Clarity Seeker</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <svg viewBox="0 0 80 80" class="avatar-illustration">
+                            <circle cx="40" cy="40" r="35" fill="#3498db" opacity="0.2"/>
+                            <circle cx="40" cy="35" r="18" fill="#FFF6CC"/>
+                            <path d="M 30 30 Q 30 24 40 23 Q 50 24 50 30" fill="#111111"/>
+                            <rect x="32" y="28" width="16" height="3" rx="1" fill="#111111"/>
+                            <circle cx="35" cy="34" r="2" fill="#111111"/>
+                            <circle cx="45" cy="34" r="2" fill="#111111"/>
+                            <path d="M 35 40 Q 40 42 45 40" stroke="#111111" stroke-width="2" fill="none"/>
+                            <rect x="25" y="53" width="30" height="25" rx="8" fill="#9b59b6"/>
+                        </svg>
+                    </div>
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p>"I got career suggestions that actually match my dreams and strengths."</p>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <strong>Arjun Kumar</strong>
+                            <span>Software Developer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <svg viewBox="0 0 80 80" class="avatar-illustration">
+                            <circle cx="40" cy="40" r="35" fill="#1abc9c" opacity="0.2"/>
+                            <circle cx="40" cy="35" r="18" fill="#FFF6CC"/>
+                            <path d="M 28 30 Q 28 22 40 20 Q 52 22 52 30 Q 50 26 45 24 Q 40 23 35 24 Q 30 26 28 30" fill="#8e44ad"/>
+                            <circle cx="35" cy="34" r="2" fill="#111111"/>
+                            <circle cx="45" cy="34" r="2" fill="#111111"/>
+                            <path d="M 35 41 Q 40 44 45 41" stroke="#111111" stroke-width="2" fill="none"/>
+                            <rect x="25" y="53" width="30" height="25" rx="8" fill="#1abc9c"/>
+                        </svg>
+                    </div>
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p>"I could take action with confidence — the insights were practical and clear."</p>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <strong>Manoj Prakash</strong>
+                            <span>Marketing Professional</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Ready to Begin?</h2>
+                <p>Start your journey toward clarity, confidence, and the right career.</p>
+                <button class="btn-large" onclick="checkAuthAndStartTest()">Start Assessment</button>
+                <p class="cta-note">✓ Free forever · ✓ No credit card required · ✓ Results in 5-10 minutes</p>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-section">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    </svg>
+                    <span>PersonalityPro</span>
+                </div>
+                <p>Empowering individuals through self-discovery</p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="/assessment/">Take Test</a></li>
+                    <li><a href="/personalities/">Personality Types</a></li>
+                    <li><a href="/premium/">Premium</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="/resources/">Articles</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PersonalityPro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'assessment/js/script.js' %}"></script>
+    <script>
+        // Check authentication before starting test
+        function checkAuthAndStartTest() {
+            // Always redirect to login page first before starting assessment
+            // This ensures users must authenticate before taking the test
+            window.location.href = '/login/?redirect=/assessment/';
+        }
+    </script>
+</body>
+</html>

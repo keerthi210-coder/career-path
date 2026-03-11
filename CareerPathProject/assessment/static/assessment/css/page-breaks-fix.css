@@ -1,0 +1,229 @@
+/* ============================================
+   CLEAN PAGE BREAK SOLUTION FOR MULTI-PAGE REPORTS
+   ============================================ */
+
+/* 1. CONTAINER SETUP */
+.report-container {
+    width: 210mm; /* A4 width */
+    margin: 0 auto;
+    background: #f5f5dc;
+    font-family: 'Inter', sans-serif;
+}
+
+/* 2. SECTION (PAGE) SETUP - CRITICAL */
+.report-container section {
+    /* Fixed dimensions - MUST match A4 exactly */
+    width: 210mm;
+    height: 297mm;
+    min-height: 297mm;
+    max-height: 297mm;
+    
+    /* Box model */
+    box-sizing: border-box;
+    padding: 15mm 20mm;
+    
+    /* Page break controls - THE KEY TO FIXING OVERFLOW */
+    page-break-after: always;      /* Force new page after each section */
+    page-break-before: always;     /* Force new page before each section */
+    page-break-inside: avoid;      /* Prevent content from splitting */
+    break-after: page;             /* Modern CSS alternative */
+    break-before: page;            /* Modern CSS alternative */
+    break-inside: avoid;           /* Modern CSS alternative */
+    
+    /* Overflow control */
+    overflow: hidden;              /* Hide any overflow content */
+    
+    /* Display */
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    
+    /* Background */
+    background: #f5f5dc;
+}
+
+/* 3. FIRST PAGE - NO PAGE BREAK BEFORE */
+.report-container section:first-child {
+    page-break-before: auto;       /* Allow first page to start naturally */
+    break-before: auto;
+}
+
+/* 4. LAST PAGE - NO PAGE BREAK AFTER */
+.report-container section:last-child {
+    page-break-after: auto;        /* No extra page after last section */
+    break-after: auto;
+}
+
+/* 5. CONTENT INSIDE SECTIONS - PREVENT ORPHANS */
+.report-container section > * {
+    page-break-inside: avoid;      /* Keep content blocks together */
+    break-inside: avoid;
+}
+
+/* 6. SPECIFIC PAGE CLASSES */
+.cover-page {
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+    page-break-after: always !important;
+}
+
+.assessment-info-page,
+.interest-report-page,
+.profile-strategy-page,
+.curiosities-page,
+.personality-description-page,
+.working-orientation-page,
+.similarity-insight-page,
+.trait-breakdown-page,
+.cognitive-functions-page,
+.communication-style-page,
+.relationships-work-page,
+.career-matches-page,
+.career-detail-page,
+.career-detail-locked-page,
+.growth-plan-page,
+.final-reflection-page {
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+    page-break-before: always !important;
+    page-break-after: always !important;
+}
+
+/* 7. PRINT-SPECIFIC STYLES */
+@media print {
+    /* Remove margins from body */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Ensure container takes full width */
+    .report-container {
+        width: 210mm;
+        margin: 0;
+    }
+    
+    /* Force page breaks */
+    .report-container section {
+        page-break-after: always;
+        page-break-before: always;
+        page-break-inside: avoid;
+        margin: 0;
+        width: 210mm;
+        height: 297mm;
+    }
+    
+    /* First and last page exceptions */
+    .report-container section:first-child {
+        page-break-before: avoid;
+    }
+    
+    .report-container section:last-child {
+        page-break-after: avoid;
+    }
+    
+    /* Hide UI elements */
+    .navbar,
+    .footer,
+    button,
+    #manual-download-btn {
+        display: none !important;
+    }
+}
+
+/* 8. SCREEN DISPLAY - SIMULATE PAGES */
+@media screen {
+    /* Add visual separation between pages */
+    .report-container section {
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Remove margin from last section */
+    .report-container section:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* 9. PDF GENERATION SPECIFIC (html2canvas + jsPDF) */
+.report-container section {
+    /* Ensure exact pixel dimensions for capture */
+    /* 794px = 210mm at 96 DPI */
+    /* 1123px = 297mm at 96 DPI */
+    position: relative;
+}
+
+/* 10. CONTENT SIZING - PREVENT OVERFLOW */
+.page-content {
+    max-height: calc(297mm - 30mm); /* Total height minus padding */
+    overflow: hidden;
+}
+
+/* 11. FLEXIBLE CONTENT AREAS */
+.page-content > * {
+    margin-bottom: 15px;
+}
+
+.page-content > *:last-child {
+    margin-bottom: 0;
+}
+
+/* 12. TABLES AND GRIDS - PREVENT SPLITTING */
+table,
+.grid,
+.card-grid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* 13. HEADINGS - KEEP WITH CONTENT */
+h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* 14. IMAGES - PREVENT SPLITTING */
+img {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    max-width: 100%;
+    height: auto;
+}
+
+/* 15. LISTS - KEEP TOGETHER */
+ul, ol {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* ============================================
+   TROUBLESHOOTING TIPS
+   ============================================
+   
+   If pages still overflow:
+   
+   1. Check content height:
+      - Total content must fit in 297mm - padding
+      - Reduce font sizes, margins, or padding
+      - Use smaller images
+   
+   2. Check nested elements:
+      - Remove any position: absolute that breaks flow
+      - Check for large margin-bottom values
+      - Verify no min-height conflicts
+   
+   3. Test in browser:
+      - Open DevTools
+      - Set viewport to 794x1123px
+      - Check if content fits
+   
+   4. For PDF generation:
+      - Capture each section separately
+      - Set section height to 297mm before capture
+      - Reset after capture
+   
+   ============================================ */

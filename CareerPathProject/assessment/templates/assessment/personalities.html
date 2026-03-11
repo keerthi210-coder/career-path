@@ -1,0 +1,476 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Types - PersonalityPro</title>
+    <link rel="stylesheet" href="{% static 'assessment/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assessment/css/personalities.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                </svg>
+                <span>PersonalityPro</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/personalities/" class="active">Personalities Types</a></li>
+                <li><a href="/assessment/">Assessment</a></li>
+                <li><a href="/resources/">Resources</a></li>
+                <li><a href="/premium/">Premium</a></li>
+            </ul>
+            <button class="btn-primary" onclick="window.location.href='/assessment/'">Take Test</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="personality-hero">
+        <div class="hero-bg-elements">
+            <!-- Top Left Large Circle (partial) -->
+            <div class="large-circle top-left"></div>
+            
+            <!-- Top Right Large Circle (partial) -->
+            <div class="large-circle top-right"></div>
+            
+            <!-- Small Circles -->
+            <div class="small-circle circle-1"></div>
+            <div class="small-circle circle-3"></div>
+            <div class="small-circle circle-4"></div>
+            <div class="small-circle circle-5"></div>
+            <div class="small-circle circle-7"></div>
+            <div class="small-circle circle-9"></div>
+            
+            <!-- Ring Circles (outline only) -->
+            <div class="ring-circle ring-1"></div>
+            <div class="ring-circle ring-2"></div>
+            <div class="ring-circle ring-3"></div>
+            <div class="ring-circle ring-4"></div>
+            
+            <!-- Triangles (filled) -->
+            <div class="filled-triangle tri-1"></div>
+            <div class="filled-triangle tri-2"></div>
+            <div class="filled-triangle tri-3"></div>
+            <div class="filled-triangle tri-4"></div>
+            
+            <!-- Diagonal Lines -->
+            <div class="diagonal-lines lines-1"></div>
+            <div class="diagonal-lines lines-2"></div>
+            
+            <!-- Dot Grids -->
+            <div class="dot-grid grid-1">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="dot-grid grid-2">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="dot-grid grid-3">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="dot-grid grid-4">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+            
+            <!-- Plus Signs -->
+            <div class="plus-grid plus-1">
+                <span>+</span><span>+</span><span>+</span><span>+</span>
+                <span>+</span><span>+</span><span>+</span><span>+</span>
+                <span>+</span><span>+</span><span>+</span><span>+</span>
+            </div>
+            <div class="plus-grid plus-2">
+                <span>+</span><span>+</span>
+                <span>+</span><span>+</span>
+            </div>
+            <div class="plus-grid plus-3">
+                <span>+</span><span>+</span><span>+</span>
+                <span>+</span><span>+</span><span>+</span>
+            </div>
+            
+            <!-- Wave Patterns -->
+            <svg class="wave-bottom" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                <path class="wave-path-1" fill="rgba(255, 216, 77, 0.05)" d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,128C672,107,768,85,864,90.7C960,96,1056,128,1152,138.7C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                <path class="wave-path-2" fill="rgba(255, 224, 138, 0.04)" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,154.7C672,149,768,171,864,181.3C960,192,1056,192,1152,181.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                <path class="wave-path-3" fill="rgba(255, 246, 204, 0.03)" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,213.3C960,203,1056,181,1152,165.3C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+        
+        <div class="container">
+            <div class="hero-content-wrapper">
+                <div class="hero-text">
+                    <h1>Personality types</h1>
+                    <p class="hero-quote">"The privilege of a lifetime is to become who you truly are." — Carl Jung</p>
+                    <p>Explore your personality by taking our test</p>
+                    <button class="btn-take-test" onclick="window.location.href='/assessment/'">Take the test</button>
+                </div>
+                <div class="hero-image">
+                    <img src="{% static 'assessment/images/person_type.png' %}" alt="Personality Types Illustration" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="personality-main">
+        <div class="container">
+
+            <!-- Analysts Section -->
+            <section class="personality-category">
+                <div class="category-header">
+                    <div class="category-badge">
+                        <svg viewBox="0 0 512 512">
+                            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
+                        </svg>
+                        ANALYSTS
+                    </div>
+                    <h2>STRATEGIC THINKERS & VISIONARIES</h2>
+                    <p>Rational and impartial, Analysts enjoy intellectual pursuits and excel at strategic thinking.</p>
+                </div>
+                
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <div class="card-type">INTJ / INTJ-T</div>
+                        <h3>ARCHITECT</h3>
+                        <div class="card-subtitle">Visionary Strategist</div>
+                        <p>Architects are visionary strategists who approach every situation with depth, foresight, and precision. They naturally craft long-term plans and excel at turning complex ideas into clear, structured solutions.</p>
+                        <div class="trait-tags">
+                            <span class="trait">
+                                <svg viewBox="0 0 512 512">
+                                    <path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8V444.8C394 378 431.1 230.1 432 141.4L256 66.8l0 0z"/>
+                                </svg>
+                                Strategic
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 576 512">
+                                    <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 13.9 0 21.8C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-13.9 0-21.8c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-92.7-69.4z"/>
+                                </svg>
+                                Visionary
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 384 512">
+                                    <path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM112 256H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+                                </svg>
+                                Structured
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">INTP / INTP-T</div>
+                        <h3>LOGICIAN</h3>
+                        <div class="card-subtitle">Analytical Explorer</div>
+                        <p>Logicians are analytical explorers who thrive on understanding how things work. Their inventive minds constantly seek patterns, theories, and new possibilities, making them pioneers of original thought.</p>
+                        <div class="trait-tags">
+                            <span class="trait">
+                                <svg viewBox="0 0 512 512">
+                                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+                                </svg>
+                                Analytical
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 384 512">
+                                    <path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32v16c0 44.2-35.8 80-80 80z"/>
+                                </svg>
+                                Inventive
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 448 512">
+                                    <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+                                </svg>
+                                Theoretical
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ENTJ / ENTJ-T</div>
+                        <h3>COMMANDER</h3>
+                        <div class="card-subtitle">Dynamic Trailblazer</div>
+                        <p>Commanders are dynamic trailblazers with a natural talent for leadership. They take charge confidently, create well-defined goals, and inspire teams to achieve ambitious results with efficiency and clarity.</p>
+                        <div class="trait-tags">
+                            <span class="trait">
+                                <svg viewBox="0 0 640 512">
+                                    <path d="M528 448H112c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16H528c8.8 0 16-7.2 16-16V464c0-8.8-7.2-16-16-16zm64-320c-26.5 0-48 21.5-48 48 0 7.1 1.6 13.7 4.4 19.8L476 239.2c-15.4 9.2-35.3 4-44.2-11.6L350.3 85C361 76.2 368 63 368 48c0-26.5-21.5-48-48-48s-48 21.5-48 48c0 15 7 28.2 17.7 37l-81.5 142.6c-8.9 15.6-28.9 20.8-44.2 11.6l-72.4-43.4c2.7-6.1 4.4-12.7 4.4-19.8 0-26.5-21.5-48-48-48S0 149.5 0 176s21.5 48 48 48c2.6 0 5.2-.4 7.7-.8L128 416h384l72.3-192.8c2.5 .4 5.1 .8 7.7 .8 26.5 0 48-21.5 48-48s-21.5-48-48-48z"/>
+                                </svg>
+                                Leader
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 448 512">
+                                    <path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/>
+                                </svg>
+                                Dynamic
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 512 512">
+                                    <path d="M78.6 5C69.1-2.4 55.6-1.5 47 7L7 47c-8.5 8.5-9.4 22-2.1 31.6l80 104c4.5 5.9 11.6 9.4 19 9.4h54.1l109 109c-14.7 29-10 65.4 14.3 89.6l112 112c12.5 12.5 32.8 12.5 45.3 0l64-64c12.5-12.5 12.5-32.8 0-45.3l-112-112c-24.2-24.2-60.6-29-89.6-14.3l-109-109V104c0-7.5-3.5-14.5-9.4-19L78.6 5zM19.9 396.1C7.4 408.6 7.4 428.9 19.9 441.4l50.7 50.7c12.5 12.5 32.8 12.5 45.3 0l67.9-67.9c37.1-37.1 37.1-97.3 0-134.4l-22.6-22.6c-87.6-87.6-228.7-87.6-316.3 0c-12.5 12.5-12.5 32.8 0 45.3l22.6 22.6c6.2 6.2 16.4 6.2 22.6 0c75-75 196.5-75 271.5 0l22.6 22.6c6.2 6.2 6.2 16.4 0 22.6L19.9 396.1z"/>
+                                </svg>
+                                Efficient
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ENTP / ENTP-T</div>
+                        <h3>DEBATER</h3>
+                        <div class="card-subtitle">Energetic Innovator</div>
+                        <p>Debaters are energetic innovators who enjoy questioning norms and exploring different angles of an idea. Their sharp intellect and fearless curiosity make them exceptional problem-solvers in fast-moving environments.</p>
+                        <div class="trait-tags">
+                            <span class="trait">
+                                <svg viewBox="0 0 640 512">
+                                    <path d="M88 96C88 60.7 116.7 32 152 32h336c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H152c-35.3 0-64-28.7-64-64V96zM480 256c0-66.3-53.7-120-120-120s-120 53.7-120 120s53.7 120 120 120s120-53.7 120-120zM360 176a80 80 0 1 0 0 160 80 80 0 1 0 0-160zM288 64c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64zM32 256c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zm0-128c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zm0 256c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32z"/>
+                                </svg>
+                                Debater
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 512 512">
+                                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+                                </svg>
+                                Curious
+                            </span>
+                            <span class="trait">
+                                <svg viewBox="0 0 384 512">
+                                    <path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32v16c0 44.2-35.8 80-80 80z"/>
+                                </svg>
+                                Innovative
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diplomats Section -->
+            <section class="personality-category">
+                <div class="category-header">
+                    <div class="category-badge">🌟 DIPLOMATS</div>
+                    <h2>EMPATHETIC IDEALISTS & MOTIVATORS</h2>
+                    <p>Empathetic, diplomatic, and passionate idealists who inspire and guide others toward meaningful change.</p>
+                </div>
+                
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <div class="card-type">INFJ / INFJ-T</div>
+                        <h3>ADVOCATE</h3>
+                        <div class="card-subtitle">Thoughtful Visionary</div>
+                        <p>Advocates are thoughtful visionaries with a deep sense of purpose. They combine quiet strength with heartfelt conviction, often guiding others with compassion, insight, and unwavering idealism.</p>
+                        <div class="trait-tags">
+                            <span class="trait visionary">👁️ Visionary</span>
+                            <span class="trait compassionate">❤️ Compassionate</span>
+                            <span class="trait idealistic">⭐ Idealistic</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">INFP / INFP-T</div>
+                        <h3>MEDIATOR</h3>
+                        <div class="card-subtitle">Gentle Dreamer</div>
+                        <p>Mediators are gentle dreamers driven by empathy and creativity. Their warm, genuine nature inspires them to support meaningful causes and uplift the people around them with kindness.</p>
+                        <div class="trait-tags">
+                            <span class="trait gentle">🕊️ Gentle</span>
+                            <span class="trait creative">🎨 Creative</span>
+                            <span class="trait empathetic">💝 Empathetic</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ENFJ / ENFJ-T</div>
+                        <h3>PROTAGONIST</h3>
+                        <div class="card-subtitle">Natural Motivator</div>
+                        <p>Protagonists are natural motivators who lead with passion and sincerity. Their ability to connect deeply with others makes them influential guides who spark confidence and positive change wherever they go.</p>
+                        <div class="trait-tags">
+                            <span class="trait motivator">🚀 Motivator</span>
+                            <span class="trait passionate">🔥 Passionate</span>
+                            <span class="trait influential">📢 Influential</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ENFP / ENFP-T</div>
+                        <h3>CAMPAIGNER</h3>
+                        <div class="card-subtitle">Lively Spirit</div>
+                        <p>Campaigners are lively and imaginative spirits who radiate optimism. Their boundless creativity and social warmth help them brighten any space and find excitement in every new possibility.</p>
+                        <div class="trait-tags">
+                            <span class="trait optimistic">☀️ Optimistic</span>
+                            <span class="trait imaginative">🌈 Imaginative</span>
+                            <span class="trait social">👥 Social</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sentinels Section -->
+            <section class="personality-category">
+                <div class="category-header">
+                    <div class="category-badge">⚡ SENTINELS</div>
+                    <h2>PRACTICAL GUARDIANS & ORGANIZERS</h2>
+                    <p>Practical, orderly, and reliable guardians who value structure and bring stability to their communities.</p>
+                </div>
+                
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <div class="card-type">ISTJ / ISTJ-T</div>
+                        <h3>LOGISTICIAN</h3>
+                        <div class="card-subtitle">Grounded Individual</div>
+                        <p>Logisticians are grounded, detail-oriented individuals who value clarity and structure. Their strong sense of responsibility and steady commitment make them dependable in any situation.</p>
+                        <div class="trait-tags">
+                            <span class="trait detail-oriented">🔍 Detail-oriented</span>
+                            <span class="trait grounded">🏔️ Grounded</span>
+                            <span class="trait dependable">🛡️ Dependable</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ISFJ / ISFJ-T</div>
+                        <h3>DEFENDER</h3>
+                        <div class="card-subtitle">Compassionate Caretaker</div>
+                        <p>Defenders are compassionate caretakers who quietly support and safeguard the people they value. Their loyalty, patience, and nurturing nature create a comforting presence for everyone around them.</p>
+                        <div class="trait-tags">
+                            <span class="trait caretaker">🤗 Caretaker</span>
+                            <span class="trait loyal">💎 Loyal</span>
+                            <span class="trait protective">🛡️ Protective</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ESTJ / ESTJ-T</div>
+                        <h3>EXECUTIVE</h3>
+                        <div class="card-subtitle">Organized Leader</div>
+                        <p>Executives are organized, confident leaders who excel at bringing plans to life. Their strong decision-making and structured approach help teams stay focused, efficient, and productive.</p>
+                        <div class="trait-tags">
+                            <span class="trait organized">📋 Organized</span>
+                            <span class="trait decisive">⚡ Decisive</span>
+                            <span class="trait productive">⚙️ Productive</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ESFJ / ESFJ-T</div>
+                        <h3>CONSUL</h3>
+                        <div class="card-subtitle">Warm-hearted Individual</div>
+                        <p>Consultants are warm-hearted and socially attuned individuals who enjoy creating harmony. Their supportive nature and enthusiasm for helping others make them valued members of every community.</p>
+                        <div class="trait-tags">
+                            <span class="trait social">👥 Social</span>
+                            <span class="trait supportive">🤝 Supportive</span>
+                            <span class="trait harmonious">🎵 Harmonious</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Explorers Section -->
+            <section class="personality-category">
+                <div class="category-header">
+                    <div class="category-badge">🚀 EXPLORERS</div>
+                    <h2>SPONTANEOUS INNOVATORS & PERFORMERS</h2>
+                    <p>Spontaneous, energetic, and enthusiastic individuals who thrive in dynamic environments and embrace new experiences.</p>
+                </div>
+                
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <div class="card-type">ISTP / ISTP-T</div>
+                        <h3>VIRTUOSO</h3>
+                        <div class="card-subtitle">Practical Innovator</div>
+                        <p>Virtuosos are practical innovators who love working with their hands and discovering how things function. They are calm, adaptable, and skilled at finding quick, effective solutions in unexpected situations.</p>
+                        <div class="trait-tags">
+                            <span class="trait practical">🔧 Practical</span>
+                            <span class="trait adaptable">🌊 Adaptable</span>
+                            <span class="trait quick">⚡ Quick</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ISFP / ISFP-T</div>
+                        <h3>ADVENTURER</h3>
+                        <div class="card-subtitle">Gentle Creative</div>
+                        <p>Adventurers are gentle creatives with a natural flair for expression. They move through life with curiosity and openness, constantly seeking new experiences and ways to appreciate beauty in the world around them.</p>
+                        <div class="trait-tags">
+                            <span class="trait creative">🎨 Creative</span>
+                            <span class="trait curious">🔍 Curious</span>
+                            <span class="trait aesthetic">✨ Aesthetic</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ESTP / ESTP-T</div>
+                        <h3>ENTREPRENEUR</h3>
+                        <div class="card-subtitle">Bold Individual</div>
+                        <p>Entrepreneurs are bold, fast-thinking individuals who thrive in action-oriented environments. Their sharp instincts and lively energy make them masters at seizing opportunities and keeping life exciting.</p>
+                        <div class="trait-tags">
+                            <span class="trait bold">💪 Bold</span>
+                            <span class="trait energetic">⚡ Energetic</span>
+                            <span class="trait opportunistic">🎯 Opportunistic</span>
+                        </div>
+                    </div>
+
+                    <div class="personality-card">
+                        <div class="card-type">ESFP / ESFP-T</div>
+                        <h3>ENTERTAINER</h3>
+                        <div class="card-subtitle">Vibrant Personality</div>
+                        <p>Entertainers are vibrant, joyful personalities who bring light and fun wherever they go. Their spontaneity and genuine warmth make every moment lively and memorable for the people around them.</p>
+                        <div class="trait-tags">
+                            <span class="trait joyful">😊 Joyful</span>
+                            <span class="trait vibrant">🌟 Vibrant</span>
+                            <span class="trait memorable">💫 Memorable</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-section">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    </svg>
+                    <span>PersonalityPro</span>
+                </div>
+                <p>Empowering individuals through self-discovery</p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="/assessment/">Take Test</a></li>
+                    <li><a href="/personalities/">Personality Types</a></li>
+                    <li><a href="/premium/">Premium</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="/resources/">Articles</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PersonalityPro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
