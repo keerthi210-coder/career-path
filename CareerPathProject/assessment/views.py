@@ -22,6 +22,12 @@ def get_questions(request):
     """
     questions = Question.objects.all().prefetch_related('choices')
     serializer = QuestionSerializer(questions, many=True)
+    
+    # Log for debugging
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f'Questions endpoint called. Found {questions.count()} questions')
+    
     return Response(serializer.data)
 
 

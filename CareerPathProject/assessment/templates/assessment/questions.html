@@ -161,12 +161,22 @@
         // Load questions from Django API
         async function loadQuestionsFromAPI() {
             try {
+                console.log('Loading questions from:', `${API_BASE_URL}/questions/`);
                 const response = await fetch(`${API_BASE_URL}/questions/`);
+                
+                console.log('Response status:', response.status);
+                
                 if (!response.ok) {
-                    throw new Error('Failed to fetch questions');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 questions = await response.json();
+                console.log('Questions loaded:', questions.length, 'questions');
+                
+                if (questions.length === 0) {
+                    alert('No questions found in database. Please contact support.');
+                    return;
+                }
                 
                 // Update question counter
                 document.getElementById('current-q').textContent = '1';
@@ -178,7 +188,7 @@
                 loadQuestion(currentQuestion);
             } catch (error) {
                 console.error('Error loading questions:', error);
-                alert('Failed to load questions. Please make sure the Django server is running on port 8000.');
+                alert(`Failed to load questions: ${error.message}`);
             }
         }
 
