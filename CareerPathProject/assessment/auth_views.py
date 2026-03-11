@@ -47,12 +47,22 @@ def google_auth(request):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
+        logger.info(f'Attempting to verify token with CLIENT_ID: {CLIENT_ID[:20]}...')
+        
         # Verify the token with Google
-        idinfo = id_token.verify_oauth2_token(
-            token, 
-            google_requests.Request(), 
-            CLIENT_ID
-        )
+        try:
+            idinfo = id_token.verify_oauth2_token(
+                token, 
+                google_requests.Request(), 
+                CLIENT_ID
+            )
+            logger.info('Token verified successfully')
+        except Exception as verify_error:
+            logger.error(f'Token verification failed: {str(verify_error)}')
+            return Response(
+                {'error': f'Token verification failed: {str(verify_error)}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
         # Verify token issuer
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
@@ -75,6 +85,8 @@ def google_auth(request):
                 {'error': 'Email not provided by Google'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+        logger.info(f'Token info - Email: {email}, Verified: {email_verified}')
         
         if not email_verified:
             logger.warning(f'Unverified email attempted login: {email}')
@@ -104,14 +116,23 @@ def google_auth(request):
             )
             
             # Create user profile
-            profile = UserProfile.objects.create(
-                user=user,
-                google_id=google_id if hasattr(UserProfile, 'google_id') else None
-            )
+            try:
+                profile = UserProfile.objects.create(user=user)
+            except Exception as profile_error:
+                logger.error(f'Failed to create user profile: {str(profile_error)}')
+                user.delete()
+                return Response(
+                    {'error': f'Failed to create user profile: {str(profile_error)}'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
             
             logger.info(f'New user created via Google OAuth: {email}')
         else:
-            profile = user.profile
+            try:
+                profile = user.profile
+            except Exception as profile_error:
+                logger.warning(f'User profile missing, creating: {str(profile_error)}')
+                profile = UserProfile.objects.create(user=user)
             logger.info(f'Existing user logged in via Google OAuth: {email}')
         
         # Create or get token
