@@ -143,6 +143,8 @@
             googleBtn.disabled = true;
             googleBtn.textContent = 'Signing in...';
             
+            console.log('Google response received:', response ? 'Token present' : 'No token');
+            
             try {
                 // Send credential to backend for verification
                 const apiResponse = await fetch(`${API_BASE_URL}/auth/google/`, {
@@ -153,7 +155,9 @@
                     body: JSON.stringify({ token: response.credential })
                 });
                 
+                console.log('API Response Status:', apiResponse.status);
                 const data = await apiResponse.json();
+                console.log('API Response Data:', data);
                 
                 if (apiResponse.ok && data.success) {
                     // Store authentication data
@@ -171,7 +175,9 @@
                     }, 1000);
                 } else {
                     // Show error from backend
-                    showError(data.error || 'Authentication failed. Please try again.');
+                    const errorMsg = data.error || 'Authentication failed. Please try again.';
+                    console.error('Backend error:', errorMsg);
+                    showError(errorMsg);
                     resetGoogleButton();
                 }
             } catch (error) {
