@@ -153,6 +153,11 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.*\.google\.com$",
 ]
 
+# CSRF Trusted Origins for Render deployment
+CSRF_TRUSTED_ORIGINS = [
+    "https://career-path-qvcy.onrender.com"
+]
+
 # Security settings for production
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
