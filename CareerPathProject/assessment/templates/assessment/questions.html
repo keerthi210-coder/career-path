@@ -91,22 +91,30 @@
     </section>
 
     <script>
+        console.log('Questions page script loaded');
+        
         // Check authentication before loading questions
         function checkAuthentication() {
             const authToken = localStorage.getItem('authToken');
             const user = localStorage.getItem('user');
             
+            console.log('Auth check - Token:', authToken ? 'Present' : 'Missing');
+            console.log('Auth check - User:', user ? 'Present' : 'Missing');
+            
             if (!authToken || !user) {
                 // User not logged in, redirect to login
+                console.log('Not authenticated, redirecting to login');
                 alert('Please login to take the assessment');
                 window.location.href = '/login/?redirect=/questions/';
                 return false;
             }
+            console.log('Authentication check passed');
             return true;
         }
         
         // Django API Integration
         const API_BASE_URL = window.location.origin + '/api';
+        console.log('API_BASE_URL:', API_BASE_URL);
         let questions = [];
         let currentQuestion = 0;
         let answers = [];
@@ -151,10 +159,13 @@
 
         // Initialize
         async function init() {
+            console.log('Init function called');
             // Check authentication first
             if (!checkAuthentication()) {
+                console.log('Authentication failed, stopping init');
                 return;
             }
+            console.log('Starting to load questions');
             await loadQuestionsFromAPI();
         }
 
@@ -424,7 +435,20 @@
         }
 
         // Initialize on load
-        init();
+        console.log('Adding load event listener');
+        window.addEventListener('load', () => {
+            console.log('Window load event fired');
+            init();
+        });
+        
+        // Also try calling init immediately in case page is already loaded
+        console.log('Calling init immediately');
+        if (document.readyState === 'loading') {
+            console.log('Document still loading');
+        } else {
+            console.log('Document already loaded, calling init');
+            init();
+        }
     </script>
 </body>
 </html>
