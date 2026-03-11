@@ -37,7 +37,7 @@ pip install -r requirements.txt && python CareerPathProject/manage.py collectsta
   ```
 - **Start Command**: 
   ```bash
-  gunicorn CareerPathProject.wsgi:application --bind 0.0.0.0:$PORT
+  cd CareerPathProject && gunicorn CareerPathProject.wsgi:application --bind 0.0.0.0:$PORT --workers 2
   ```
 
 ### 3. Set Environment Variables
@@ -250,7 +250,7 @@ Whitenoise is already configured to serve static files. Make sure:
 
 ---
 
-## Deployment Commands Reference
+**Deployment Commands Reference**
 
 **Build Command:**
 ```bash
@@ -259,7 +259,7 @@ pip install -r requirements.txt && python CareerPathProject/manage.py collectsta
 
 **Start Command:**
 ```bash
-gunicorn CareerPathProject.wsgi:application --bind 0.0.0.0:$PORT
+cd CareerPathProject && gunicorn CareerPathProject.wsgi:application --bind 0.0.0.0:$PORT --workers 2
 ```
 
 ---

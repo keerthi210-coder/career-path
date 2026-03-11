@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt && python CareerPathProject/manage.py collectstatic --noinput && python CareerPathProject/manage.py migrate
-    startCommand: gunicorn CareerPathProject.wsgi:application --bind 0.0.0.0:$PORT --workers 2
+    startCommand: cd CareerPathProject && gunicorn CareerPathProject.wsgi:application --bind 0.0.0.0:$PORT --workers 2
     envVars:
       - key: DEBUG
         value: "False"
