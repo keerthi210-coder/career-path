@@ -1,6 +1,6 @@
 // Report Page JavaScript - With PDF Download
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = window.location.origin + '/api';
 
 // Get personality data from URL or sessionStorage
 const urlParams = new URLSearchParams(window.location.search);
