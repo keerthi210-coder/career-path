@@ -69,6 +69,18 @@
                 Continue with Google
             </button>
             
+            <div class="divider">Or Test Without Google</div>
+            
+            <button type="button" class="btn-demo" id="demo-login-btn" style="background: #6c757d; margin-top: 10px;">
+                Demo Login (Test Mode)
+            </button>
+            
+            <div class="divider">Or Test Without Google</div>
+            
+            <button type="button" class="btn-demo" id="demo-login-btn" style="background: #6c757d; margin-top: 10px;">
+                Demo Login (Test Mode)
+            </button>
+            
             <div class="divider">Secure Authentication</div>
             
             <div class="terms">
@@ -98,7 +110,8 @@
                         callback: handleGoogleSignIn,
                         auto_select: false,
                         cancel_on_tap_outside: false,
-                        use_fedcm_for_prompt: false  // Disable FedCM
+                        use_fedcm_for_prompt: false,  // Disable FedCM
+                        use_fedcm_for_signin: false   // Also disable for signin
                     });
                     googleInitialized = true;
                     console.log('Google Sign-In initialized successfully');
@@ -259,6 +272,47 @@
         window.addEventListener('load', () => {
             // Wait for Google Sign-In library to load
             setTimeout(initializeGoogleSignIn, 500);
+        });
+        
+        // Demo Login Button
+        document.getElementById('demo-login-btn').addEventListener('click', async () => {
+            const demoBtn = document.getElementById('demo-login-btn');
+            demoBtn.disabled = true;
+            demoBtn.textContent = 'Logging in...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/demo-login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: 'demo@personalitypro.com' })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('userName', data.user.name || data.user.email);
+                    
+                    showSuccess('✓ Demo login successful! Redirecting...');
+                    
+                    setTimeout(() => {
+                        const redirect = new URLSearchParams(window.location.search).get('redirect');
+                        window.location.href = redirect || '/assessment/';
+                    }, 1000);
+                } else {
+                    showError(data.error || 'Demo login failed');
+                    demoBtn.disabled = false;
+                    demoBtn.textContent = 'Demo Login (Test Mode)';
+                }
+            } catch (error) {
+                console.error('Demo login error:', error);
+                showError('Demo login failed. Please try again.');
+                demoBtn.disabled = false;
+                demoBtn.textContent = 'Demo Login (Test Mode)';
+            }
         });
         
         // Note: We don't auto-redirect if already logged in
