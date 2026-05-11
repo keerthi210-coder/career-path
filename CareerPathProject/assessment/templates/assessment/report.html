@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,24 +15,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="{% static 'assessment/js/personality-data.js' %}"></script>
 </head>
+
 <body>
     <!-- Fixed Download Button -->
     <button id="manual-download-btn" onclick="downloadReportAsPDF()" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 15px 30px; background: #FFD84D; color: #111; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">
         �️ Download PDF
     </button>
-    
+
     <nav class="navbar">
         <div class="container nav-container">
             <div class="logo">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
-                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D" />
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                 </svg>
                 <span>PersonalityPro</span>
             </div>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
-                <li><a href="/personalities/">Personalities Types</a></li>
                 <li><a href="/assessment/">Assessment</a></li>
                 <li><a href="/resources/">Resources</a></li>
                 <li><a href="/premium/">Premium</a></li>
@@ -42,13 +43,13 @@
 
     <!-- Report Container -->
     <div class="report-container" id="report-container">
-        
+
         <!-- Cover Page -->
         <section class="cover-page">
             <div class="cover-content">
                 <h1 class="cover-title">PERSONALITY INSIGHT REPORT</h1>
                 <p class="cover-subtitle">A personalized guide to understanding how you think, decide, and grow</p>
-                
+
                 <div class="cover-illustration">
                     <div class="illustration-card">
                         <div class="illustration-text">
@@ -59,12 +60,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="personality-badge">
                     <h2 class="personality-title" id="cover-personality-name">Campaigner</h2>
                     <div class="personality-code" id="cover-personality-type">ENFP - Diplomats</div>
                 </div>
-                
+
                 <div class="cover-features">
                     <div class="feature-item">
                         <span class="feature-icon">🧠</span>
@@ -79,17 +80,17 @@
                         <span class="feature-text">Understand how you relate at work & in life</span>
                     </div>
                 </div>
-                
+
                 <div class="prepared-for">
                     Prepared exclusively for <strong id="user-name">Anitha</strong>
                 </div>
-                
+
                 <div class="journey-text">
                     ↓ Begin your self-discovery journey
                 </div>
             </div>
         </section>
-        
+
         <!-- Second Page - How This Career Assessment Works -->
         <section class="assessment-info-page">
             <div class="assessment-info-content">
@@ -98,8 +99,8 @@
                     <div class="assessment-logo">
                         <div class="logo-box">
                             <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                                <circle cx="20" cy="20" r="18" fill="white"/>
-                                <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                                <circle cx="20" cy="20" r="18" fill="white" />
+                                <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                             </svg>
                             <div class="logo-text">
                                 <span class="logo-main">Personality</span>
@@ -115,14 +116,14 @@
                         ENFP
                     </div>
                 </div>
-                
+
                 <!-- Main Content -->
                 <div class="assessment-works-section">
                     <h1 class="works-title">How This Career Assessment Works</h1>
                     <p class="works-description">
                         This assessment evaluates your natural preferences across interest, orientation, and personality to identify career environments where you are most likely to succeed.
                     </p>
-                    
+
                     <div class="assessment-grid">
                         <!-- Orientation Card -->
                         <div class="assessment-card">
@@ -132,7 +133,7 @@
                                 Your orientation reflects how you naturally approach tasks, responsibilities, and interactions with people in real-world situations.
                             </p>
                         </div>
-                        
+
                         <!-- Interest Card -->
                         <div class="assessment-card">
                             <div class="card-icon">💜</div>
@@ -141,7 +142,7 @@
                                 Interest analysis identifies the fields and activities that naturally attract you and keep you engaged over long periods of time.
                             </p>
                         </div>
-                        
+
                         <!-- Personality Card -->
                         <div class="assessment-card">
                             <div class="card-icon">💗</div>
@@ -150,7 +151,7 @@
                                 Personality assessment explains how you think, make decisions, process information, and respond to challenges.
                             </p>
                         </div>
-                        
+
                         <!-- Career Fit Card -->
                         <div class="assessment-card">
                             <div class="card-icon">💼</div>
@@ -163,14 +164,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 3: Your Interest Report -->
         <section class="interest-report-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -179,18 +180,18 @@
                 </div>
                 <div class="personality-badge-header" id="page3-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Your Interest Report</h1>
                     <p class="page-description">Understanding what naturally captivates your attention and fuels your motivation.</p>
                     <div class="title-icon">📷🎵📖✏️</div>
                 </div>
-                
+
                 <div class="interest-bars" id="interest-bars">
                     <!-- Dynamically populated -->
                 </div>
-                
+
                 <div class="insights-box">
                     <h3>💡 How to use these insights</h3>
                     <p><strong>High Scores (70%+):</strong> These are your "Flow States". You should actively seek careers that involve these activities daily.</p>
@@ -199,14 +200,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 4: Consolidated Profile Strategy -->
         <section class="profile-strategy-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -215,14 +216,14 @@
                 </div>
                 <div class="personality-badge-header" id="page4-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Consolidated Profile Strategy</h1>
                     <p class="page-description">Synthesizing your orientation, interests, and personality into a clear operational strategy.</p>
                     <div class="title-icon">💡</div>
                 </div>
-                
+
                 <div class="strategy-cards">
                     <div class="strategy-card">
                         <h3>Dominant Orientation</h3>
@@ -237,12 +238,12 @@
                         <div class="trait-icon">💎</div>
                     </div>
                 </div>
-                
+
                 <div class="core-advantage-box">
                     <h3>🚀 Your Core Advantage</h3>
                     <p id="core-advantage-text">By combining your personality analytical capabilities with a Creative orientation, you possess a unique ability to solve complex problems while staying focused on your interests.</p>
                 </div>
-                
+
                 <div class="strategy-grid">
                     <div class="strategy-detail-card">
                         <h3>💼 Operational Style</h3>
@@ -261,7 +262,7 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <div class="self-reflection-box">
                     <h3>🔍 Self-Reflection</h3>
                     <p>Where do I see myself applying these strengths most effectively?</p>
@@ -269,14 +270,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 5: Curiosities & Facts -->
         <section class="curiosities-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -285,32 +286,32 @@
                 </div>
                 <div class="personality-badge-header" id="page5-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Curiosities & Facts</h1>
                     <p class="page-description" id="curiosities-subtitle">Interesting insights about the ENFP personality type.</p>
                     <div class="title-icon">💡</div>
                 </div>
-                
+
                 <div class="curiosity-cards" id="curiosity-cards">
                     <!-- Dynamically populated -->
                 </div>
-                
+
                 <div class="did-you-know-box">
                     <h3>Did you know?</h3>
                     <p id="did-you-know-text">Your personality type is often found in leadership roles during times of crisis because of your ability to remain calm and strategic.</p>
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 6: Personality Description & Metaphor -->
         <section class="personality-description-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -319,24 +320,24 @@
                 </div>
                 <div class="personality-badge-header" id="page6-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="personality-hero-box">
                     <h1 class="personality-hero-title" id="personality-name-hero">Campaigner 🔧</h1>
                     <p class="personality-category" id="personality-category">Diplomats</p>
-                    
+
                     <div class="personality-description-text" id="personality-full-description">
                         <p>As a Campaigner (ENFP), you are a bold and practical experimenter, master of all kinds of tools. You have a natural mechanical curiosity and love to take things apart to see how they work. You are independent and adaptable, often reacting quickly to change and crisis.</p>
-                        
+
                         <p>You are a person of few words, preferring action over conversation. You value your freedom and need space to pursue your own interests. You are logical and rational, but you also have a spontaneous streak that can surprise those around you.</p>
-                        
+
                         <p>You may struggle with long-term planning and emotional commitment, preferring to live in the moment. You can appear insensitive or detached to more emotional types. Learning to communicate your feelings and consider the future consequences of your actions will help you build stronger relationships.</p>
                     </div>
-                    
+
                     <div class="personality-active-badge">
                         <span>Personality Active • <span id="personality-code-badge">ENFP</span></span>
                     </div>
-                    
+
                     <div class="personality-traits" id="personality-traits">
                         <span>Practical ✨</span>
                         <span>Independent 🏔️</span>
@@ -344,13 +345,13 @@
                         <span>Adaptable 🌿</span>
                     </div>
                 </div>
-                
+
                 <div class="metaphor-box">
                     <div class="metaphor-icon">🧭</div>
                     <h2 class="metaphor-title">Your Personality Metaphor</h2>
                     <h3 class="metaphor-name" id="metaphor-name">Strategic Navigator</h3>
                     <p class="metaphor-description" id="metaphor-description">Like a navigator who studies the map before sailing, you prefer clarity before action.</p>
-                    
+
                     <div class="metaphor-traits">
                         <div class="metaphor-trait">
                             <span class="trait-icon">🗺️</span>
@@ -368,14 +369,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 7: Working Orientation Profile -->
         <section class="working-orientation-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -384,29 +385,29 @@
                 </div>
                 <div class="personality-badge-header" id="page7-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Working Orientation Profile</h1>
                     <p class="page-description">Your working orientation reflects how you naturally operate in academic, professional, and team environments.</p>
                     <div class="title-icon">🧭📊</div>
                 </div>
-                
+
                 <div class="orientation-bars" id="orientation-bars">
                     <!-- Dynamically populated -->
                 </div>
-                
+
                 <p class="orientation-note">Understanding this helps you identify roles and work cultures where you can perform at your best.</p>
             </div>
         </section>
-        
+
         <!-- Page 8: Personality Similarity Insight (LOCKED) -->
         <section class="similarity-insight-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -415,14 +416,14 @@
                 </div>
                 <div class="personality-badge-header" id="page8-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section-center">
                     <div class="title-icon-center">🔑</div>
                     <h1 class="page-main-title">Personality Similarity Insight</h1>
                     <p class="page-description">Understanding how your traits resemble well-known personality patterns</p>
                 </div>
-                
+
                 <div class="locked-content-box">
                     <div class="lock-icon-large">🔒</div>
                     <h2>Similarity Insight Locked</h2>
@@ -431,14 +432,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 9: Trait Breakdown & Strengths -->
         <section class="trait-breakdown-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -447,7 +448,7 @@
                 </div>
                 <div class="personality-badge-header" id="page9-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="trait-section">
                     <h2 class="section-label">📊 Trait Breakdown</h2>
@@ -457,7 +458,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="strengths-section">
                     <h2 class="section-label">💪 Core Strengths & Growth Areas</h2>
                     <div class="strengths-grid">
@@ -477,14 +478,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 10: Cognitive Function Stack (LOCKED) -->
         <section class="cognitive-functions-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -493,14 +494,14 @@
                 </div>
                 <div class="personality-badge-header" id="page10-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section-center">
                     <div class="title-icon-center">🧠</div>
                     <h1 class="page-main-title">Cognitive Function Stack</h1>
                     <p class="page-description">This section explains how your mind naturally processes information and makes decisions under normal and stressful situations.</p>
                 </div>
-                
+
                 <div class="locked-content-box">
                     <div class="lock-icon-large">🔒</div>
                     <h2>Cognitive Functions Locked</h2>
@@ -509,14 +510,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 11: Communication Style -->
         <section class="communication-style-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -525,21 +526,21 @@
                 </div>
                 <div class="personality-badge-header" id="page11-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Communication Style</h1>
                     <p class="page-description">How you express yourself and connect with others matters.</p>
                     <div class="title-icon">💬</div>
                 </div>
-                
+
                 <div class="communication-traits-box">
                     <h3>Key Communication Traits</h3>
                     <ul id="communication-traits-list">
                         <!-- Dynamically populated -->
                     </ul>
                 </div>
-                
+
                 <div class="communication-grid">
                     <div class="dos-card">
                         <h3>Do's</h3>
@@ -556,14 +557,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 12: Relationships & Work -->
         <section class="relationships-work-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -572,14 +573,14 @@
                 </div>
                 <div class="personality-badge-header" id="page12-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Relationships & Work</h1>
                     <p class="page-description">How your personality shapes connection and collaboration</p>
                     <div class="title-icon">🤝🔗</div>
                 </div>
-                
+
                 <div class="relationships-grid">
                     <div class="relationship-card">
                         <h3>💕 Romantic Style</h3>
@@ -606,21 +607,21 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <div class="relationship-note">
                     <span class="note-icon">💡</span>
                     <p id="relationship-summary">Your relationship style remains consistent — thoughtful, values-driven, and purposeful — across personal and professional life.</p>
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 13: Your Top Career Matches -->
         <section class="career-matches-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -629,32 +630,32 @@
                 </div>
                 <div class="personality-badge-header" id="page13-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Your Top Career Matches</h1>
                     <p class="page-description">Roles that align with your natural strengths and interests.</p>
                     <div class="title-icon">🎯📊</div>
                 </div>
-                
+
                 <div class="career-match-bars" id="career-match-bars">
                     <!-- Dynamically populated -->
                 </div>
-                
+
                 <div class="career-note">
                     <span class="note-icon">💡</span>
                     <p>Career matches indicate compatibility with work environments, not limits on ability or success.</p>
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 14: Career Detail (First Match) -->
         <section class="career-detail-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -663,14 +664,14 @@
                 </div>
                 <div class="personality-badge-header" id="page14-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="career-detail-header">
                     <div class="career-icon">💼</div>
                     <h1 class="career-detail-title" id="career-detail-title">Technical Entrepreneur</h1>
                     <p class="career-detail-subtitle">This career path aligns well with your natural interests, thinking style, and working preferences.</p>
                 </div>
-                
+
                 <div class="career-confidence-bar">
                     <h3>📊 Career Confidence</h3>
                     <div class="confidence-bar-bg">
@@ -680,45 +681,45 @@
                     </div>
                     <p class="confidence-label" id="career-confidence-label">83% Compatibility Match</p>
                 </div>
-                
+
                 <div class="career-detail-grid">
                     <div class="career-detail-card">
                         <h3>📝 Overview</h3>
                         <p id="career-overview">Builds and manages technology-driven businesses or products.</p>
-                        
+
                         <h3 style="margin-top: 20px;">💡 Why It Fits You</h3>
                         <p id="career-why-fits">This role matches your profile due to the following factors observed during the assessment: Fits independent thinkers who enjoy building solutions from scratch.</p>
                     </div>
                     <div class="career-detail-card">
                         <h3>🏢 Work Environment</h3>
                         <p id="career-environment">Startups, innovation hubs, remote environments.</p>
-                        
+
                         <h3 style="margin-top: 20px;">📈 Growth Path</h3>
                         <p id="career-growth-path">Founder → Scale-up Leader → Serial Entrepreneur</p>
                     </div>
                 </div>
-                
+
                 <div class="career-skills">
                     <h3>⭐ Key Skills</h3>
                     <div class="skills-tags" id="career-skills-tags">
                         <!-- Dynamically populated -->
                     </div>
                 </div>
-                
+
                 <div class="career-final-note">
                     <span class="note-icon">💡</span>
                     <p>This role aligns well with how you think, decide, and grow — making it a strong option to explore further.</p>
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 15: Career Detail (Second Match - LOCKED) -->
         <section class="career-detail-locked-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -727,14 +728,14 @@
                 </div>
                 <div class="personality-badge-header" id="page15-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="career-detail-header-faded">
                     <div class="career-icon">🔧</div>
                     <h1 class="career-detail-title-faded" id="career-locked-title">Mechanical / Electrical Technician</h1>
                     <p class="career-detail-subtitle-faded" id="career-locked-subtitle">59% Compatibility</p>
                 </div>
-                
+
                 <div class="locked-content-box-large">
                     <div class="lock-icon-large">🔒</div>
                     <h2>Career Insight Locked</h2>
@@ -743,14 +744,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 15B: Career Detail (Third Match - LOCKED) -->
         <section class="career-detail-locked-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -759,14 +760,14 @@
                 </div>
                 <div class="personality-badge-header" id="page15b-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="career-detail-header-faded">
                     <div class="career-icon">💼</div>
                     <h1 class="career-detail-title-faded" id="career-locked-title-3">Career Title</h1>
                     <p class="career-detail-subtitle-faded" id="career-locked-subtitle-3">XX% Compatibility</p>
                 </div>
-                
+
                 <div class="locked-content-box-large">
                     <div class="lock-icon-large">🔒</div>
                     <h2>Career Insight Locked</h2>
@@ -775,14 +776,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 15C: Career Detail (Fourth Match - LOCKED) -->
         <section class="career-detail-locked-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -791,14 +792,14 @@
                 </div>
                 <div class="personality-badge-header" id="page15c-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="career-detail-header-faded">
                     <div class="career-icon">🎯</div>
                     <h1 class="career-detail-title-faded" id="career-locked-title-4">Career Title</h1>
                     <p class="career-detail-subtitle-faded" id="career-locked-subtitle-4">XX% Compatibility</p>
                 </div>
-                
+
                 <div class="locked-content-box-large">
                     <div class="lock-icon-large">🔒</div>
                     <h2>Career Insight Locked</h2>
@@ -807,14 +808,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 15D: Career Detail (Fifth Match - LOCKED) -->
         <section class="career-detail-locked-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -823,14 +824,14 @@
                 </div>
                 <div class="personality-badge-header" id="page15d-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="career-detail-header-faded">
                     <div class="career-icon">🚀</div>
                     <h1 class="career-detail-title-faded" id="career-locked-title-5">Career Title</h1>
                     <p class="career-detail-subtitle-faded" id="career-locked-subtitle-5">XX% Compatibility</p>
                 </div>
-                
+
                 <div class="locked-content-box-large">
                     <div class="lock-icon-large">🔒</div>
                     <h2>Career Insight Locked</h2>
@@ -839,14 +840,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 16: Your Growth Plan (LOCKED) -->
         <section class="growth-plan-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -855,14 +856,14 @@
                 </div>
                 <div class="personality-badge-header" id="page16-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="page-title-section">
                     <h1 class="page-main-title">Your Growth Plan</h1>
                     <p class="page-description">Actionable steps to reach your full potential.</p>
                     <div class="title-icon">📝✨</div>
                 </div>
-                
+
                 <div class="locked-content-box-large">
                     <div class="lock-icon-large">🔒</div>
                     <h2>Growth Plan Locked</h2>
@@ -871,14 +872,14 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Page 17: Your Final Reflection -->
         <section class="final-reflection-page">
             <div class="report-header-bar">
                 <div class="header-logo">
                     <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="white"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="white" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <div class="header-text">
                         <span class="header-main">PersonalityPro</span>
@@ -887,20 +888,20 @@
                 </div>
                 <div class="personality-badge-header" id="page17-personality-type">ENFP</div>
             </div>
-            
+
             <div class="page-content">
                 <div class="final-reflection-header">
                     <div class="reflection-icon">💡</div>
                     <h1 class="reflection-title">Your Final Reflection</h1>
                     <p class="reflection-subtitle">A thoughtful pause before you move forward</p>
                 </div>
-                
+
                 <div class="reflection-main-box">
                     <p class="reflection-main-text">This report is not meant to define who you must become, but to guide you toward choices that feel natural, fulfilling, and sustainable.</p>
                     <div class="reflection-underline"></div>
                     <p class="reflection-sub-text">Career clarity begins with self-awareness, and informed decisions today create stronger outcomes tomorrow.</p>
                 </div>
-                
+
                 <div class="reflection-pillars">
                     <div class="pillar-card">
                         <div class="pillar-icon">🧠</div>
@@ -918,7 +919,7 @@
                         <p>Develop skills beyond your comfort zone</p>
                     </div>
                 </div>
-                
+
                 <div class="reflection-final-message">
                     <p class="final-message-text">You don't need to become someone else to succeed here. You need to <strong>*be more intentionally you*</strong>.</p>
                     <div class="final-checkmark">✓</div>
@@ -934,8 +935,8 @@
             <div class="footer-section">
                 <div class="logo">
                     <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="#FFD84D" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <span>PersonalityPro</span>
                 </div>
@@ -945,7 +946,6 @@
                 <h4>Product</h4>
                 <ul>
                     <li><a href="/assessment/">Take Test</a></li>
-                    <li><a href="/personalities/">Personality Types</a></li>
                     <li><a href="/premium/">Premium</a></li>
                 </ul>
             </div>
@@ -974,6 +974,5 @@
     <script src="{% static 'assessment/js/script.js' %}"></script>
     <script src="{% static 'assessment/js/report.js' %}"></script>
 </body>
+
 </html>
-
-

@@ -13,35 +13,35 @@ let assessmentScores = null;
 // Function to calculate personality type from scores
 function calculatePersonalityTypeFromScores(scores) {
     if (!scores) return null;
-    
+
     console.log('Calculating personality type from scores:', scores);
-    
-    // Determine each dimension based on which score is higher
-    const dimension1 = scores.e > scores.i ? 'E' : 'I';
-    const dimension2 = scores.s > scores.n ? 'S' : 'N';
-    const dimension3 = scores.t > scores.f ? 'T' : 'F';
-    const dimension4 = scores.j > scores.p ? 'J' : 'P';
-    
+
+    // Determine each dimension — ties go to E, S, T, J (standard MBTI convention)
+    const dimension1 = scores.e >= scores.i ? 'E' : 'I';
+    const dimension2 = scores.s >= scores.n ? 'S' : 'N';
+    const dimension3 = scores.t >= scores.f ? 'T' : 'F';
+    const dimension4 = scores.j >= scores.p ? 'J' : 'P';
+
     const calculatedType = dimension1 + dimension2 + dimension3 + dimension4;
     console.log('Calculated personality type:', calculatedType);
-    
+
     return calculatedType;
 }
 
 // Function to update ALL personality type badges and references in the HTML
 function updateAllPersonalityReferences(type) {
     console.log('=== UPDATING ALL PERSONALITY REFERENCES TO:', type, '===');
-    
+
     // Update all badge elements by ID
     const badgeIds = [
-        'page2-personality-type', 'page3-personality-type', 'page4-personality-type', 
-        'page5-personality-type', 'page6-personality-type', 'page7-personality-type', 
+        'page2-personality-type', 'page3-personality-type', 'page4-personality-type',
+        'page5-personality-type', 'page6-personality-type', 'page7-personality-type',
         'page8-personality-type', 'page9-personality-type', 'page10-personality-type',
         'page11-personality-type', 'page12-personality-type', 'page13-personality-type',
         'page14-personality-type', 'page15-personality-type', 'page16-personality-type',
         'page17-personality-type'
     ];
-    
+
     let updatedCount = 0;
     badgeIds.forEach(id => {
         const element = document.getElementById(id);
@@ -53,15 +53,15 @@ function updateAllPersonalityReferences(type) {
             console.warn(`✗ Element ${id} not found`);
         }
     });
-    
+
     console.log(`Updated ${updatedCount} out of ${badgeIds.length} badges`);
-    
+
     // Also update by class name as backup
     const badgeElements = document.querySelectorAll('.personality-badge-header');
     badgeElements.forEach(element => {
         element.textContent = type;
     });
-    
+
     console.log(`Also updated ${badgeElements.length} elements by class name`);
 }
 
@@ -198,7 +198,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log('=== REPORT LOADING ===');
     console.log('Initial Personality Type from URL:', personalityType);
     console.log('Session ID:', sessionId);
-    
+
     // Show report container immediately
     const reportContainer = document.getElementById('report-container');
     if (reportContainer) {
@@ -207,33 +207,33 @@ window.addEventListener('DOMContentLoaded', async () => {
     } else {
         console.error('Report container not found!');
     }
-    
+
     // Load report data (this will calculate personality type from scores if available)
     console.log('Loading report data...');
     await loadReportData();
     console.log('Report data loaded with personality type:', personalityType);
-    
+
     // Check premium status
     checkPremiumStatus();
-    
+
     // Check if download parameter is present AND not already downloaded
     const shouldDownload = urlParams.get('download');
     const hasDownloaded = sessionStorage.getItem('reportDownloaded');
-    
+
     if (shouldDownload === 'true' && !hasDownloaded) {
         // Mark as downloaded to prevent re-download on refresh
         sessionStorage.setItem('reportDownloaded', 'true');
-        
+
         // Wait for content to fully render, then download
         setTimeout(() => {
             downloadReportAsPDF();
-            
+
             // Remove download parameter from URL after download
             const newUrl = window.location.pathname + `?type=${personalityType}` + (sessionId ? `&session=${sessionId}` : '');
             window.history.replaceState({}, '', newUrl);
         }, 2000);
     }
-    
+
     console.log('=== REPORT LOADED SUCCESSFULLY ===');
 });
 
@@ -257,7 +257,7 @@ async function loadReportData() {
                     J: result.j_score,
                     P: result.p_score
                 });
-                
+
                 assessmentScores = {
                     e: result.e_score || 0,
                     i: result.i_score || 0,
@@ -268,34 +268,34 @@ async function loadReportData() {
                     j: result.j_score || 0,
                     p: result.p_score || 0
                 };
-                
+
                 // USE THE SERVER'S PERSONALITY TYPE - DON'T RECALCULATE
                 personalityType = result.personality_type;
                 console.log('✓ Using SERVER personality type:', personalityType);
-                
+
                 // IMMEDIATELY update all badges with the server's type
                 updateAllPersonalityReferences(personalityType);
             }
         }
-        
+
         // If no personality type yet, use default or URL parameter
         if (!personalityType) {
             personalityType = urlParams.get('type') || 'INFP';
             console.log('Using personality type from URL or default:', personalityType);
-            
+
             // Update all badges
             updateAllPersonalityReferences(personalityType);
         }
-        
+
         // Now fetch personality data
         const response = await fetch(`${API_BASE_URL}/personality/${personalityType}/`);
         if (!response.ok) throw new Error('Failed to fetch personality data');
-        
+
         const data = await response.json();
         reportData = data.description;
-        
+
         populateReport(reportData, assessmentScores);
-        
+
     } catch (error) {
         console.error('Error loading report data:', error);
         populateReport({
@@ -308,18 +308,18 @@ async function loadReportData() {
 }
 
 // Calculate overall score from dimension scores
+// Scoring card totals: EI=10, SN=20, TF=20, JP=20
 function calculateOverallScore(scores) {
     if (!scores) return 75;
-    
-    const dominantScores = [
-        Math.max(scores.e, scores.i),
-        Math.max(scores.s, scores.n),
-        Math.max(scores.t, scores.f),
-        Math.max(scores.j, scores.p)
-    ];
-    
-    const sum = dominantScores.reduce((a, b) => a + b, 0);
-    return Math.round((sum / dominantScores.length) * 12.5);
+
+    const DIMENSION_TOTALS = { ei: 10, sn: 20, tf: 20, jp: 20 };
+
+    const eiPct  = (Math.max(scores.e, scores.i)  / DIMENSION_TOTALS.ei)  * 100;
+    const snPct  = (Math.max(scores.s, scores.n)  / DIMENSION_TOTALS.sn)  * 100;
+    const tfPct  = (Math.max(scores.t, scores.f)  / DIMENSION_TOTALS.tf)  * 100;
+    const jpPct  = (Math.max(scores.j, scores.p)  / DIMENSION_TOTALS.jp)  * 100;
+
+    return Math.min(Math.round((eiPct + snPct + tfPct + jpPct) / 4), 100);
 }
 
 // Calculate percentile from overall score
@@ -332,29 +332,29 @@ function populateReport(data, scores) {
     // Populate cover page
     document.getElementById('cover-personality-name').textContent = data.name;
     document.getElementById('cover-personality-type').textContent = `${personalityType} - ${getCategoryName(personalityType)}`;
-    
+
     // Populate second page personality badge
     document.getElementById('page2-personality-type').textContent = personalityType;
-    
+
     // Get user name from localStorage or default
     const userName = localStorage.getItem('userName') || 'You';
     document.getElementById('user-name').textContent = userName.charAt(0).toUpperCase() + userName.slice(1);
-    
+
     // Populate Quick Snapshot
     const overallScore = calculateOverallScore(scores);
     document.getElementById('overall-score').textContent = overallScore;
-    
+
     const percentile = calculatePercentile(overallScore);
     document.getElementById('percentile-text').textContent = `Top ${100 - percentile}%`;
-    
+
     setTimeout(() => {
         const percentileFill = document.getElementById('percentile-fill');
         percentileFill.style.width = percentile + '%';
     }, 300);
-    
+
     // Populate career role bars
     populateCareerRoleBars();
-    
+
     // Populate dimension scores
     if (scores) {
         populateDimensionScore('ei', scores.e, scores.i, 'E', 'I');
@@ -368,10 +368,10 @@ function populateReport(data, scores) {
         populateDimensionScore('tf', defaultScores.t, defaultScores.f, 'T', 'F');
         populateDimensionScore('jp', defaultScores.j, defaultScores.p, 'J', 'P');
     }
-    
+
     // Populate career roles
     populateCareerRoles();
-    
+
     // Populate new pages (3-17) with personality badges and content
     populateNewPages();
 }
@@ -391,10 +391,10 @@ function getCategoryName(type) {
 function populateCareerRoleBars() {
     const careers = careerMappings[personalityType] || careerMappings['INTJ'];
     const topCareers = careers.slice(0, 5);
-    
+
     const roleBarsContainer = document.getElementById('role-bars');
     roleBarsContainer.innerHTML = '';
-    
+
     topCareers.forEach((career, index) => {
         const roleBar = document.createElement('div');
         roleBar.className = 'role-bar';
@@ -408,7 +408,7 @@ function populateCareerRoleBars() {
             </div>
         `;
         roleBarsContainer.appendChild(roleBar);
-        
+
         setTimeout(() => {
             const fill = roleBar.querySelector('.role-bar-fill');
             fill.style.width = career.match + '%';
@@ -421,26 +421,26 @@ function populateDimensionScore(dimension, score1, score2, letter1, letter2) {
     const total = score1 + score2;
     const percentage1 = total > 0 ? (score1 / total) * 100 : 50;
     const percentage2 = total > 0 ? (score2 / total) * 100 : 50;
-    
+
     const dominant = percentage1 > percentage2 ? letter1 : letter2;
     const dominantPercentage = Math.max(percentage1, percentage2);
-    
+
     const bar1 = document.getElementById(`${letter1.toLowerCase()}-bar`);
     const bar2 = document.getElementById(`${letter2.toLowerCase()}-bar`);
     const result = document.getElementById(`${dimension}-result`);
     const desc = document.getElementById(`${dimension}-desc`);
-    
+
     if (bar1 && bar2) {
         setTimeout(() => {
             bar1.style.width = percentage1 + '%';
             bar2.style.width = percentage2 + '%';
         }, 500);
     }
-    
+
     if (result) {
         result.textContent = `${dominant} (${Math.round(dominantPercentage)}%)`;
     }
-    
+
     if (desc) {
         desc.textContent = dimensionDescriptions[dominant] || '';
     }
@@ -450,10 +450,10 @@ function populateDimensionScore(dimension, score1, score2, letter1, letter2) {
 function populateCareerRoles() {
     const careers = careerMappings[personalityType] || careerMappings['INTJ'];
     const freeCareers = careers.slice(0, 3);
-    
+
     const careersList = document.getElementById('careers-list');
     careersList.innerHTML = '';
-    
+
     freeCareers.forEach((career, index) => {
         const careerCard = document.createElement('div');
         careerCard.className = 'career-role-card';
@@ -472,21 +472,22 @@ function populateCareerRoles() {
 }
 
 // Get default scores based on personality type
+// Reflects scoring card totals: EI=10, SN=20, TF=20, JP=20
 function getDefaultScores(type) {
-    const scores = { e: 4, i: 4, s: 4, n: 4, t: 4, f: 4, j: 4, p: 4 };
-    
-    if (type[0] === 'E') scores.e = 6;
-    else scores.i = 6;
-    
-    if (type[1] === 'S') scores.s = 6;
-    else scores.n = 6;
-    
-    if (type[2] === 'T') scores.t = 6;
-    else scores.f = 6;
-    
-    if (type[3] === 'J') scores.j = 6;
-    else scores.p = 6;
-    
+    const scores = { e: 5, i: 5, s: 10, n: 10, t: 10, f: 10, j: 10, p: 10 };
+
+    if (type[0] === 'E') { scores.e = 6; scores.i = 4; }
+    else                  { scores.i = 6; scores.e = 4; }
+
+    if (type[1] === 'S') { scores.s = 12; scores.n = 8; }
+    else                  { scores.n = 12; scores.s = 8; }
+
+    if (type[2] === 'T') { scores.t = 12; scores.f = 8; }
+    else                  { scores.f = 12; scores.t = 8; }
+
+    if (type[3] === 'J') { scores.j = 12; scores.p = 8; }
+    else                  { scores.p = 12; scores.j = 8; }
+
     return scores;
 }
 
@@ -516,18 +517,18 @@ function getPersonalityName(type) {
 // Check premium status and unlock sections
 async function checkPremiumStatus() {
     const token = localStorage.getItem('authToken');
-    
+
     if (!token) {
         return false;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE_URL}/auth/check-premium/`, {
             headers: {
                 'Authorization': `Token ${token}`
             }
         });
-        
+
         if (response.ok) {
             const data = await response.json();
             if (data.is_premium) {
@@ -538,7 +539,7 @@ async function checkPremiumStatus() {
     } catch (error) {
         console.error('Error checking premium status:', error);
     }
-    
+
     return false;
 }
 
@@ -548,11 +549,11 @@ function unlockPremiumSections() {
     lockedSections.forEach(section => {
         const overlay = section.querySelector('.premium-overlay');
         const blurred = section.querySelector('.blurred');
-        
+
         if (overlay) overlay.remove();
         if (blurred) blurred.classList.remove('blurred');
     });
-    
+
     const header = document.querySelector('.report-header');
     const premiumBadge = document.createElement('div');
     premiumBadge.style.cssText = 'background: #FFD84D; color: #111; padding: 10px 20px; border-radius: 20px; display: inline-block; margin-top: 10px; font-weight: 600;';
@@ -566,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const token = localStorage.getItem('authToken');
-            
+
             if (!token) {
                 window.location.href = `login.html?redirect=report.html?type=${personalityType}&session=${sessionId}`;
             } else {
@@ -579,14 +580,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // Download PDF function
 function downloadReportAsPDF() {
     console.log('downloadReportAsPDF called - generating PDF');
-    
+
     // Show loading message
     const loadingMsg = document.createElement('div');
     loadingMsg.id = 'pdf-loading';
     loadingMsg.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 30px 50px; border-radius: 15px; z-index: 10000; font-size: 20px; font-weight: 600;';
     loadingMsg.innerHTML = '📄 Generating PDF...<br><small style="font-size: 14px; font-weight: 400;">Please wait...</small>';
     document.body.appendChild(loadingMsg);
-    
+
     setTimeout(async () => {
         try {
             const { jsPDF } = window.jspdf;
@@ -596,32 +597,32 @@ function downloadReportAsPDF() {
                 format: 'a4',
                 compress: true
             });
-            
+
             // Get all sections
             const sections = document.querySelectorAll('.report-container section');
             console.log('Found sections:', sections.length);
-            
+
             if (sections.length === 0) {
                 alert('No report sections found');
                 document.body.removeChild(loadingMsg);
                 return;
             }
-            
+
             let isFirstPage = true;
-            
+
             // Process each section with optimized settings
             for (let i = 0; i < sections.length; i++) {
                 const section = sections[i];
-                
+
                 // Update loading message
                 loadingMsg.innerHTML = `📄 Generating PDF...<br><small style="font-size: 14px; font-weight: 400;">Page ${i + 1} of ${sections.length}</small>`;
-                
+
                 // Temporarily set fixed dimensions for capture
                 const originalHeight = section.style.height;
                 const originalOverflow = section.style.overflow;
                 section.style.height = '297mm';
                 section.style.overflow = 'hidden';
-                
+
                 // Capture section as canvas with optimized settings
                 const canvas = await html2canvas(section, {
                     scale: 1.5,  // Reduced from 2 for faster processing
@@ -636,35 +637,35 @@ function downloadReportAsPDF() {
                     imageTimeout: 0,  // Don't wait for images
                     removeContainer: true  // Clean up faster
                 });
-                
+
                 // Restore original styles
                 section.style.height = originalHeight;
                 section.style.overflow = originalOverflow;
-                
+
                 // Use lower quality JPEG for faster processing
                 const imgData = canvas.toDataURL('image/jpeg', 0.85);
-                
+
                 // Add new page if not first
                 if (!isFirstPage) {
                     pdf.addPage();
                 }
                 isFirstPage = false;
-                
+
                 // Add image to fill entire A4 page
                 pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-                
+
                 // Small delay to prevent browser freezing
                 if (i % 5 === 0 && i > 0) {
                     await new Promise(resolve => setTimeout(resolve, 100));
                 }
             }
-            
+
             // Download the PDF
             pdf.save(`PersonalityReport_${personalityType}_${new Date().toISOString().split('T')[0]}.pdf`);
-            
+
             console.log('PDF generated successfully');
             document.body.removeChild(loadingMsg);
-            
+
         } catch (error) {
             console.error('Error generating PDF:', error);
             alert('Error generating PDF: ' + error.message);
@@ -690,12 +691,12 @@ const interestData = {
         { name: 'Systems Design', score: 60 }
     ],
     'ENTJ': [
-        { name: 'Leadership', score: 85 },
-        { name: 'Entrepreneurship', score: 80 },
-        { name: 'Business Strategy', score: 75 },
-        { name: 'Management', score: 70 },
-        { name: 'Finance', score: 65 },
-        { name: 'Negotiation', score: 60 }
+        { name: 'Leadership & Strategy', score: 92 },
+        { name: 'Entrepreneurship', score: 88 },
+        { name: 'Business Development', score: 85 },
+        { name: 'Finance & Investment', score: 80 },
+        { name: 'Organizational Management', score: 78 },
+        { name: 'Negotiation & Debate', score: 75 }
     ],
     'INTP': [
         { name: 'Technology', score: 85 },
@@ -706,12 +707,12 @@ const interestData = {
         { name: 'Analysis', score: 60 }
     ],
     'ENTP': [
-        { name: 'Innovation', score: 85 },
-        { name: 'Entrepreneurship', score: 80 },
-        { name: 'Marketing', score: 75 },
-        { name: 'Technology', score: 70 },
-        { name: 'Business Development', score: 65 },
-        { name: 'Creative Problem Solving', score: 60 }
+        { name: 'Innovation & Invention', score: 90 },
+        { name: 'Entrepreneurship', score: 86 },
+        { name: 'Strategic Problem Solving', score: 83 },
+        { name: 'Debate & Law', score: 80 },
+        { name: 'Technology & Science', score: 76 },
+        { name: 'Creative Writing & Ideas', score: 72 }
     ],
     'INFJ': [
         { name: 'Counseling', score: 85 },
@@ -722,12 +723,12 @@ const interestData = {
         { name: 'Human Resources', score: 60 }
     ],
     'ENFJ': [
-        { name: 'Teaching', score: 85 },
-        { name: 'Public Relations', score: 80 },
-        { name: 'Human Resources', score: 75 },
-        { name: 'Counseling', score: 70 },
-        { name: 'Event Planning', score: 65 },
-        { name: 'Communication', score: 60 }
+        { name: 'Teaching & Mentoring', score: 92 },
+        { name: 'Counseling & Support', score: 88 },
+        { name: 'Human Resources', score: 82 },
+        { name: 'Public Relations', score: 78 },
+        { name: 'Community & Social Work', score: 75 },
+        { name: 'Event Planning & Leadership', score: 70 }
     ],
     'INFP': [
         { name: 'Creative Writing', score: 85 },
@@ -738,12 +739,12 @@ const interestData = {
         { name: 'Education', score: 60 }
     ],
     'ENFP': [
-        { name: 'Sales', score: 60 },
-        { name: 'Entrepreneurship', score: 60 },
-        { name: 'Advertising & Marketing', score: 60 },
-        { name: 'Media & Communication', score: 60 },
-        { name: 'Technology', score: 60 },
-        { name: 'Helping Professions', score: 60 }
+        { name: 'Creative Ideation & Innovation', score: 88 },
+        { name: 'People & Relationships', score: 85 },
+        { name: 'Entrepreneurship', score: 82 },
+        { name: 'Writing & Communication', score: 80 },
+        { name: 'Counseling & Coaching', score: 76 },
+        { name: 'Arts & Self-Expression', score: 72 }
     ],
     'ISTJ': [
         { name: 'Accounting', score: 85 },
@@ -770,12 +771,12 @@ const interestData = {
         { name: 'Library Science', score: 60 }
     ],
     'ESFJ': [
-        { name: 'Event Planning', score: 85 },
-        { name: 'Healthcare Administration', score: 80 },
-        { name: 'Sales', score: 75 },
-        { name: 'Customer Service', score: 70 },
-        { name: 'Hospitality', score: 65 },
-        { name: 'Education', score: 60 }
+        { name: 'Caregiving & Healthcare', score: 90 },
+        { name: 'Education & Teaching', score: 86 },
+        { name: 'Event Planning & Hospitality', score: 83 },
+        { name: 'Human Resources', score: 80 },
+        { name: 'Social Services', score: 76 },
+        { name: 'Community & Family', score: 73 }
     ],
     'ISTP': [
         { name: 'Engineering', score: 85 },
@@ -820,10 +821,10 @@ const curiositiesData = {
         'They are natural systems thinkers who see patterns others miss.'
     ],
     'ENTJ': [
-        'ENTJs are natural-born leaders who thrive in executive positions.',
-        'They make up about 3% of the population.',
-        'Famous ENTJs include Steve Jobs and Margaret Thatcher.',
-        'They are decisive and excel at organizing people and resources.'
+        'ENTJs are called "The Executive" — natural born leaders who see challenges as opportunities to be conquered.',
+        'They make up about 3% of the population but hold a disproportionate number of CEO and executive positions.',
+        'Famous ENTJs include Steve Jobs, Margaret Thatcher, and Napoleon Bonaparte.',
+        'ENTJs have tremendous personal power and presence — even the most confident individuals may experience self-doubt when debating with an ENTJ.'
     ],
     'INTP': [
         'INTPs are often called "The Architects" of ideas and systems.',
@@ -832,10 +833,10 @@ const curiositiesData = {
         'They love theoretical discussions and abstract concepts.'
     ],
     'ENTP': [
-        'ENTPs are innovative debaters who love intellectual challenges.',
-        'They make up about 3% of the population.',
-        'Famous ENTPs include Mark Twain and Thomas Edison.',
-        'They excel at seeing possibilities and generating creative solutions.'
+        'ENTPs are called "The Visionary" — they are the great problem solvers, discoverers, and re-inventors of the world.',
+        'They make up about 3% of the population and are among the most intellectually versatile of all types.',
+        'Famous ENTPs include Leonardo da Vinci, Benjamin Franklin, and Socrates.',
+        'ENTPs love to debate and may even switch sides just for the love of the argument — they are fluent conversationalists who are mentally quick and enjoy verbal sparring.'
     ],
     'INFJ': [
         'INFJs are the rarest personality type, making up only 1-2% of the population.',
@@ -844,10 +845,10 @@ const curiositiesData = {
         'They have strong intuition about people and situations.'
     ],
     'ENFJ': [
-        'ENFJs are natural teachers and mentors who inspire others.',
-        'They make up about 2-3% of the population.',
-        'Famous ENFJs include Oprah Winfrey and Barack Obama.',
-        'They excel at understanding and motivating people.'
+        'ENFJs are called "The Giver" — their primary drive is bringing out the best in others.',
+        'They make up about 2-3% of the population and are among the most people-focused of all types.',
+        'Famous ENFJs include Oprah Winfrey, Barack Obama, and Nelson Mandela.',
+        'ENFJs have such extraordinary people skills they can often get others to do exactly what they want — usually for unselfish reasons.'
     ],
     'INFP': [
         'INFPs are idealistic dreamers with strong personal values.',
@@ -856,10 +857,10 @@ const curiositiesData = {
         'They are deeply creative and often pursue artistic careers.'
     ],
     'ENFP': [
-        'ENFPs are often called "The Campaigners" because they love understanding how things work.',
-        'They are the type most likely to survive a zombie apocalypse due to their practical skills.',
-        'Bear Grylls and Clint Eastwood are famous ENFPs.',
-        'They are cool under pressure and often excel in extreme sports.'
+        'ENFPs are called "The Inspirer" — their enthusiasm lends them the ability to inspire and motivate others more than any other type.',
+        'They are project-oriented and may go through several different careers during their lifetime, always guided by a strong consistent value system.',
+        'Famous ENFPs include Robin Williams, Walt Disney, and Mark Twain.',
+        'ENFPs have an exceptional ability to intuitively understand a person after a very short period of time — and can talk their way in or out of anything.'
     ],
     'ISTJ': [
         'ISTJs are reliable and detail-oriented, often called "The Inspectors".',
@@ -880,10 +881,10 @@ const curiositiesData = {
         'They are loyal and dedicated to helping others.'
     ],
     'ESFJ': [
-        'ESFJs are warm and sociable, often called "The Caregivers".',
-        'They make up about 9-13% of the population.',
-        'Famous ESFJs include Taylor Swift and Bill Clinton.',
-        'They excel at creating harmony in social situations.'
+        'ESFJs are called "The Caregiver" — caring is the very nature of their personality, and they measure success by the happiness and gratitude reflected back from those they help.',
+        'They make up about 9-13% of the population, making them one of the most common types.',
+        'Famous ESFJs include Taylor Swift, Bill Clinton, and Jennifer Garner.',
+        'ESFJs have a special gift of invariably making people feel good about themselves — they are extremely good at reading others and understanding their point of view.'
     ],
     'ISTP': [
         'ISTPs are often called "The Mechanics" because they love understanding how things work.',
@@ -914,17 +915,17 @@ const curiositiesData = {
 // Metaphors for each personality type
 const metaphorData = {
     'INTJ': { name: 'Strategic Architect', desc: 'Like an architect designing a masterpiece, you plan every detail before building.', traits: ['Visionary 🔭', 'Systematic 📐', 'Independent 🏔️'] },
-    'ENTJ': { name: 'Commanding General', desc: 'Like a general leading troops, you organize and direct with confidence.', traits: ['Decisive ⚡', 'Strategic 🎯', 'Ambitious 🚀'] },
+    'ENTJ': { name: 'Commanding General', desc: 'Like a general who sees the entire battlefield and leads troops to victory, you organize, plan, and drive forward until the best result has been realized.', traits: ['Decisive ⚡', 'Strategic 🎯', 'Ambitious 🚀'] },
     'INTP': { name: 'Curious Scientist', desc: 'Like a scientist in a lab, you explore ideas and test theories.', traits: ['Analytical 🔬', 'Innovative 💡', 'Logical 🧮'] },
-    'ENTP': { name: 'Inventive Explorer', desc: 'Like an explorer discovering new lands, you seek novel possibilities.', traits: ['Creative 🎨', 'Adaptable 🌿', 'Energetic ⚡'] },
+    'ENTP': { name: 'Inventive Visionary', desc: 'Like a pioneer who sees a new frontier where others see only obstacles, you are always the first to show others a new path or find a way of doing something no one has done before.', traits: ['Creative 🎨', 'Adaptable 🌿', 'Energetic ⚡'] },
     'INFJ': { name: 'Insightful Counselor', desc: 'Like a wise counselor, you understand people deeply and guide them.', traits: ['Empathetic 💗', 'Visionary 🔮', 'Principled 📜'] },
-    'ENFJ': { name: 'Inspiring Teacher', desc: 'Like a passionate teacher, you motivate and develop others.', traits: ['Charismatic ✨', 'Supportive 🤝', 'Organized 📋'] },
+    'ENFJ': { name: 'Inspiring Catalyst', desc: 'Like a passionate teacher who sees the potential in every student, you make things happen for people and find your greatest satisfaction in their growth.', traits: ['Charismatic ✨', 'Empathetic 💗', 'Organized 📋'] },
     'INFP': { name: 'Idealistic Poet', desc: 'Like a poet crafting verses, you express deep values through creativity.', traits: ['Authentic 🌟', 'Compassionate 💚', 'Creative 🎭'] },
-    'ENFP': { name: 'Enthusiastic Champion', desc: 'Like a champion rallying support, you inspire with passion and possibility.', traits: ['Enthusiastic 🎉', 'Creative 🌈', 'Empathetic 💖'] },
+    'ENFP': { name: 'Enthusiastic Inspirer', desc: 'Like a spark that ignites a fire, you see possibilities everywhere and have the rare gift of making others believe in them too.', traits: ['Enthusiastic 🎉', 'Creative 🌈', 'Empathetic 💖'] },
     'ISTJ': { name: 'Reliable Guardian', desc: 'Like a guardian protecting traditions, you maintain order and stability.', traits: ['Dependable 🛡️', 'Practical 🔧', 'Organized 📊'] },
     'ESTJ': { name: 'Efficient Executive', desc: 'Like an executive running operations, you ensure everything runs smoothly.', traits: ['Organized 📋', 'Direct 🎯', 'Responsible 👔'] },
     'ISFJ': { name: 'Devoted Protector', desc: 'Like a protector caring for loved ones, you nurture and support.', traits: ['Caring 💝', 'Loyal 🤝', 'Practical 🏠'] },
-    'ESFJ': { name: 'Harmonious Host', desc: 'Like a gracious host, you create warmth and bring people together.', traits: ['Sociable 🎊', 'Helpful 🤗', 'Traditional 🏛️'] },
+    'ESFJ': { name: 'Devoted Caregiver', desc: 'Like a gracious host who ensures every guest feels welcome and valued, you create warmth, order, and belonging wherever you go.', traits: ['Sociable 🎊', 'Helpful 🤗', 'Traditional 🏛️'] },
     'ISTP': { name: 'Strategic Navigator', desc: 'Like a navigator who studies the map before sailing, you prefer clarity before action.', traits: ['Plans Ahead 🗺️', 'Calm Under Pressure 🌊', 'Purpose Driven 🎯'] },
     'ESTP': { name: 'Bold Adventurer', desc: 'Like an adventurer seeking thrills, you dive into action fearlessly.', traits: ['Energetic ⚡', 'Practical 🛠️', 'Spontaneous 🎲'] },
     'ISFP': { name: 'Gentle Artist', desc: 'Like an artist creating beauty, you express yourself through aesthetics.', traits: ['Artistic 🎨', 'Sensitive 🌸', 'Flexible 🌊'] },
@@ -942,17 +943,17 @@ const orientationData = {
 // Operational Style data for each type
 const operationalStyleData = {
     'INTJ': ['Prefers autonomy in execution', 'Needs clear, logical objectives', 'Thrives on intellectual challenge'],
-    'ENTJ': ['Takes charge of situations', 'Focuses on efficiency and results', 'Delegates effectively'],
+    'ENTJ': ['Takes charge of situations naturally and drives toward the best result', 'Focuses on efficiency, productivity, and measurable outcomes', 'Delegates strategically based on competence', 'Constantly scanning for problems to turn into solutions'],
     'INTP': ['Works independently on complex problems', 'Requires intellectual freedom', 'Explores multiple solutions'],
-    'ENTP': ['Generates innovative ideas rapidly', 'Challenges conventional thinking', 'Adapts quickly to change'],
+    'ENTP': ['Generates innovative ideas rapidly and sees angles others have not thought of', 'Challenges conventional thinking and quickly finds the best or most useful side of a situation', 'Adapts quickly to change; juggles many differing jobs or processes at once', 'Needs freedom and open road — will not be happy in regimented or confining positions'],
     'INFJ': ['Works with purpose and meaning', 'Prefers deep, authentic connections', 'Plans with long-term vision'],
-    'ENFJ': ['Leads through inspiration', 'Builds strong team relationships', 'Focuses on people development'],
+    'ENFJ': ['Leads through inspiration and genuine care for people', 'Builds strong, authentic team relationships', 'Focuses on developing others\' potential', 'Maintains structure while staying people-centered'],
     'INFP': ['Follows personal values', 'Works best with creative freedom', 'Seeks meaningful impact'],
-    'ENFP': ['Explores multiple possibilities', 'Energized by new projects', 'Connects ideas creatively'],
+    'ENFP': ['Explores multiple possibilities and generates creative new ideas', 'Energized by new projects, people, and experiences', 'Works best with flexibility — highly productive with little supervision when excited', 'Needs time alone to center themselves and ensure alignment with their values'],
     'ISTJ': ['Follows established procedures', 'Values accuracy and detail', 'Maintains consistent standards'],
     'ESTJ': ['Organizes people and resources', 'Implements practical solutions', 'Enforces rules and structure'],
     'ISFJ': ['Supports team harmony', 'Attends to practical details', 'Maintains traditions'],
-    'ESFJ': ['Creates positive social environment', 'Coordinates group activities', 'Ensures everyone\'s needs are met'],
+    'ESFJ': ['Creates positive social environment and ensures everyone feels valued', 'Coordinates group activities and sees before others what needs to be done', 'Enjoys creating order, structure, and schedules — very good at these tasks', 'Thrives best where they can make decisions and organize things their own way'],
     'ISTP': ['Prefers hands-on problem solving', 'Works efficiently with tools', 'Responds well to crises'],
     'ESTP': ['Takes immediate action', 'Thrives in dynamic environments', 'Negotiates and persuades effectively'],
     'ISFP': ['Expresses through creative work', 'Values personal freedom', 'Responds to immediate needs'],
@@ -962,17 +963,17 @@ const operationalStyleData = {
 // Decision Framework data for each type
 const decisionFrameworkData = {
     'INTJ': ['Analyzes long-term impact first', 'Validates data before acting', 'Values competence over hierarchy'],
-    'ENTJ': ['Makes quick, decisive choices', 'Focuses on strategic outcomes', 'Prioritizes efficiency'],
+    'ENTJ': ['Makes quick, decisive choices based on rational analysis', 'Focuses on long-range strategic outcomes and organizational well-being', 'Prioritizes efficiency and the most productive path forward', 'Needs to consciously include others\' perspectives to avoid blind spots'],
     'INTP': ['Evaluates logical consistency', 'Questions assumptions thoroughly', 'Seeks elegant solutions'],
-    'ENTP': ['Explores multiple perspectives', 'Debates to test ideas', 'Pivots based on new information'],
+    'ENTP': ['Explores multiple perspectives and debates to test ideas before committing', 'Acts swiftly and decisively on angles and combinations scarcely noticed by other types', 'Pivots based on new information — always looking for a better or more satisfying outcome', 'Needs to carefully analyze perceptions to avoid leaping over important constraints'],
     'INFJ': ['Considers impact on people', 'Trusts intuitive insights', 'Aligns with core values'],
-    'ENFJ': ['Weighs effect on relationships', 'Seeks consensus when possible', 'Considers ethical implications'],
+    'ENFJ': ['Weighs the effect on people and relationships first', 'Seeks consensus and win-win outcomes', 'Considers ethical and human implications', 'Values harmony but will be sharp when a core value is at stake'],
     'INFP': ['Filters through personal values', 'Seeks authentic choices', 'Considers individual impact'],
-    'ENFP': ['Follows enthusiasm and passion', 'Considers human potential', 'Keeps options open'],
+    'ENFP': ['Follows enthusiasm and passion while staying true to personal values', 'Considers the human element and individual needs above group expectations', 'Keeps options open — resistant to being controlled or labeled', 'Needs to consciously apply judgment to avoid jumping to wrong conclusions'],
     'ISTJ': ['Reviews past precedents', 'Follows proven methods', 'Ensures compliance'],
     'ESTJ': ['Applies practical logic', 'Makes timely decisions', 'Follows established guidelines'],
     'ISFJ': ['Considers others\' needs first', 'Maintains stability', 'Honors commitments'],
-    'ESFJ': ['Seeks group harmony', 'Follows social norms', 'Considers tradition'],
+    'ESFJ': ['Seeks group harmony and weighs values against the community around them', 'Follows social norms and traditional, established ways of doing things', 'Considers what is best for others and the group before acting', 'Needs to consciously open perspective to include differing viewpoints'],
     'ISTP': ['Analyzes immediate situation', 'Tests practical solutions', 'Stays flexible'],
     'ESTP': ['Acts on current opportunities', 'Takes calculated risks', 'Adapts to circumstances'],
     'ISFP': ['Follows personal aesthetics', 'Stays true to values', 'Responds to feelings'],
@@ -982,52 +983,52 @@ const decisionFrameworkData = {
 // Full personality descriptions for each type
 const personalityDescriptions = {
     'INTJ': 'As an Architect (INTJ), you are a strategic mastermind with a natural ability to see the big picture and devise long-term plans. You approach problems with logic and analysis, preferring to work independently on complex challenges. Your mind is constantly seeking patterns and improvements in systems. You value competence and knowledge above all else, and you have little patience for inefficiency or illogical thinking. While you may appear reserved, you possess strong convictions and will defend your ideas with well-reasoned arguments. You excel in fields requiring strategic thinking, innovation, and systematic problem-solving.',
-    
-    'ENTJ': 'As a Commander (ENTJ), you are a natural-born leader with an exceptional ability to organize people and resources toward a common goal. You think strategically, make decisions quickly, and execute plans with confidence and determination. Your direct communication style and focus on efficiency make you an effective executive. You thrive in challenging environments where you can take charge and drive results. While your assertiveness is a strength, learning to consider others\' feelings and perspectives will enhance your leadership effectiveness. You excel in management, entrepreneurship, and any role requiring strategic vision and decisive action.',
-    
+
+    'ENTJ': 'As an ENTJ, your primary mode of living is focused externally, where you deal with things rationally and logically. You are a natural born leader who lives in a world of possibilities, seeing all sorts of challenges to be surmounted — and wanting to be the one responsible for surmounting them. You have a drive for leadership, well-served by your quickness to grasp complexities, your ability to absorb large amounts of impersonal information, and your quick and decisive judgments. You are very career-focused and fit into the corporate world naturally, constantly scanning your environment for potential problems to turn into solutions. You generally see things from a long-range perspective and are usually successful at identifying plans to turn problems around. There is not much room for error in your world — you dislike seeing mistakes repeated and have no patience with inefficiency. You are assertive, innovative, and a long-range thinker with an excellent ability to translate theories and possibilities into solid plans of action. You have a tremendous amount of personal power and presence. You love to interact with people and there is nothing more enjoyable to you than a lively, challenging conversation. You especially respect people who are able to stand up to you and argue persuasively for their point of view.',
+
     'INTP': 'As a Logician (INTP), you are an innovative thinker with an insatiable curiosity about how things work. You excel at analyzing complex systems, identifying patterns, and developing elegant theoretical solutions. Your mind is constantly exploring ideas, questioning assumptions, and seeking logical consistency. You value intellectual independence and need freedom to pursue your interests deeply. While you may appear detached, you are passionate about ideas and enjoy engaging in thoughtful debates. You may struggle with practical implementation and social conventions. You excel in fields requiring analytical thinking, innovation, and theoretical problem-solving.',
-    
-    'ENTP': 'As a Debater (ENTP), you are a quick-witted innovator who loves intellectual challenges and generating creative solutions. You see possibilities everywhere and enjoy exploring unconventional ideas. Your ability to think on your feet and argue multiple perspectives makes you an engaging conversationalist and effective problem-solver. You thrive on change and variety, often juggling multiple projects simultaneously. While your enthusiasm for new ideas is infectious, you may struggle with follow-through and routine tasks. Learning to focus your energy and consider others\' feelings will enhance your effectiveness. You excel in entrepreneurship, innovation, and roles requiring creative problem-solving.',
-    
+
+    'ENTP': 'As an ENTP, your primary mode of living is focused externally, where you take things in primarily via your intuition. You are an upbeat visionary who highly values knowledge and spends much of your life seeking a higher understanding. You live in the world of possibilities, and become excited about concepts, challenges and difficulties. With Extraverted Intuition dominating your personality, you are constantly absorbing ideas and images about the situations you are presented with, and are usually extremely quick and accurate in your ability to size up a situation. You are an idea person — your perceptive abilities cause you to see possibilities everywhere. You get excited and enthusiastic about your ideas, and are able to spread your enthusiasm to others. You are a fluent conversationalist, mentally quick, and enjoy verbal sparring. You love to debate issues, and may even switch sides sometimes just for the love of the debate. You are less interested in developing plans of action than in generating possibilities and ideas — following through on implementation is usually a chore. When presented with a problem, you are good at improvising and quickly come up with a creative solution. Creative, clever, curious, and theoretical, you have a broad range of possibilities in your life. You are fortunate in that you have a wide range of capabilities and are generally good at anything which has captured your interest.',
+
     'INFJ': 'As an Advocate (INFJ), you are a deeply insightful individual with a strong sense of idealism and integrity. You possess an exceptional ability to understand people and see beneath the surface. Your intuition guides you toward meaningful work that aligns with your values. You are driven by a desire to help others and make a positive impact on the world. While you are empathetic and caring, you also need time alone to recharge and reflect. You may struggle with perfectionism and taking on too much responsibility for others. You excel in counseling, writing, education, and any role where you can guide and inspire others toward personal growth.',
-    
-    'ENFJ': 'As a Protagonist (ENFJ), you are a charismatic leader with a natural ability to inspire and motivate others. You are deeply attuned to people\'s emotions and needs, and you excel at bringing out the best in everyone around you. Your warmth, enthusiasm, and organizational skills make you an effective teacher, mentor, and team leader. You are driven by a desire to help others reach their potential and create positive change. While your focus on others is admirable, remember to attend to your own needs as well. You excel in teaching, human resources, public relations, and any role involving people development and leadership.',
-    
+
+    'ENFJ': 'As a Protagonist (ENFJ), your primary mode of living is focused externally, dealing with things according to how you feel about them and how they fit your personal value system. Your secondary mode is internal, taking things in primarily via intuition. You are a people-focused individual who lives in the world of human possibilities. More so than any other type, you have excellent people skills — you understand and care about people, and have a special talent for bringing out the best in others. Your main interest in life is giving love, support, and a good time to other people. Because your people skills are so extraordinary, you have the ability to make people do exactly what you want them to do. Your motives are usually unselfish, but ENFJs who have developed less than ideally have been known to use this power to manipulate. You tend to define your life\'s direction according to other people\'s needs, and may not always be aware of your own. You have definite values and opinions which you express clearly, as long as they don\'t interfere with bringing out the best in others. People love ENFJs — you are fun to be with, straight-forward, honest, full of self-confidence, bright, energetic, and fast-paced. You like things to be well-organized and will work hard at maintaining structure. You get your best personal satisfaction from serving others and making things happen for people.',
+
     'INFP': 'As a Mediator (INFP), you are an idealistic dreamer guided by strong personal values and a desire for authenticity. You possess a rich inner world and express yourself through creative pursuits. You are deeply empathetic and seek to understand others on a profound level. Your work must align with your values and contribute to something meaningful. While you are adaptable and open-minded, you stand firm on matters of principle. You may struggle with practical details and asserting yourself. Learning to balance idealism with pragmatism will help you achieve your goals. You excel in creative writing, counseling, design, and roles allowing authentic self-expression.',
-    
-    'ENFP': 'As a Campaigner (ENFP), you are an enthusiastic free spirit with boundless energy and creativity. You see life as full of possibilities and approach each day with curiosity and passion. Your ability to connect with people and generate innovative ideas makes you an inspiring presence. You thrive on variety and new experiences, often pursuing multiple interests simultaneously. While your enthusiasm is contagious, you may struggle with focus and follow-through. Learning to channel your energy and complete projects will enhance your effectiveness. You excel in marketing, journalism, counseling, and any role requiring creativity, communication, and people skills.',
-    
+
+    'ENFP': 'As an ENFP, your primary mode of living is focused externally, where you take things in primarily via your intuition. You are warm, enthusiastic, typically very bright and full of potential. You live in the world of possibilities, and can become very passionate and excited about things. Your enthusiasm lends you the ability to inspire and motivate others more so than we see in other types — you can talk your way in or out of anything. You love life, seeing it as a special gift, and strive to make the most out of it. You have an unusually broad range of skills and talents and are good at most things which interest you. You are project-oriented and may go through several different careers during your lifetime, always guided by a strong, consistent value system. Everything you do must be in line with your values — you need to feel that you are living your life as your true Self. You have great people skills and an exceptional ability to intuitively understand a person after a very short period of time. Because you live in the world of exciting possibilities, the details of everyday life are seen as trivial drudgery. You work best in situations where you have a lot of flexibility and where you can work with people and ideas. ENFPs are charming, ingenuous, risk-taking, sensitive, people-oriented individuals with capabilities ranging across a broad spectrum.',
+
     'ISTJ': 'As a Logistician (ISTJ), you are a reliable and practical individual who values tradition, order, and responsibility. You approach tasks methodically, paying careful attention to details and following established procedures. Your strong sense of duty and commitment makes you dependable in any role. You prefer clear expectations and proven methods over experimentation. While your consistency is a strength, being open to new approaches can enhance your effectiveness. You may appear reserved but possess deep loyalty to those you care about. You excel in accounting, project management, administration, and any role requiring accuracy, organization, and dependability.',
-    
+
     'ESTJ': 'As an Executive (ESTJ), you are an efficient organizer with a talent for managing people and processes. You value structure, rules, and clear hierarchies. Your direct communication style and focus on results make you an effective leader and administrator. You believe in hard work, responsibility, and following established procedures. While your decisiveness is valuable, learning to be flexible and consider others\' perspectives will enhance your leadership. You may struggle with change and unconventional approaches. You excel in management, operations, finance, and any role requiring organization, efficiency, and practical problem-solving.',
-    
+
     'ISFJ': 'As a Defender (ISFJ), you are a caring and dedicated individual who finds fulfillment in supporting and helping others. You are attentive to details and remember what matters to people. Your loyalty, reliability, and practical nature make you an invaluable team member. You prefer stable environments and value tradition and harmony. While your selflessness is admirable, remember to advocate for your own needs as well. You may struggle with change and conflict. Learning to embrace new possibilities and express your feelings will enhance your well-being. You excel in healthcare, education, administration, and any role involving service and support.',
-    
-    'ESFJ': 'As a Consul (ESFJ), you are a warm and sociable individual who thrives on creating harmony and helping others. You are highly attuned to social dynamics and excel at bringing people together. Your organizational skills and attention to others\' needs make you an excellent host, coordinator, and caregiver. You value tradition, cooperation, and maintaining positive relationships. While your focus on others is a strength, ensure you don\'t neglect your own needs. You may struggle with criticism and conflict. You excel in event planning, healthcare administration, sales, customer service, and any role involving people coordination and support.',
-    
+
+    'ESFJ': 'As an ESFJ, your primary mode of living is focused externally, where you deal with things according to how you feel about them, or how they fit in with your personal value system. You are a people person — you love people and are warmly interested in others. You use your Sensing and Judging characteristics to gather specific, detailed information about others, and turn this information into supportive judgments. You have a special skill at bringing out the best in others and are extremely good at reading people and understanding their point of view. You take your responsibilities very seriously and are very dependable. You value security and stability, and have a strong focus on the details of life. You see before others do what needs to be done, and do whatever it takes to make sure it gets done. You are warm and energetic, and get a lot of your personal satisfaction from the happiness of others. You want to be appreciated for who you are and what you give. You enjoy creating order and structure, and are very good at tasks which require these kinds of skills. At your best you are warm, sympathetic, helpful, cooperative, tactful, down-to-earth, practical, thorough, consistent, organized, enthusiastic, and energetic. You enjoy tradition and security, and seek stable lives rich in contact with friends and family.',
+
     'ISTP': 'As a Virtuoso (ISTP), you are a bold and practical experimenter with a natural mechanical curiosity. You love understanding how things work and excel at hands-on problem-solving. You are independent, adaptable, and calm under pressure, often reacting quickly to crises. You value freedom and need space to pursue your interests. Your logical and rational approach is balanced by a spontaneous streak. While you are action-oriented, you may struggle with long-term planning and emotional expression. Learning to communicate your feelings and consider future consequences will strengthen your relationships. You excel in engineering, technology, mechanics, and any role requiring practical problem-solving.',
-    
+
     'ESTP': 'As an Entrepreneur (ESTP), you are an energetic risk-taker who lives in the moment and thrives on action. You are perceptive, adaptable, and excel at reading situations and people. Your ability to think on your feet and take immediate action makes you effective in dynamic environments. You are pragmatic and results-oriented, preferring to learn by doing. While your spontaneity is exciting, you may struggle with long-term planning and routine tasks. Learning to consider consequences and follow through on commitments will enhance your success. You excel in sales, entrepreneurship, emergency services, and any role requiring quick thinking and action.',
-    
+
     'ISFP': 'As an Adventurer (ISFP), you are a gentle and artistic soul with a strong aesthetic sense and appreciation for beauty. You live in the present moment and express yourself through creative pursuits. You are deeply in tune with your senses and emotions, and you value personal freedom and authenticity. Your adaptability and open-mindedness make you easy to be around. While you are caring and empathetic, you may struggle with conflict and long-term planning. Learning to assert yourself and plan ahead will help you achieve your goals. You excel in art, design, culinary arts, veterinary care, and any role allowing creative expression.',
-    
+
     'ESFP': 'As an Entertainer (ESFP), you are a spontaneous and enthusiastic individual who brings joy and energy wherever you go. You love being around people and making experiences fun and memorable. You are observant, practical, and excel at reading social situations. Your ability to live in the moment and adapt quickly makes you engaging and entertaining. While your spontaneity is a gift, you may struggle with planning ahead and dealing with criticism. Learning to consider long-term consequences and develop discipline will enhance your success. You excel in entertainment, hospitality, fitness training, retail, and any role involving people engagement and performance.'
 };
 
 // Did you know facts for each type
 const didYouKnowData = {
     'INTJ': 'Your personality type is often found in leadership roles during times of crisis because of your ability to remain calm and strategic.',
-    'ENTJ': 'ENTJs make up only 3% of the population but hold a disproportionate number of CEO positions.',
+    'ENTJ': 'ENTJs make up only 3% of the population but hold a disproportionate number of CEO positions. Their ability to clearly identify problems and innovative solutions makes them exceptional organization builders.',
     'INTP': 'Many groundbreaking scientific theories were developed by INTPs who questioned conventional wisdom.',
-    'ENTP': 'Your personality type is known for starting multiple businesses and pioneering new industries.',
+    'ENTP': 'Your personality type is known for starting multiple businesses and pioneering new industries. ENTPs are the great problem solvers, discoverers, and re-inventors of the world — their insights allow them to see new ways of putting things together that others simply cannot see.',
     'INFJ': 'Despite being rare, INFJs have influenced history through counseling, writing, and social reform.',
-    'ENFJ': 'Your personality type is naturally gifted at public speaking and often becomes influential teachers.',
+    'ENFJ': 'Your personality type is naturally gifted at public speaking and often becomes an influential teacher, mentor, or leader. ENFJs have such a special gift with people that they can draw out even the most reserved individuals.',
     'INFP': 'Many of the world\'s greatest literary works were written by INFPs expressing their inner worlds.',
-    'ENFP': 'Your personality type is often found in creative industries and is known for innovative thinking.',
+    'ENFP': 'Your personality type is often found in creative industries and is known for innovative thinking. ENFPs are lucky in that they\'re good at quite a lot of different things — they can generally achieve success at anything which has interested them.',
     'ISTJ': 'ISTJs form the backbone of many organizations through their reliability and attention to detail.',
     'ESTJ': 'Your personality type excels at turning chaos into order and is often found in management roles.',
     'ISFJ': 'ISFJs are the most common personality type and are known for their dedication to helping others.',
-    'ESFJ': 'Your personality type is naturally skilled at creating community and bringing people together.',
+    'ESFJ': 'Your personality type is naturally skilled at creating community and bringing people together. ESFJs measure their success by the happiness and gratitude reflected back from the people in whose lives they play a part.',
     'ISTP': 'ISTPs are often called "The Mechanics" and excel in hands-on problem-solving situations.',
     'ESTP': 'Your personality type is known for thriving in high-pressure situations and making quick decisions.',
     'ISFP': 'Many famous artists and musicians are ISFPs who express their inner world through their craft.',
@@ -1039,22 +1040,22 @@ function populateNewPages() {
     console.log('=== POPULATE NEW PAGES CALLED ===');
     console.log('Current personalityType:', personalityType);
     console.log('Assessment scores:', assessmentScores);
-    
+
     // If we have scores but no personality type, calculate it
     if (assessmentScores && !personalityType) {
         personalityType = calculatePersonalityTypeFromScores(assessmentScores);
         console.log('Calculated personality type from scores:', personalityType);
     }
-    
+
     // Ensure we have a personality type
     if (!personalityType) {
         personalityType = 'INFP'; // Default fallback
         console.warn('No personality type found, using default:', personalityType);
     }
-    
+
     // Update ALL personality badges
     updateAllPersonalityReferences(personalityType);
-    
+
     // Update personality badges on all pages (legacy code, kept for compatibility)
     const badgeIds = [
         'page3-personality-type', 'page4-personality-type', 'page5-personality-type',
@@ -1063,7 +1064,7 @@ function populateNewPages() {
         'page12-personality-type', 'page13-personality-type', 'page14-personality-type',
         'page15-personality-type', 'page16-personality-type', 'page17-personality-type'
     ];
-    
+
     badgeIds.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
@@ -1073,16 +1074,16 @@ function populateNewPages() {
             console.warn(`Element ${id} not found`);
         }
     });
-    
+
     // Page 3: Interest Report
     populateInterestBars();
-    
+
     // Page 4: Profile Strategy
     populateProfileStrategy();
-    
+
     // Page 5: Curiosities
     populateCuriosities();
-    
+
     // Page 6: Personality Description
     populatePersonalityDescription();
 }
@@ -1091,7 +1092,7 @@ function populateInterestBars() {
     const interests = interestData[personalityType] || interestData['ENFP'];
     const container = document.getElementById('interest-bars');
     container.innerHTML = '';
-    
+
     interests.forEach((interest, index) => {
         const bar = document.createElement('div');
         bar.className = 'interest-bar';
@@ -1105,7 +1106,7 @@ function populateInterestBars() {
             </div>
         `;
         container.appendChild(bar);
-        
+
         setTimeout(() => {
             const fill = bar.querySelector('.interest-bar-fill');
             fill.style.width = interest.score + '%';
@@ -1116,42 +1117,42 @@ function populateInterestBars() {
 function populateProfileStrategy() {
     console.log('=== POPULATING PROFILE STRATEGY ===');
     console.log('Personality Type:', personalityType);
-    
+
     const orientation = orientationData[personalityType] || 'Creative';
     const opStyle = operationalStyleData[personalityType] || operationalStyleData['ENFP'];
     const decFramework = decisionFrameworkData[personalityType] || decisionFrameworkData['ENFP'];
-    
+
     console.log('Orientation:', orientation);
     console.log('Operational Style:', opStyle);
     console.log('Decision Framework:', decFramework);
-    
+
     const dominantOrientationEl = document.getElementById('dominant-orientation');
     const archetypeTypeEl = document.getElementById('archetype-type');
     const coreAdvantageEl = document.getElementById('core-advantage-text');
-    
+
     if (dominantOrientationEl) {
         dominantOrientationEl.textContent = orientation;
         console.log('✓ Updated dominant-orientation to:', orientation);
     } else {
         console.error('✗ Element dominant-orientation not found!');
     }
-    
+
     if (archetypeTypeEl) {
         archetypeTypeEl.textContent = personalityType;
         console.log('✓ Updated archetype-type to:', personalityType);
     } else {
         console.error('✗ Element archetype-type not found!');
     }
-    
+
     const coreAdvantage = `By combining your ${personalityType} capabilities with a ${orientation} orientation, you possess a unique ability to excel in your field while staying true to your natural strengths and interests.`;
-    
+
     if (coreAdvantageEl) {
         coreAdvantageEl.textContent = coreAdvantage;
         console.log('✓ Updated core-advantage-text');
     } else {
         console.error('✗ Element core-advantage-text not found!');
     }
-    
+
     // Populate operational style
     const opStyleContainer = document.getElementById('operational-style');
     if (opStyleContainer) {
@@ -1160,7 +1161,7 @@ function populateProfileStrategy() {
     } else {
         console.error('✗ Element operational-style not found!');
     }
-    
+
     // Populate decision framework
     const decFrameworkContainer = document.getElementById('decision-framework');
     if (decFrameworkContainer) {
@@ -1169,7 +1170,7 @@ function populateProfileStrategy() {
     } else {
         console.error('✗ Element decision-framework not found!');
     }
-    
+
     console.log('=== PROFILE STRATEGY POPULATION COMPLETE ===');
 }
 
@@ -1178,9 +1179,9 @@ function populateCuriosities() {
     const container = document.getElementById('curiosity-cards');
     const subtitle = document.getElementById('curiosities-subtitle');
     const didYouKnow = document.getElementById('did-you-know-text');
-    
+
     subtitle.textContent = `Interesting insights about the ${personalityType} personality type.`;
-    
+
     container.innerHTML = '';
     curiosities.slice(0, 3).forEach(fact => {
         const card = document.createElement('div');
@@ -1191,23 +1192,23 @@ function populateCuriosities() {
         `;
         container.appendChild(card);
     });
-    
+
     didYouKnow.textContent = didYouKnowData[personalityType] || didYouKnowData['ENFP'];
 }
 
 function populatePersonalityDescription() {
     console.log('=== POPULATING PERSONALITY DESCRIPTION ===');
     console.log('Personality Type:', personalityType);
-    
+
     const name = getPersonalityName(personalityType);
     const category = getCategoryName(personalityType);
     const metaphor = metaphorData[personalityType] || metaphorData['ISTP'];
     const fullDesc = personalityDescriptions[personalityType] || personalityDescriptions['ENFP'];
-    
+
     console.log('Name:', name);
     console.log('Category:', category);
     console.log('Metaphor:', metaphor);
-    
+
     // Determine emoji based on category
     const categoryEmojis = {
         'Analysts': '🧠',
@@ -1216,75 +1217,75 @@ function populatePersonalityDescription() {
         'Explorers': '🔧'
     };
     const emoji = categoryEmojis[category] || '🔧';
-    
+
     const nameHeroEl = document.getElementById('personality-name-hero');
     if (nameHeroEl) {
         nameHeroEl.textContent = name + ' ' + emoji;
         console.log('✓ Updated personality-name-hero');
     }
-    
+
     const categoryEl = document.getElementById('personality-category');
     if (categoryEl) {
         categoryEl.textContent = category;
         console.log('✓ Updated personality-category');
     }
-    
+
     const codeBadgeEl = document.getElementById('personality-code-badge');
     if (codeBadgeEl) {
         codeBadgeEl.textContent = personalityType;
         console.log('✓ Updated personality-code-badge');
     }
-    
+
     // Use comprehensive description
     const fullDescEl = document.getElementById('personality-full-description');
     if (fullDescEl) {
         fullDescEl.innerHTML = `<p>${fullDesc}</p>`;
         console.log('✓ Updated personality-full-description');
     }
-    
+
     // Populate traits
     const traitsContainer = document.getElementById('personality-traits');
     if (traitsContainer) {
         traitsContainer.innerHTML = metaphor.traits.map(trait => `<span>${trait}</span>`).join('');
         console.log('✓ Updated personality-traits');
     }
-    
+
     // Populate metaphor
     const metaphorNameEl = document.getElementById('metaphor-name');
     if (metaphorNameEl) {
         metaphorNameEl.textContent = metaphor.name;
         console.log('✓ Updated metaphor-name');
     }
-    
+
     const metaphorDescEl = document.getElementById('metaphor-description');
     if (metaphorDescEl) {
         metaphorDescEl.textContent = metaphor.desc;
         console.log('✓ Updated metaphor-description');
     }
-    
+
     // Extract trait labels without emojis for metaphor traits
     const trait1 = metaphor.traits[0].replace(/[^\w\s]/g, '').trim();
     const trait2 = metaphor.traits[1].replace(/[^\w\s]/g, '').trim();
     const trait3 = metaphor.traits[2].replace(/[^\w\s]/g, '').trim();
-    
+
     const trait1El = document.getElementById('metaphor-trait-1');
     if (trait1El) {
         trait1El.textContent = trait1;
         console.log('✓ Updated metaphor-trait-1');
     }
-    
+
     const trait2El = document.getElementById('metaphor-trait-2');
     if (trait2El) {
         trait2El.textContent = trait2;
         console.log('✓ Updated metaphor-trait-2');
     }
-    
+
     const trait3El = document.getElementById('metaphor-trait-3');
     if (trait3El) {
         trait3El.textContent = trait3;
         console.log('✓ Updated metaphor-trait-3');
     }
-    
+
     console.log('=== PERSONALITY DESCRIPTION POPULATION COMPLETE ===');
 }
 
@@ -1396,32 +1397,32 @@ const strengthsGrowthData = {
         growth: ['May seem aloof or arrogant', 'Can be overly critical', 'Struggles with emotional expression', 'May dismiss others\' input']
     },
     'ENTJ': {
-        strengths: ['Natural leadership abilities', 'Decisive and efficient', 'Strategic and organized', 'Confident in execution'],
-        growth: ['Can be overly dominant', 'May overlook people\'s feelings', 'Impatient with inefficiency', 'Can be too blunt']
+        strengths: ['Natural born leader — driven to take charge and surmount challenges', 'Excellent verbal communication and debate skills', 'Fair-minded, decisive, and extremely high standards', 'Able to turn conflict situations into positive lessons'],
+        growth: ['Tendency to be challenging, confrontational, and overbearing', 'Not naturally tuned in to people\'s feelings and reactions', 'May be harsh and intolerant about inefficiency or messiness', 'Tendency to make hasty decisions and want to always be in charge']
     },
     'INTP': {
         strengths: ['Analytical and logical thinking', 'Creative problem-solving', 'Open-minded and curious', 'Independent and objective'],
         growth: ['May procrastinate on practical tasks', 'Can be socially awkward', 'Struggles with emotional expression', 'May overthink decisions']
     },
     'ENTP': {
-        strengths: ['Innovative and creative', 'Quick-witted and adaptable', 'Excellent debater', 'Sees possibilities everywhere'],
-        growth: ['May lack follow-through', 'Can be argumentative', 'Struggles with routine', 'May overlook details']
+        strengths: ['Enthusiastic, upbeat, and excellent communicator — able to spread enthusiasm to others', 'Sees possibilities everywhere; great at improvising creative solutions to difficult problems', 'Extremely interested in self-improvement and growth in relationships', 'Able to quickly find the best or most useful side of others; laid-back and flexible'],
+        growth: ['Tendency to not follow through on plans and ideas — may never finish what they start', 'Love of debate may cause them to provoke arguments unnecessarily', 'Big risk-takers and spenders; not usually good at managing money', 'May abandon relationships which no longer offer opportunity for growth']
     },
     'INFJ': {
         strengths: ['Deep insight into people', 'Strong values and integrity', 'Creative and visionary', 'Dedicated to helping others'],
         growth: ['Can be perfectionistic', 'May take on too much', 'Struggles with criticism', 'Can be overly idealistic']
     },
     'ENFJ': {
-        strengths: ['Charismatic and inspiring', 'Excellent communicator', 'Organized and responsible', 'Empathetic and supportive'],
-        growth: ['May be overly idealistic', 'Can neglect own needs', 'Struggles with conflict', 'May be too controlling']
+        strengths: ['Genuinely and warmly interested in people', 'Exceptional people skills — understands and motivates others', 'Strong organizational capabilities and love of structure', 'Loyal, honest, creative, and imaginative'],
+        growth: ['Tendency to neglect own needs for others', 'Can be overly controlling or manipulative when unbalanced', 'Extremely sensitive to criticism and conflict', 'May define themselves entirely through others\' needs']
     },
     'INFP': {
         strengths: ['Deeply empathetic and caring', 'Creative and imaginative', 'Authentic and genuine', 'Flexible and open-minded'],
         growth: ['Can be overly idealistic', 'May avoid conflict', 'Struggles with practical details', 'Can be too self-critical']
     },
     'ENFP': {
-        strengths: ['Enthusiastic and energetic', 'Creative and innovative', 'Excellent people skills', 'Adaptable and spontaneous'],
-        growth: ['May lack focus and follow-through', 'Can be overly emotional', 'Struggles with routine tasks', 'May overcommit']
+        strengths: ['Exceptionally perceptive about people — quickly and accurately assesses where someone is coming from', 'Warmly, genuinely interested in people with great communication skills', 'Highly creative, energetic, and motivational; brings out the best in others', 'Natural leader who does not like to control people; cooperative and egalitarian'],
+        growth: ['May drop projects when excited about a new possibility — difficulty following through', 'Tendency to be smothering and hold onto bad relationships long after they\'ve turned bad', 'Extreme dislike of conflict and criticism; may internalize anger rather than express it', 'Uninterested in routine, mundane tasks; may become bored easily']
     },
     'ISTJ': {
         strengths: ['Reliable and responsible', 'Detail-oriented and thorough', 'Practical and logical', 'Strong work ethic'],
@@ -1436,8 +1437,8 @@ const strengthsGrowthData = {
         growth: ['May neglect own needs', 'Can be too selfless', 'Struggles with change', 'May avoid conflict']
     },
     'ESFJ': {
-        strengths: ['Warm and caring', 'Organized and responsible', 'Strong social skills', 'Loyal and supportive'],
-        growth: ['Can be too concerned with others\' opinions', 'May be overly sensitive', 'Struggles with criticism', 'Can be inflexible']
+        strengths: ['Warm, friendly, and affirming — has a special gift for making people feel good about themselves', 'Service-oriented, takes commitments very seriously, and seeks lifelong relationships', 'Responsible and practical — can be counted on to take care of day-to-day necessities', 'Generally upbeat and popular; traditionally minded and family-oriented'],
+        growth: ['Generally uncomfortable with change and moving into new territory', 'Extreme dislike of conflict and criticism; needs a lot of positive affirmation', 'May tend to use guilt manipulation as a way to get what they want', 'Have difficulty accepting negative things about people close to them']
     },
     'ISTP': {
         strengths: ['Calm in crisis situations', 'Skilled at troubleshooting and fixing things', 'Adaptable and spontaneous', 'Independent and self-reliant'],
@@ -1465,9 +1466,9 @@ const communicationStyleData = {
         donts: ['Don\'t waste time on small talk', 'Don\'t be overly emotional', 'Don\'t ignore their expertise']
     },
     'ENTJ': {
-        traits: ['Direct and assertive', 'Goal-oriented communication', 'Prefers efficiency'],
-        dos: ['Be direct and clear', 'Focus on results', 'Come prepared'],
-        donts: ['Don\'t waste their time', 'Don\'t be overly sensitive', 'Don\'t lack structure']
+        traits: ['Direct, assertive, and verbally fluent', 'Enjoys lively, challenging debate — especially respects those who stand up to them', 'Goal-oriented and efficiency-focused; no patience for vagueness'],
+        dos: ['Be direct, prepared, and argue your point with confidence', 'Focus on results, logic, and long-term outcomes', 'Come with data and a clear rationale'],
+        donts: ['Don\'t be vague, inefficient, or waste their time', 'Don\'t be overly emotional or sensitive in discussions', 'Don\'t back down without a well-reasoned argument']
     },
     'INTP': {
         traits: ['Analytical and precise', 'Enjoys intellectual debates', 'May seem detached'],
@@ -1475,9 +1476,9 @@ const communicationStyleData = {
         donts: ['Don\'t be illogical', 'Don\'t rush decisions', 'Don\'t take debates personally']
     },
     'ENTP': {
-        traits: ['Witty and engaging', 'Enjoys debate and discussion', 'Challenges ideas'],
-        dos: ['Be open to new ideas', 'Engage in discussion', 'Keep it interesting'],
-        donts: ['Don\'t be rigid', 'Don\'t take debates personally', 'Don\'t be boring']
+        traits: ['Witty, engaging, and mentally quick — enjoys verbal sparring', 'Loves to debate and may switch sides just for the love of the argument', 'Challenges conventional thinking and sees the other side of every situation'],
+        dos: ['Be open to new ideas and engage in lively intellectual discussion', 'Come prepared to defend your position with logic and evidence', 'Keep it interesting — they thrive on challenge and novelty'],
+        donts: ['Don\'t be rigid, boring, or resistant to new ideas', 'Don\'t take their debate personally — it\'s intellectual sport to them', 'Don\'t expect them to follow routine or stick to a rigid plan']
     },
     'INFJ': {
         traits: ['Thoughtful and deep', 'Prefers meaningful conversations', 'Reads between the lines'],
@@ -1485,9 +1486,9 @@ const communicationStyleData = {
         donts: ['Don\'t be superficial', 'Don\'t dismiss their intuition', 'Don\'t be dishonest']
     },
     'ENFJ': {
-        traits: ['Warm and expressive', 'Focuses on people and relationships', 'Encouraging and supportive'],
-        dos: ['Be open and honest', 'Show appreciation', 'Engage emotionally'],
-        donts: ['Don\'t be cold or distant', 'Don\'t criticize harshly', 'Don\'t ignore feelings']
+        traits: ['Warm, expressive, and people-focused', 'Adapts communication style to the listener like a chameleon', 'Expresses values clearly but avoids topics that would interfere with harmony'],
+        dos: ['Be open, honest, and show genuine appreciation', 'Engage emotionally and acknowledge their efforts', 'Give them affirmation — they need to know they are valued'],
+        donts: ['Don\'t be cold, dismissive, or overly critical', 'Don\'t ignore their feelings or the feelings of others', 'Don\'t force them into purely impersonal logic without a human element']
     },
     'INFP': {
         traits: ['Gentle and thoughtful', 'Values authenticity', 'May be reserved initially'],
@@ -1495,9 +1496,9 @@ const communicationStyleData = {
         donts: ['Don\'t be fake or manipulative', 'Don\'t criticize their ideals', 'Don\'t rush them']
     },
     'ENFP': {
-        traits: ['Enthusiastic and expressive', 'Enjoys brainstorming', 'Connects ideas creatively'],
-        dos: ['Be open and enthusiastic', 'Explore possibilities', 'Show genuine interest'],
-        donts: ['Don\'t be rigid or controlling', 'Don\'t dismiss their ideas', 'Don\'t be overly critical']
+        traits: ['Enthusiastic, expressive, and genuinely warm', 'Exceptional ability to relate to people on their own level', 'Highly intuitive — can read people quickly and accurately'],
+        dos: ['Be open, enthusiastic, and explore possibilities together', 'Show genuine interest in them as an individual', 'Give them freedom and flexibility — avoid being controlling'],
+        donts: ['Don\'t be rigid, controlling, or dismissive of their ideas', 'Don\'t criticize them personally — they dislike it intensely', 'Don\'t force them into routine or mundane detail work']
     },
     'ISTJ': {
         traits: ['Clear and factual', 'Prefers structured communication', 'Values accuracy'],
@@ -1515,9 +1516,9 @@ const communicationStyleData = {
         donts: ['Don\'t be rude or abrupt', 'Don\'t ignore their efforts', 'Don\'t create conflict']
     },
     'ESFJ': {
-        traits: ['Friendly and sociable', 'Focuses on people and harmony', 'Expressive and warm'],
-        dos: ['Be friendly and warm', 'Show appreciation', 'Maintain harmony'],
-        donts: ['Don\'t be cold or critical', 'Don\'t ignore social norms', 'Don\'t create discord']
+        traits: ['Friendly, warm, and focused on people and harmony', 'Extremely good at reading others and changing their manner to be more pleasing', 'Open, honest, and forthright about the way they see things'],
+        dos: ['Be friendly, warm, and show genuine appreciation', 'Maintain harmony and acknowledge their contributions', 'Be reliable and follow through on commitments'],
+        donts: ['Don\'t be cold, critical, or indifferent — they are hurt by indifference', 'Don\'t ignore social norms or create unnecessary conflict', 'Don\'t dismiss their values or the traditions they hold dear']
     },
     'ISTP': {
         traits: ['Brief, practical, and to the point', 'Prefers action over long discussions', 'May avoid abstract or speculative conversations'],
@@ -1544,27 +1545,27 @@ const communicationStyleData = {
 // Populate pages 7-11
 function populateAdditionalPages() {
     console.log('populateAdditionalPages called');
-    
+
     // Update personality badges (already done in populateNewPages, but ensuring)
     const additionalBadgeIds = [
         'page7-personality-type', 'page8-personality-type', 'page9-personality-type',
         'page10-personality-type', 'page11-personality-type'
     ];
-    
+
     additionalBadgeIds.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
             element.textContent = personalityType;
         }
     });
-    
+
     // Page 7: Working Orientation
     populateWorkingOrientation();
-    
+
     // Page 9: Trait Breakdown & Strengths
     populateTraitBreakdown();
     populateStrengthsGrowth();
-    
+
     // Page 11: Communication Style
     populateCommunicationStyle();
 }
@@ -1573,9 +1574,9 @@ function populateWorkingOrientation() {
     const orientations = workingOrientationData[personalityType] || workingOrientationData['ENFP'];
     const container = document.getElementById('orientation-bars');
     container.innerHTML = '';
-    
+
     const icons = { 'Creative': '🎨', 'Informative': '📚', 'People': '👥', 'Administrative': '📋' };
-    
+
     orientations.forEach((item, index) => {
         const bar = document.createElement('div');
         bar.className = 'orientation-bar-item';
@@ -1592,7 +1593,7 @@ function populateWorkingOrientation() {
             </div>
         `;
         container.appendChild(bar);
-        
+
         setTimeout(() => {
             const fill = bar.querySelector('.orientation-bar-fill');
             fill.style.width = item.score + '%';
@@ -1604,7 +1605,7 @@ function populateTraitBreakdown() {
     const scores = assessmentScores || getDefaultScores(personalityType);
     const container = document.getElementById('trait-bars-grid');
     container.innerHTML = '';
-    
+
     const traits = [
         { letter: 'I', score: scores.i, total: scores.i + scores.e },
         { letter: 'E', score: scores.e, total: scores.i + scores.e },
@@ -1615,7 +1616,7 @@ function populateTraitBreakdown() {
         { letter: 'J', score: scores.j, total: scores.j + scores.p },
         { letter: 'P', score: scores.p, total: scores.j + scores.p }
     ];
-    
+
     traits.forEach((trait, index) => {
         const percentage = Math.round((trait.score / trait.total) * 100);
         const bar = document.createElement('div');
@@ -1628,7 +1629,7 @@ function populateTraitBreakdown() {
             <span class="trait-percentage">${percentage}%</span>
         `;
         container.appendChild(bar);
-        
+
         setTimeout(() => {
             const fill = bar.querySelector('.trait-bar-fill-inner');
             fill.style.width = percentage + '%';
@@ -1638,23 +1639,23 @@ function populateTraitBreakdown() {
 
 function populateStrengthsGrowth() {
     const data = strengthsGrowthData[personalityType] || strengthsGrowthData['ENFP'];
-    
+
     const strengthsList = document.getElementById('strengths-list');
     strengthsList.innerHTML = data.strengths.map(item => `<li>${item}</li>`).join('');
-    
+
     const growthList = document.getElementById('growth-areas-list');
     growthList.innerHTML = data.growth.map(item => `<li>${item}</li>`).join('');
 }
 
 function populateCommunicationStyle() {
     const data = communicationStyleData[personalityType] || communicationStyleData['ISTP'];
-    
+
     const traitsList = document.getElementById('communication-traits-list');
     traitsList.innerHTML = data.traits.map(item => `<li>${item}</li>`).join('');
-    
+
     const dosList = document.getElementById('communication-dos-list');
     dosList.innerHTML = data.dos.map(item => `<li>${item}</li>`).join('');
-    
+
     const dontsList = document.getElementById('communication-donts-list');
     dontsList.innerHTML = data.donts.map(item => `<li>${item}</li>`).join('');
 }
@@ -1676,10 +1677,10 @@ const relationshipsWorkData = {
         manager: ['Sets high standards', 'Delegates strategically', 'Focuses on long-term vision', 'May seem demanding']
     },
     'ENTJ': {
-        romantic: ['Direct and honest in relationships', 'Takes charge naturally', 'Values ambition in partners', 'May prioritize career'],
-        friendships: ['Enjoys goal-oriented activities', 'Appreciates intellectual equals', 'Can be competitive', 'Loyal to close friends'],
-        colleague: ['Drives projects forward', 'Expects high performance', 'Communicates directly', 'Takes initiative'],
-        manager: ['Leads decisively', 'Focuses on efficiency', 'Develops talent strategically', 'Sets clear expectations']
+        romantic: ['Wants a beautiful, well-run home and a congenial, devoted relationship', 'Best paired with someone who has a strong self-image and is also a Thinking type', 'Takes commitments very seriously and has strong sentimental streaks (though often hidden)', 'May be absent from home mentally or physically due to career focus'],
+        friendships: ['Enjoys lively, challenging conversations above all else', 'Genuinely interested in people\'s ideas and thoughts', 'Respects those who can stand up to them and argue persuasively', 'Able to leave relationships without looking back when necessary'],
+        colleague: ['Drives projects forward with tireless energy and clear direction', 'Expects high performance and has no patience with inefficiency', 'Communicates directly and verbalizes opinions quickly', 'Takes initiative and naturally assumes leadership roles'],
+        manager: ['Leads decisively and sets extremely high standards and expectations', 'Focuses on long-range organizational vision and strategy', 'Develops talent strategically and delegates based on competence', 'May be harsh or intolerant when patience is tried; needs to work on sensitivity']
     },
     'INTP': {
         romantic: ['Values intellectual compatibility', 'Needs personal space', 'Shows love through ideas', 'May seem emotionally detached'],
@@ -1688,10 +1689,10 @@ const relationshipsWorkData = {
         manager: ['Gives autonomy to team', 'Focuses on innovation', 'May avoid micromanaging', 'Appreciates competence']
     },
     'ENTP': {
-        romantic: ['Keeps relationships exciting', 'Enjoys intellectual sparring', 'Needs variety and stimulation', 'May avoid routine'],
-        friendships: ['Enjoys debating ideas', 'Brings energy to groups', 'Challenges friends intellectually', 'Keeps things interesting'],
-        colleague: ['Generates innovative ideas', 'Challenges status quo', 'Adapts quickly', 'May jump between projects'],
-        manager: ['Encourages creativity', 'Gives freedom to innovate', 'May lack follow-through', 'Inspires with vision']
+        romantic: ['Keeps relationships exciting — always excited by anything new, which may lead to changing partners frequently', 'Takes commitments and relationships very seriously when genuinely invested', 'Charming and capable; others tend to follow their lead even in trying situations', 'May abandon relationships which no longer offer opportunity for growth'],
+        friendships: ['Enthusiastic, upbeat, and popular — easy to get along with when laid-back', 'Enjoys lively intellectual debate and loves friends who can hold their own in an argument', 'Big idea-people who are always working on a grand scheme or idea', 'May provoke arguments through their love of debate — not always intentionally'],
+        colleague: ['Generates innovative ideas and sees angles others have not thought of', 'Challenges the status quo and quickly adapts to new situations', 'May jump between projects and struggle to follow through on implementation', 'Needs freedom and open road — resists regimented or confining work environments'],
+        manager: ['Encourages creativity and gives team freedom to innovate', 'Inspires with vision and enthusiasm for new possibilities', 'May lack follow-through on plans and struggle with routine management tasks', 'Best in roles where they can use their intuitive powers freely']
     },
     'INFJ': {
         romantic: ['Deeply committed and loyal', 'Seeks meaningful connection', 'Intuitive about partner\'s needs', 'May idealize relationships'],
@@ -1700,10 +1701,10 @@ const relationshipsWorkData = {
         manager: ['Develops people holistically', 'Creates supportive environment', 'Leads with vision', 'May avoid conflict']
     },
     'ENFJ': {
-        romantic: ['Warm and expressive', 'Attentive to partner\'s needs', 'Creates harmony', 'May neglect own needs'],
-        friendships: ['Brings people together', 'Supportive and encouraging', 'Maintains many connections', 'Remembers important details'],
-        colleague: ['Facilitates collaboration', 'Motivates team members', 'Communicates effectively', 'Builds strong relationships'],
-        manager: ['Inspires and develops team', 'Creates positive culture', 'Provides mentorship', 'May take on too much']
+        romantic: ['Warm, affirming, and deeply invested in the relationship', 'Puts a lot of effort and enthusiasm into closeness and authenticity', 'Loyal and committed — wants lifelong relationships', 'May tend to "smother" loved ones; needs to remember their own needs'],
+        friendships: ['Brings people together and maintains many connections', 'Supportive, encouraging, and remembers what matters to friends', 'Fun to be with — lively sense of humor, dramatic, energetic, optimistic', 'May feel lonely even when surrounded by people due to not revealing their true self'],
+        colleague: ['Facilitates collaboration and motivates team members', 'Communicates effectively and builds strong working relationships', 'Enjoys being the center of attention in positive, inspiring ways', 'Dislikes impersonal reasoning without a human connection'],
+        manager: ['Inspires and develops team members to reach their potential', 'Creates a positive, organized culture with clear structure', 'Provides mentorship and genuinely cares about each person\'s growth', 'May take on too much responsibility for others\' wellbeing']
     },
     'INFP': {
         romantic: ['Deeply romantic and idealistic', 'Values authenticity', 'Loyal and committed', 'May avoid conflict'],
@@ -1712,10 +1713,10 @@ const relationshipsWorkData = {
         manager: ['Leads with empathy', 'Encourages individual growth', 'Creates supportive environment', 'May avoid tough decisions']
     },
     'ENFP': {
-        romantic: ['Enthusiastic and affectionate', 'Keeps relationships exciting', 'Values deep connection', 'May idealize partners'],
-        friendships: ['Makes friends easily', 'Brings energy and fun', 'Supports friends\' dreams', 'Maintains many connections'],
-        colleague: ['Generates creative ideas', 'Energizes team', 'Builds relationships', 'May struggle with routine'],
-        manager: ['Inspires with enthusiasm', 'Encourages innovation', 'Supports team development', 'May lack structure']
+        romantic: ['Warmly affectionate, fun to be with — lively sense of humor, dramatic, energetic, optimistic', 'Strives for win-win situations and is driven to meet others\' needs', 'Usually loyal and dedicated; strong values keep them committed', 'May hold onto bad relationships long after they\'ve turned bad; always seeing what could be'],
+        friendships: ['Genuinely warm and interested in people — places great importance on relationships', 'Has a strong need to be liked and brings out the best in others', 'Highly perceptive about people\'s thoughts and motivations', 'May become bored easily and needs friends who are comfortable with change and new experiences'],
+        colleague: ['Generates creative ideas and energizes the team with enthusiasm', 'Builds relationships easily and relates to people on their own level', 'Highly productive with little supervision when excited about the work', 'May struggle with routine tasks and following through on long projects'],
+        manager: ['Inspires with enthusiasm and a compelling vision of possibilities', 'Encourages individual growth and does not like to control people', 'Supports team development and strives for cooperative, win-win outcomes', 'May lack structure and struggle with enforcing discipline or routine']
     },
     'ISTJ': {
         romantic: ['Reliable and committed', 'Shows love through actions', 'Values tradition', 'May struggle with spontaneity'],
@@ -1736,10 +1737,10 @@ const relationshipsWorkData = {
         manager: ['Supports team members', 'Creates stable environment', 'Leads by serving', 'May avoid conflict']
     },
     'ESFJ': {
-        romantic: ['Warm and affectionate', 'Creates harmonious home', 'Attentive to partner\'s needs', 'Values commitment'],
-        friendships: ['Maintains many friendships', 'Organizes gatherings', 'Remembers details', 'Provides emotional support'],
-        colleague: ['Facilitates team cooperation', 'Maintains positive atmosphere', 'Helps colleagues', 'Values harmony'],
-        manager: ['Creates supportive culture', 'Recognizes contributions', 'Maintains team morale', 'May avoid tough decisions']
+        romantic: ['Warm-hearted and highly invested in close personal relationships — relationships are central to their lives', 'Takes commitments very seriously and seeks lifelong relationships', 'Very service-oriented; own happiness is closely tied to the happiness of those around them', 'Has difficulty accepting the end of a relationship and is likely to take the blame onto their own shoulders'],
+        friendships: ['Maintains many friendships and organizes gatherings and celebrations', 'Remembers details about people and makes family celebrations and traditions special events', 'Provides emotional support and practical care freely and generously', 'Generally upbeat and popular — people are drawn towards them'],
+        colleague: ['Facilitates team cooperation and maintains a positive, harmonious atmosphere', 'Sees before others what needs to be done and does whatever it takes to get it done', 'Helps colleagues and values everyone feeling included and appreciated', 'May struggle with conflict and may avoid difficult conversations'],
+        manager: ['Creates a supportive, organized culture where people feel valued', 'Recognizes contributions and maintains team morale', 'Responsible and practical — can be counted on for day-to-day necessities', 'May avoid tough decisions and be overly sensitive to criticism']
     },
     'ISTP': {
         romantic: ['Shows love through practical help and shared activities', 'Values freedom and personal space in relationships', 'May find emotional discussions uncomfortable or confusing'],
@@ -1781,11 +1782,11 @@ const careerDetailData = {
     'ENTJ': {
         title: 'CEO / Executive',
         compatibility: 95,
-        overview: 'Leads organizations and drives strategic business growth.',
-        whyFits: 'Perfect for natural leaders who excel at organizing and directing teams.',
-        environment: 'Corporations, startups, consulting firms.',
-        growthPath: 'Manager → Director → VP → CEO',
-        skills: ['Leadership', 'Strategic Planning', 'Decision Making', 'Business Development']
+        overview: 'Leads organizations, drives strategic vision, and turns problems into measurable results.',
+        whyFits: 'Your natural drive for leadership, quickness to grasp complexities, and tireless work ethic make you exceptionally well-suited to the highest levels of organizational leadership. You are not likely to be happy as a follower — you need to be in charge to take advantage of your special capabilities.',
+        environment: 'Corporations, startups, consulting firms, investment banks.',
+        growthPath: 'Manager → Director → VP → C-Suite Executive → CEO',
+        skills: ['Strategic Leadership', 'Decision Making', 'Business Development', 'Organizational Vision']
     },
     'INTP': {
         title: 'Software Developer',
@@ -1799,11 +1800,11 @@ const careerDetailData = {
     'ENTP': {
         title: 'Innovation Manager',
         compatibility: 93,
-        overview: 'Drives creative solutions and new product development.',
-        whyFits: 'Perfect for creative thinkers who challenge conventional approaches.',
-        environment: 'Startups, innovation labs, consulting.',
+        overview: 'Drives creative solutions, new product development, and organizational reinvention.',
+        whyFits: 'Your ability to see possibilities everywhere, quickly size up situations, and spread enthusiasm to others makes you a natural at leading innovation. You are happiest when you have the freedom to use your mind most productively and an open road toward success.',
+        environment: 'Startups, innovation labs, consulting firms, tech companies.',
         growthPath: 'Analyst → Innovation Lead → Chief Innovation Officer',
-        skills: ['Creative Thinking', 'Strategy', 'Communication', 'Change Management']
+        skills: ['Creative Thinking', 'Strategic Vision', 'Communication', 'Problem Solving']
     },
     'INFJ': {
         title: 'Counselor / Therapist',
@@ -1817,11 +1818,11 @@ const careerDetailData = {
     'ENFJ': {
         title: 'Teacher / Professor',
         compatibility: 95,
-        overview: 'Educates and inspires students to reach their potential.',
-        whyFits: 'Perfect for natural mentors who excel at developing others.',
-        environment: 'Schools, universities, training centers.',
-        growthPath: 'Teacher → Department Head → Principal',
-        skills: ['Teaching', 'Communication', 'Mentorship', 'Organization']
+        overview: 'Educates, inspires, and develops students to reach their full potential.',
+        whyFits: 'Your uncanny ability to understand people and say exactly what they need to hear makes you a natural in any teaching or mentoring role. You enjoy being the center of attention and thrive when you can inspire and lead others.',
+        environment: 'Schools, universities, training centers, coaching practices.',
+        growthPath: 'Teacher → Department Head → Principal / Dean → Educational Director',
+        skills: ['Teaching & Mentoring', 'Communication', 'Organization', 'People Development']
     },
     'INFP': {
         title: 'Creative Writer',
@@ -1835,11 +1836,11 @@ const careerDetailData = {
     'ENFP': {
         title: 'Brand Manager',
         compatibility: 94,
-        overview: 'Builds and manages brand identity and marketing strategies.',
-        whyFits: 'Perfect for creative communicators who connect with people.',
-        environment: 'Marketing agencies, corporations, startups.',
-        growthPath: 'Coordinator → Brand Manager → Marketing Director',
-        skills: ['Creativity', 'Communication', 'Strategy', 'People Skills']
+        overview: 'Builds and manages brand identity, crafting compelling stories that connect with people.',
+        whyFits: 'Your exceptional ability to understand people intuitively, combined with your creativity and enthusiasm, makes you a natural at building brands that resonate. You can talk your way in or out of anything — a powerful asset in marketing and communications.',
+        environment: 'Marketing agencies, startups, media companies, remote work.',
+        growthPath: 'Marketing Coordinator → Brand Manager → Marketing Director → CMO',
+        skills: ['Creative Ideation', 'Communication', 'People Insight', 'Storytelling']
     },
     'ISTJ': {
         title: 'Accountant',
@@ -1871,11 +1872,11 @@ const careerDetailData = {
     'ESFJ': {
         title: 'Event Planner',
         compatibility: 94,
-        overview: 'Organizes and coordinates memorable events.',
-        whyFits: 'Perfect for social organizers who bring people together.',
-        environment: 'Event companies, hotels, freelance.',
-        growthPath: 'Coordinator → Event Manager → Director',
-        skills: ['Organization', 'Communication', 'Coordination', 'People Skills']
+        overview: 'Organizes and coordinates memorable events, ensuring every detail is perfect and every guest feels valued.',
+        whyFits: 'Your natural talent for creating order and structure, combined with your genuine warmth and ability to make people feel good about themselves, makes you exceptional at bringing people together for meaningful occasions.',
+        environment: 'Event companies, hotels, schools, healthcare, community organizations.',
+        growthPath: 'Event Coordinator → Event Manager → Director of Events',
+        skills: ['Organization', 'People Skills', 'Coordination', 'Attention to Detail']
     },
     'ISTP': {
         title: 'Technical Entrepreneur',
@@ -1918,29 +1919,29 @@ const careerDetailData = {
 // Populate final pages
 function populateFinalPages() {
     console.log('populateFinalPages called');
-    
+
     // Update personality badges
     const finalBadgeIds = [
         'page12-personality-type', 'page13-personality-type', 'page14-personality-type',
         'page15-personality-type', 'page16-personality-type', 'page17-personality-type'
     ];
-    
+
     finalBadgeIds.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
             element.textContent = personalityType;
         }
     });
-    
+
     // Page 12: Relationships & Work
     populateRelationshipsWork();
-    
+
     // Page 13: Career Matches
     populateCareerMatches();
-    
+
     // Page 14: Career Detail
     populateCareerDetail();
-    
+
     // Page 15: Locked Career
     populateLockedCareer();
 }
@@ -1948,42 +1949,42 @@ function populateFinalPages() {
 function populateRelationshipsWork() {
     console.log('populateRelationshipsWork called for:', personalityType);
     const data = relationshipsWorkData[personalityType] || relationshipsWorkData['ENFP'];
-    
+
     console.log('Relationships data:', data);
-    
+
     const romanticList = document.getElementById('romantic-style-list');
     const friendshipsList = document.getElementById('friendships-list');
     const colleagueList = document.getElementById('colleague-list');
     const managerList = document.getElementById('manager-list');
-    
+
     if (romanticList) {
         romanticList.innerHTML = data.romantic.map(item => `<li>${item}</li>`).join('');
         console.log('Romantic style populated');
     } else {
         console.error('romantic-style-list element not found!');
     }
-    
+
     if (friendshipsList) {
         friendshipsList.innerHTML = data.friendships.map(item => `<li>${item}</li>`).join('');
         console.log('Friendships populated');
     } else {
         console.error('friendships-list element not found!');
     }
-    
+
     if (colleagueList) {
         colleagueList.innerHTML = data.colleague.map(item => `<li>${item}</li>`).join('');
         console.log('Colleague populated');
     } else {
         console.error('colleague-list element not found!');
     }
-    
+
     if (managerList) {
         managerList.innerHTML = data.manager.map(item => `<li>${item}</li>`).join('');
         console.log('Manager populated');
     } else {
         console.error('manager-list element not found!');
     }
-    
+
     // Update summary based on type
     const summaries = {
         'INTJ': 'Your relationship style remains consistent — strategic, independent, and competence-focused — across personal and professional life.',
@@ -2003,7 +2004,7 @@ function populateRelationshipsWork() {
         'ISFP': 'Your relationship style remains consistent — gentle, authentic, and harmony-seeking — across personal and professional life.',
         'ESFP': 'Your relationship style remains consistent — fun-loving, spontaneous, and people-focused — across personal and professional life.'
     };
-    
+
     const summaryElement = document.getElementById('relationship-summary');
     if (summaryElement) {
         summaryElement.textContent = summaries[personalityType] || summaries['ENFP'];
@@ -2018,7 +2019,7 @@ function populateCareerMatches() {
     const topCareers = careers.slice(0, 5);
     const container = document.getElementById('career-match-bars');
     container.innerHTML = '';
-    
+
     topCareers.forEach((career, index) => {
         const item = document.createElement('div');
         item.className = 'career-match-item';
@@ -2032,7 +2033,7 @@ function populateCareerMatches() {
             </div>
         `;
         container.appendChild(item);
-        
+
         setTimeout(() => {
             const fill = item.querySelector('.career-match-bar-fill');
             fill.style.width = career.match + '%';
@@ -2042,20 +2043,20 @@ function populateCareerMatches() {
 
 function populateCareerDetail() {
     const detail = careerDetailData[personalityType] || careerDetailData['ISTP'];
-    
+
     document.getElementById('career-detail-title').textContent = detail.title;
     document.getElementById('career-confidence-label').textContent = `${detail.compatibility}% Compatibility Match`;
     document.getElementById('career-confidence-percentage').textContent = `${detail.compatibility}%`;
-    
+
     setTimeout(() => {
         document.getElementById('career-confidence-fill').style.width = detail.compatibility + '%';
     }, 500);
-    
+
     document.getElementById('career-overview').textContent = detail.overview;
     document.getElementById('career-why-fits').textContent = detail.whyFits;
     document.getElementById('career-environment').textContent = detail.environment;
     document.getElementById('career-growth-path').textContent = detail.growthPath;
-    
+
     const skillsContainer = document.getElementById('career-skills-tags');
     skillsContainer.innerHTML = detail.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
 }
@@ -2063,7 +2064,7 @@ function populateCareerDetail() {
 function populateLockedCareer() {
     const careers = careerMappings[personalityType] || careerMappings['ENFP'];
     const secondCareer = careers[1];
-    
+
     document.getElementById('career-locked-title').textContent = secondCareer.title;
     document.getElementById('career-locked-subtitle').textContent = `${secondCareer.match}% Compatibility`;
     document.getElementById('career-locked-message').textContent = `Upgrade to view full analysis for ${secondCareer.title}`;
@@ -2087,14 +2088,14 @@ function forceUpdateAllContent() {
     console.log('🔥 FORCE UPDATE ALL CONTENT 🔥');
     console.log('Current personality type:', personalityType);
     console.log('Session ID:', sessionId);
-    
+
     // If we have a session, fetch scores and recalculate
     if (sessionId) {
         fetch(`${API_BASE_URL}/result/${sessionId}/`)
             .then(response => response.json())
             .then(result => {
                 console.log('Fetched assessment result:', result);
-                
+
                 const scores = {
                     e: result.e_score || 0,
                     i: result.i_score || 0,
@@ -2105,30 +2106,30 @@ function forceUpdateAllContent() {
                     j: result.j_score || 0,
                     p: result.p_score || 0
                 };
-                
+
                 console.log('Scores:', scores);
-                
+
                 // Calculate personality type
                 const calculatedType = calculatePersonalityTypeFromScores(scores);
                 console.log('🎯 CALCULATED TYPE:', calculatedType);
-                
+
                 if (calculatedType) {
                     personalityType = calculatedType;
-                    
+
                     // FORCE UPDATE EVERYTHING
                     console.log('🔄 FORCING UPDATES WITH TYPE:', personalityType);
-                    
+
                     // Update all badges
                     updateAllPersonalityReferences(personalityType);
-                    
+
                     // Update Page 4 content
                     const orientation = orientationData[personalityType] || 'Creative';
                     const opStyle = operationalStyleData[personalityType] || [];
                     const decFramework = decisionFrameworkData[personalityType] || [];
-                    
+
                     console.log('Setting orientation to:', orientation);
                     console.log('Setting operational style:', opStyle);
-                    
+
                     // Force update DOM elements
                     setTimeout(() => {
                         const domEl = document.getElementById('dominant-orientation');
@@ -2136,7 +2137,7 @@ function forceUpdateAllContent() {
                         const coreEl = document.getElementById('core-advantage-text');
                         const opStyleEl = document.getElementById('operational-style');
                         const decFrameworkEl = document.getElementById('decision-framework');
-                        
+
                         if (domEl) {
                             domEl.textContent = orientation;
                             domEl.style.color = 'red'; // Make it obvious it changed
@@ -2145,7 +2146,7 @@ function forceUpdateAllContent() {
                         } else {
                             console.error('❌ dominant-orientation element NOT FOUND');
                         }
-                        
+
                         if (archEl) {
                             archEl.textContent = personalityType;
                             archEl.style.color = 'red';
@@ -2154,27 +2155,27 @@ function forceUpdateAllContent() {
                         } else {
                             console.error('❌ archetype-type element NOT FOUND');
                         }
-                        
+
                         if (coreEl) {
                             coreEl.textContent = `By combining your ${personalityType} capabilities with a ${orientation} orientation, you possess a unique ability to excel in your field.`;
                             console.log('✅ UPDATED core-advantage-text');
                         }
-                        
+
                         if (opStyleEl) {
                             opStyleEl.innerHTML = opStyle.map(item => `<li>${item}</li>`).join('');
                             console.log('✅ UPDATED operational-style');
                         }
-                        
+
                         if (decFrameworkEl) {
                             decFrameworkEl.innerHTML = decFramework.map(item => `<li>${item}</li>`).join('');
                             console.log('✅ UPDATED decision-framework');
                         }
-                        
+
                         // ===== PAGE 3: INTEREST REPORT =====
                         console.log('🔄 Updating Page 3: Interest Report');
                         const interests = interestData[personalityType] || interestData['ENFP'];
                         const interestContainer = document.getElementById('interest-bars');
-                        
+
                         if (interestContainer) {
                             interestContainer.innerHTML = '';
                             interests.forEach((interest, index) => {
@@ -2196,20 +2197,20 @@ function forceUpdateAllContent() {
                         } else {
                             console.error('❌ interest-bars element NOT FOUND');
                         }
-                        
+
                         // ===== PAGE 5: CURIOSITIES & FACTS =====
                         console.log('🔄 Updating Page 5: Curiosities & Facts');
                         const curiosities = curiositiesData[personalityType] || curiositiesData['ENFP'];
                         const curiosityContainer = document.getElementById('curiosity-cards');
                         const curiositySubtitle = document.getElementById('curiosities-subtitle');
                         const didYouKnowEl = document.getElementById('did-you-know-text');
-                        
+
                         if (curiositySubtitle) {
                             curiositySubtitle.textContent = `Interesting insights about the ${personalityType} personality type.`;
                             curiositySubtitle.style.color = 'red';
                             console.log('✅ UPDATED curiosities-subtitle');
                         }
-                        
+
                         if (curiosityContainer) {
                             curiosityContainer.innerHTML = '';
                             curiosities.forEach((curiosity, index) => {
@@ -2223,21 +2224,21 @@ function forceUpdateAllContent() {
                             });
                             console.log('✅ UPDATED curiosity-cards with', curiosities.length, 'items');
                         }
-                        
+
                         if (didYouKnowEl) {
                             const didYouKnow = didYouKnowData[personalityType] || didYouKnowData['ENFP'];
                             didYouKnowEl.textContent = didYouKnow;
                             didYouKnowEl.style.color = '#FFD84D';
                             console.log('✅ UPDATED did-you-know-text');
                         }
-                        
+
                         // ===== PAGE 6: PERSONALITY DESCRIPTION =====
                         console.log('🔄 Updating Page 6: Personality Description');
                         const name = getPersonalityName(personalityType);
                         const category = getCategoryName(personalityType);
                         const metaphor = metaphorData[personalityType] || metaphorData['ISTP'];
                         const fullDesc = personalityDescriptions[personalityType] || personalityDescriptions['ENFP'];
-                        
+
                         const categoryEmojis = {
                             'Analysts': '🧠',
                             'Diplomats': '🤝',
@@ -2245,85 +2246,85 @@ function forceUpdateAllContent() {
                             'Explorers': '🔧'
                         };
                         const emoji = categoryEmojis[category] || '🔧';
-                        
+
                         const nameHeroEl = document.getElementById('personality-name-hero');
                         if (nameHeroEl) {
                             nameHeroEl.textContent = name + ' ' + emoji;
                             nameHeroEl.style.color = 'red';
                             console.log('✅ UPDATED personality-name-hero to:', name);
                         }
-                        
+
                         const categoryEl = document.getElementById('personality-category');
                         if (categoryEl) {
                             categoryEl.textContent = category;
                             categoryEl.style.color = 'red';
                             console.log('✅ UPDATED personality-category to:', category);
                         }
-                        
+
                         const codeBadgeEl = document.getElementById('personality-code-badge');
                         if (codeBadgeEl) {
                             codeBadgeEl.textContent = personalityType;
                             console.log('✅ UPDATED personality-code-badge');
                         }
-                        
+
                         const fullDescEl = document.getElementById('personality-full-description');
                         if (fullDescEl) {
                             fullDescEl.innerHTML = `<p style="color: #333;">${fullDesc}</p>`;
                             console.log('✅ UPDATED personality-full-description');
                         }
-                        
+
                         const traitsContainer = document.getElementById('personality-traits');
                         if (traitsContainer) {
                             traitsContainer.innerHTML = metaphor.traits.map(trait => `<span>${trait}</span>`).join('');
                             console.log('✅ UPDATED personality-traits');
                         }
-                        
+
                         const metaphorNameEl = document.getElementById('metaphor-name');
                         if (metaphorNameEl) {
                             metaphorNameEl.textContent = metaphor.name;
                             metaphorNameEl.style.color = 'red';
                             console.log('✅ UPDATED metaphor-name to:', metaphor.name);
                         }
-                        
+
                         const metaphorDescEl = document.getElementById('metaphor-description');
                         if (metaphorDescEl) {
                             metaphorDescEl.textContent = metaphor.desc;
                             console.log('✅ UPDATED metaphor-description');
                         }
-                        
+
                         const trait1 = metaphor.traits[0].replace(/[^\w\s]/g, '').trim();
                         const trait2 = metaphor.traits[1].replace(/[^\w\s]/g, '').trim();
                         const trait3 = metaphor.traits[2].replace(/[^\w\s]/g, '').trim();
-                        
+
                         const trait1El = document.getElementById('metaphor-trait-1');
                         if (trait1El) {
                             trait1El.textContent = trait1;
                             console.log('✅ UPDATED metaphor-trait-1');
                         }
-                        
+
                         const trait2El = document.getElementById('metaphor-trait-2');
                         if (trait2El) {
                             trait2El.textContent = trait2;
                             console.log('✅ UPDATED metaphor-trait-2');
                         }
-                        
+
                         const trait3El = document.getElementById('metaphor-trait-3');
                         if (trait3El) {
                             trait3El.textContent = trait3;
                             console.log('✅ UPDATED metaphor-trait-3');
                         }
-                        
+
                         // ===== PAGE 7: WORKING ORIENTATION PROFILE =====
                         console.log('🔄 Updating Page 7: Working Orientation Profile');
                         const workingOrientations = workingOrientationData[personalityType] || workingOrientationData['ENFP'];
                         const orientationContainer = document.getElementById('orientation-bars');
-                        
+
                         if (orientationContainer) {
                             orientationContainer.innerHTML = '';
                             workingOrientations.forEach((orientation, index) => {
                                 const bar = document.createElement('div');
                                 bar.className = 'orientation-bar-item';
-                                
+
                                 // Determine icon based on orientation name
                                 const icons = {
                                     'Creative': '🎨',
@@ -2336,7 +2337,7 @@ function forceUpdateAllContent() {
                                     'Social': '🤝'
                                 };
                                 const icon = icons[orientation.name] || '⚡';
-                                
+
                                 bar.innerHTML = `
                                     <div class="orientation-header">
                                         <span class="orientation-icon">${icon}</span>
@@ -2356,15 +2357,15 @@ function forceUpdateAllContent() {
                         } else {
                             console.error('❌ orientation-bars element NOT FOUND');
                         }
-                        
+
                         // ===== PAGE 9: TRAIT BREAKDOWN & STRENGTHS =====
                         console.log('🔄 Updating Page 9: Trait Breakdown & Strengths');
-                        
+
                         // Update trait bars based on actual scores
                         const traitBarsContainer = document.getElementById('trait-bars-grid');
                         if (traitBarsContainer && scores) {
                             traitBarsContainer.innerHTML = '';
-                            
+
                             const traits = [
                                 { letter: 'E', score: scores.e, total: scores.e + scores.i },
                                 { letter: 'I', score: scores.i, total: scores.e + scores.i },
@@ -2375,7 +2376,7 @@ function forceUpdateAllContent() {
                                 { letter: 'J', score: scores.j, total: scores.j + scores.p },
                                 { letter: 'P', score: scores.p, total: scores.j + scores.p }
                             ];
-                            
+
                             traits.forEach(trait => {
                                 const percentage = Math.round((trait.score / trait.total) * 100);
                                 const bar = document.createElement('div');
@@ -2391,7 +2392,7 @@ function forceUpdateAllContent() {
                             });
                             console.log('✅ UPDATED trait-bars-grid with actual scores');
                         }
-                        
+
                         // Strengths and growth areas data for each type
                         const strengthsData = {
                             'INTJ': {
@@ -2459,24 +2460,24 @@ function forceUpdateAllContent() {
                                 growth: ['May avoid serious issues', 'Difficulty with long-term planning', 'Can be impulsive', 'May seek too much attention']
                             }
                         };
-                        
+
                         const typeStrengths = strengthsData[personalityType] || strengthsData['ENFP'];
-                        
+
                         const strengthsList = document.getElementById('strengths-list');
                         if (strengthsList) {
                             strengthsList.innerHTML = typeStrengths.strengths.map(s => `<li>${s}</li>`).join('');
                             console.log('✅ UPDATED strengths-list');
                         }
-                        
+
                         const growthList = document.getElementById('growth-areas-list');
                         if (growthList) {
                             growthList.innerHTML = typeStrengths.growth.map(g => `<li>${g}</li>`).join('');
                             console.log('✅ UPDATED growth-areas-list');
                         }
-                        
+
                         // ===== PAGE 11: COMMUNICATION STYLE =====
                         console.log('🔄 Updating Page 11: Communication Style');
-                        
+
                         const communicationData = {
                             'INTJ': {
                                 traits: ['Direct and concise', 'Prefers written communication', 'Focuses on logic and efficiency'],
@@ -2559,30 +2560,30 @@ function forceUpdateAllContent() {
                                 donts: ['Don\'t be too serious', 'Don\'t criticize publicly']
                             }
                         };
-                        
+
                         const commStyle = communicationData[personalityType] || communicationData['ENFP'];
-                        
+
                         const commTraitsList = document.getElementById('communication-traits-list');
                         if (commTraitsList) {
                             commTraitsList.innerHTML = commStyle.traits.map(t => `<li>${t}</li>`).join('');
                             console.log('✅ UPDATED communication-traits-list');
                         }
-                        
+
                         const commDosList = document.getElementById('communication-dos-list');
                         if (commDosList) {
                             commDosList.innerHTML = commStyle.dos.map(d => `<li>${d}</li>`).join('');
                             console.log('✅ UPDATED communication-dos-list');
                         }
-                        
+
                         const commDontsList = document.getElementById('communication-donts-list');
                         if (commDontsList) {
                             commDontsList.innerHTML = commStyle.donts.map(d => `<li>${d}</li>`).join('');
                             console.log('✅ UPDATED communication-donts-list');
                         }
-                        
+
                         // ===== PAGE 12: RELATIONSHIPS & WORK =====
                         console.log('🔄 Updating Page 12: Relationships & Work');
-                        
+
                         const relationshipsData = {
                             'INTJ': {
                                 romantic: ['Values intellectual connection', 'Loyal and committed', 'May struggle with emotional expression'],
@@ -2697,45 +2698,45 @@ function forceUpdateAllContent() {
                                 summary: 'fun-loving, spontaneous, and people-focused'
                             }
                         };
-                        
+
                         const relData = relationshipsData[personalityType] || relationshipsData['ENFP'];
-                        
+
                         const romanticList = document.getElementById('romantic-style-list');
                         if (romanticList) {
                             romanticList.innerHTML = relData.romantic.map(r => `<li>${r}</li>`).join('');
                             console.log('✅ UPDATED romantic-style-list');
                         }
-                        
+
                         const friendshipsList = document.getElementById('friendships-list');
                         if (friendshipsList) {
                             friendshipsList.innerHTML = relData.friendships.map(f => `<li>${f}</li>`).join('');
                             console.log('✅ UPDATED friendships-list');
                         }
-                        
+
                         const colleagueList = document.getElementById('colleague-list');
                         if (colleagueList) {
                             colleagueList.innerHTML = relData.colleague.map(c => `<li>${c}</li>`).join('');
                             console.log('✅ UPDATED colleague-list');
                         }
-                        
+
                         const managerList = document.getElementById('manager-list');
                         if (managerList) {
                             managerList.innerHTML = relData.manager.map(m => `<li>${m}</li>`).join('');
                             console.log('✅ UPDATED manager-list');
                         }
-                        
+
                         const relationshipSummary = document.getElementById('relationship-summary');
                         if (relationshipSummary) {
                             relationshipSummary.textContent = `Your relationship style remains consistent — ${relData.summary} — across personal and professional life.`;
                             console.log('✅ UPDATED relationship-summary');
                         }
-                        
+
                         // ===== PAGE 13: YOUR TOP CAREER MATCHES =====
                         console.log('🔄 Updating Page 13: Your Top Career Matches');
-                        
+
                         const careers = careerMappings[personalityType] || careerMappings['ENFP'];
                         const careerMatchContainer = document.getElementById('career-match-bars');
-                        
+
                         if (careerMatchContainer) {
                             careerMatchContainer.innerHTML = '';
                             careers.forEach((career, index) => {
@@ -2757,12 +2758,12 @@ function forceUpdateAllContent() {
                         } else {
                             console.error('❌ career-match-bars element NOT FOUND');
                         }
-                        
+
                         // ===== PAGE 14: CAREER DETAIL (TOP MATCH) =====
                         console.log('🔄 Updating Page 14: Career Detail');
-                        
+
                         const topCareer = careers[0]; // Get the #1 career match
-                        
+
                         const careerDetailTitle = document.getElementById('career-detail-title');
                         if (careerDetailTitle) {
                             careerDetailTitle.textContent = topCareer.title;
@@ -2770,36 +2771,36 @@ function forceUpdateAllContent() {
                             careerDetailTitle.style.fontWeight = 'bold';
                             console.log('✅ UPDATED career-detail-title to:', topCareer.title);
                         }
-                        
+
                         const careerConfidenceFill = document.getElementById('career-confidence-fill');
                         const careerConfidencePercentage = document.getElementById('career-confidence-percentage');
                         const careerConfidenceLabel = document.getElementById('career-confidence-label');
-                        
+
                         if (careerConfidenceFill) {
                             careerConfidenceFill.style.width = topCareer.match + '%';
                             console.log('✅ UPDATED career-confidence-fill to:', topCareer.match + '%');
                         }
-                        
+
                         if (careerConfidencePercentage) {
                             careerConfidencePercentage.textContent = topCareer.match + '%';
                         }
-                        
+
                         if (careerConfidenceLabel) {
                             careerConfidenceLabel.textContent = `${topCareer.match}% Compatibility Match`;
                         }
-                        
+
                         const careerOverview = document.getElementById('career-overview');
                         if (careerOverview) {
                             careerOverview.textContent = topCareer.desc;
                             console.log('✅ UPDATED career-overview');
                         }
-                        
+
                         const careerWhyFits = document.getElementById('career-why-fits');
                         if (careerWhyFits) {
                             careerWhyFits.textContent = `This role matches your profile due to the following factors observed during the assessment: Fits ${personalityType} types who ${topCareer.desc.toLowerCase()}`;
                             console.log('✅ UPDATED career-why-fits');
                         }
-                        
+
                         // Career environment and growth path data
                         const careerDetailsData = {
                             'Software Architect': { env: 'Tech companies, startups, remote', growth: 'Developer → Senior Developer → Architect → CTO' },
@@ -2831,24 +2832,24 @@ function forceUpdateAllContent() {
                             'Artist': { env: 'Studios, galleries, freelance', growth: 'Artist → Established Artist → Gallery Owner' },
                             'Entertainer': { env: 'Entertainment industry, events', growth: 'Performer → Featured Artist → Producer' }
                         };
-                        
-                        const careerDetail = careerDetailsData[topCareer.title] || { 
-                            env: 'Various professional environments', 
-                            growth: 'Entry Level → Mid Level → Senior Level → Leadership' 
+
+                        const careerDetail = careerDetailsData[topCareer.title] || {
+                            env: 'Various professional environments',
+                            growth: 'Entry Level → Mid Level → Senior Level → Leadership'
                         };
-                        
+
                         const careerEnvironment = document.getElementById('career-environment');
                         if (careerEnvironment) {
                             careerEnvironment.textContent = careerDetail.env;
                             console.log('✅ UPDATED career-environment');
                         }
-                        
+
                         const careerGrowthPath = document.getElementById('career-growth-path');
                         if (careerGrowthPath) {
                             careerGrowthPath.textContent = careerDetail.growth;
                             console.log('✅ UPDATED career-growth-path');
                         }
-                        
+
                         // Key skills based on career
                         const skillsData = {
                             'Software Architect': ['System Design', 'Architecture Patterns', 'Technical Leadership', 'Cloud Computing'],
@@ -2864,104 +2865,104 @@ function forceUpdateAllContent() {
                             'Nurse': ['Patient Care', 'Medical Knowledge', 'Compassion', 'Attention to Detail'],
                             'Mechanical Engineer': ['CAD', 'Problem Solving', 'Physics', 'Project Management']
                         };
-                        
+
                         const skills = skillsData[topCareer.title] || ['Leadership', 'Communication', 'Problem Solving', 'Adaptability'];
-                        
+
                         const careerSkillsTags = document.getElementById('career-skills-tags');
                         if (careerSkillsTags) {
                             careerSkillsTags.innerHTML = skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
                             console.log('✅ UPDATED career-skills-tags with', skills.length, 'skills');
                         }
-                        
+
                         // ===== PAGE 15: CAREER DETAIL LOCKED (2ND MATCH) =====
                         console.log('🔄 Updating Page 15: Career Detail Locked (2nd Match)');
-                        
+
                         const secondCareer = careers[1]; // Get the #2 career match
-                        
+
                         const careerLockedTitle = document.getElementById('career-locked-title');
                         if (careerLockedTitle) {
                             careerLockedTitle.textContent = secondCareer.title;
                             console.log('✅ UPDATED career-locked-title to:', secondCareer.title);
                         }
-                        
+
                         const careerLockedSubtitle = document.getElementById('career-locked-subtitle');
                         if (careerLockedSubtitle) {
                             careerLockedSubtitle.textContent = `${secondCareer.match}% Compatibility`;
                             console.log('✅ UPDATED career-locked-subtitle to:', secondCareer.match + '%');
                         }
-                        
+
                         const careerLockedMessage = document.getElementById('career-locked-message');
                         if (careerLockedMessage) {
                             careerLockedMessage.textContent = `Upgrade to view full analysis for ${secondCareer.title}`;
                             console.log('✅ UPDATED career-locked-message');
                         }
-                        
+
                         // ===== PAGE 15B: CAREER DETAIL LOCKED (3RD MATCH) =====
                         console.log('🔄 Updating Page 15B: Career Detail Locked (3rd Match)');
                         const thirdCareer = careers[2];
-                        
+
                         document.getElementById('page15b-personality-type').textContent = personalityType;
-                        
+
                         const careerLockedTitle3 = document.getElementById('career-locked-title-3');
                         if (careerLockedTitle3) {
                             careerLockedTitle3.textContent = thirdCareer.title;
                             console.log('✅ UPDATED career-locked-title-3 to:', thirdCareer.title);
                         }
-                        
+
                         const careerLockedSubtitle3 = document.getElementById('career-locked-subtitle-3');
                         if (careerLockedSubtitle3) {
                             careerLockedSubtitle3.textContent = `${thirdCareer.match}% Compatibility`;
                         }
-                        
+
                         const careerLockedMessage3 = document.getElementById('career-locked-message-3');
                         if (careerLockedMessage3) {
                             careerLockedMessage3.textContent = `Upgrade to view full analysis for ${thirdCareer.title}`;
                         }
-                        
+
                         // ===== PAGE 15C: CAREER DETAIL LOCKED (4TH MATCH) =====
                         console.log('🔄 Updating Page 15C: Career Detail Locked (4th Match)');
                         const fourthCareer = careers[3];
-                        
+
                         document.getElementById('page15c-personality-type').textContent = personalityType;
-                        
+
                         const careerLockedTitle4 = document.getElementById('career-locked-title-4');
                         if (careerLockedTitle4) {
                             careerLockedTitle4.textContent = fourthCareer.title;
                             console.log('✅ UPDATED career-locked-title-4 to:', fourthCareer.title);
                         }
-                        
+
                         const careerLockedSubtitle4 = document.getElementById('career-locked-subtitle-4');
                         if (careerLockedSubtitle4) {
                             careerLockedSubtitle4.textContent = `${fourthCareer.match}% Compatibility`;
                         }
-                        
+
                         const careerLockedMessage4 = document.getElementById('career-locked-message-4');
                         if (careerLockedMessage4) {
                             careerLockedMessage4.textContent = `Upgrade to view full analysis for ${fourthCareer.title}`;
                         }
-                        
+
                         // ===== PAGE 15D: CAREER DETAIL LOCKED (5TH MATCH) =====
                         console.log('🔄 Updating Page 15D: Career Detail Locked (5th Match)');
                         const fifthCareer = careers[4];
-                        
+
                         document.getElementById('page15d-personality-type').textContent = personalityType;
-                        
+
                         const careerLockedTitle5 = document.getElementById('career-locked-title-5');
                         if (careerLockedTitle5) {
                             careerLockedTitle5.textContent = fifthCareer.title;
                             console.log('✅ UPDATED career-locked-title-5 to:', fifthCareer.title);
                         }
-                        
+
                         const careerLockedSubtitle5 = document.getElementById('career-locked-subtitle-5');
                         if (careerLockedSubtitle5) {
                             careerLockedSubtitle5.textContent = `${fifthCareer.match}% Compatibility`;
                         }
-                        
+
                         const careerLockedMessage5 = document.getElementById('career-locked-message-5');
                         if (careerLockedMessage5) {
                             careerLockedMessage5.textContent = `Upgrade to view full analysis for ${fifthCareer.title}`;
                         }
-                        
+
                         console.log('🎉 FORCE UPDATE COMPLETE!');
                     }, 1000);
                 }

@@ -171,42 +171,50 @@ def register(request):
     """
     Register a new user
     """
-    username = request.data.get('username')
+
+    full_name = request.data.get('fullName')
     email = request.data.get('email')
-    password = request.data.get('password')
-    
-    if not username or not email or not password:
+    phone = request.data.get('phone')
+    qualification = request.data.get('qualification')
+    institution = request.data.get('institution')
+    interests = request.data.get('interests', [])
+
+    if not full_name or not email:
         return Response(
-            {'error': 'Username, email, and password are required'},
+            {'error': 'Full name and email are required'},
             status=status.HTTP_400_BAD_REQUEST
         )
-    
-    # Check if user exists
-    if User.objects.filter(username=username).exists():
-        return Response(
-            {'error': 'Username already exists'},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-    
-    if User.objects.filter(email=email).exists():
-        return Response(
-            {'error': 'Email already exists'},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-    
+
+    # Create username from email
+    username = email.split('@')[0]
+
+    # Make username unique
+    base_username = username
+    counter = 1
+    while User.objects.filter(username=username).exists():
+        username = f"{base_username}{counter}"
+        counter += 1
+
     # Create user
+    name_parts = full_name.split()
+
     user = User.objects.create_user(
         username=username,
         email=email,
-        password=password
+        password="temp1234",
+        first_name=name_parts[0],
+        last_name=' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
     )
-    
-    # Create user profile
-    UserProfile.objects.create(user=user)
-    
+
+    # Create profile
+    profile = UserProfile.objects.create(
+        user=user,
+        phone=phone
+    )
+
     # Create token
     token, _ = Token.objects.get_or_create(user=user)
-    
+
     return Response({
         'success': True,
         'token': token.key,
@@ -214,7 +222,8 @@ def register(request):
             'id': user.id,
             'username': user.username,
             'email': user.email,
-            'is_premium': False
+            'is_premium': False,
+            'name': full_name
         }
     }, status=status.HTTP_201_CREATED)
 

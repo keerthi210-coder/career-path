@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,19 +10,19 @@
     <link rel="stylesheet" href="{% static 'assessment/css/premium.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container nav-container">
             <div class="logo">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
-                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D" />
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                 </svg>
                 <span>PersonalityPro</span>
             </div>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
-                <li><a href="/personalities/">Personalities Types</a></li>
                 <li><a href="/assessment/">Assessment</a></li>
                 <li><a href="/resources/">Resources</a></li>
                 <li><a href="/premium/" class="active">Premium</a></li>
@@ -166,7 +167,7 @@
     <section class="testimonials-premium">
         <div class="container">
             <h2>What Premium Members Say</h2>
-            
+
             <div class="testimonials-slider-container">
                 <div class="testimonials-slider">
                     <div class="testimonial-card-premium">
@@ -392,8 +393,8 @@
             <div class="footer-section">
                 <div class="logo">
                     <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="#FFD84D" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <span>PersonalityPro</span>
                 </div>
@@ -403,7 +404,6 @@
                 <h4>Product</h4>
                 <ul>
                     <li><a href="/assessment/">Take Test</a></li>
-                    <li><a href="/personalities/">Personality Types</a></li>
                     <li><a href="/premium/">Premium</a></li>
                 </ul>
             </div>
@@ -437,4 +437,5 @@
         testimonialsSlider.innerHTML = originalCards + originalCards; // Duplicate for seamless loop
     </script>
 </body>
+
 </html>

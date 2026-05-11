@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,18 +10,19 @@
     <link rel="stylesheet" href="{% static 'assessment/css/questions.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container nav-container">
             <div class="logo">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
-                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D" />
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                 </svg>
                 <span>PersonalityPro</span>
             </div>
             <div class="progress-info">
-                <span class="question-counter">Question <span id="current-q">1</span> of 3</span>
+                <span class="question-counter">Question <span id="current-q">1</span> of <span id="total-q">70</span></span>
             </div>
         </div>
     </nav>
@@ -65,10 +67,10 @@
                     <div class="question-header">
                         <div class="buddy-wrapper">
                             <svg id="buddyFace" viewBox="0 0 120 120" class="buddy-face">
-                                <circle cx="60" cy="60" r="55" fill="#FFF6CC" stroke="#FFE08A" stroke-width="6"/>
-                                <ellipse id="leftEye" cx="45" cy="55" rx="6" ry="8" fill="#111"/>
-                                <ellipse id="rightEye" cx="75" cy="55" rx="6" ry="8" fill="#111"/>
-                                <path id="mouth" d="M40 75 Q60 95 80 75" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/>
+                                <circle cx="60" cy="60" r="55" fill="#FFF6CC" stroke="#FFE08A" stroke-width="6" />
+                                <ellipse id="leftEye" cx="45" cy="55" rx="6" ry="8" fill="#111" />
+                                <ellipse id="rightEye" cx="75" cy="55" rx="6" ry="8" fill="#111" />
+                                <path id="mouth" d="M40 75 Q60 95 80 75" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round" />
                             </svg>
                         </div>
                         <span class="question-number" id="question-number">Question 1</span>
@@ -92,15 +94,15 @@
 
     <script>
         console.log('Questions page script loaded');
-        
+
         // Check authentication before loading questions
         function checkAuthentication() {
             const authToken = localStorage.getItem('authToken');
             const user = localStorage.getItem('user');
-            
+
             console.log('Auth check - Token:', authToken ? 'Present' : 'Missing');
             console.log('Auth check - User:', user ? 'Present' : 'Missing');
-            
+
             if (!authToken || !user) {
                 // User not logged in, redirect to login
                 console.log('Not authenticated, redirecting to login');
@@ -111,7 +113,7 @@
             console.log('Authentication check passed');
             return true;
         }
-        
+
         // Django API Integration
         const API_BASE_URL = window.location.origin + '/api';
         console.log('API_BASE_URL:', API_BASE_URL);
@@ -130,7 +132,7 @@
             // Close eyes
             leftEye.setAttribute('ry', '1');
             rightEye.setAttribute('ry', '1');
-            
+
             // Open eyes after 150ms
             setTimeout(() => {
                 leftEye.setAttribute('ry', '8');
@@ -174,28 +176,28 @@
             try {
                 console.log('Loading questions from:', `${API_BASE_URL}/questions/`);
                 const response = await fetch(`${API_BASE_URL}/questions/`);
-                
+
                 console.log('Response status:', response.status);
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 questions = await response.json();
                 console.log('Questions loaded:', questions.length, 'questions');
-                
+
                 if (questions.length === 0) {
                     alert('No questions found in database. Please contact support.');
                     return;
                 }
-                
+
                 // Update question counter
                 document.getElementById('current-q').textContent = '1';
                 const counterSpan = document.querySelector('.question-counter');
                 if (counterSpan) {
                     counterSpan.innerHTML = `Question <span id="current-q">1</span> of ${questions.length}`;
                 }
-                
+
                 loadQuestion(currentQuestion);
             } catch (error) {
                 console.error('Error loading questions:', error);
@@ -390,7 +392,7 @@
             } catch (error) {
                 console.error('Error submitting assessment:', error);
                 alert('Failed to submit assessment. Please try again.');
-                
+
                 // Re-enable button on error
                 const submitBtn = document.getElementById('btn-submit');
                 submitBtn.disabled = false;
@@ -422,7 +424,7 @@
                 confetti.animate([
                     { transform: "translate(0,0)", opacity: 1 },
                     {
-                        transform: `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)`,
+                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`,
                         opacity: 0
                     }
                 ], {
@@ -440,7 +442,7 @@
             console.log('Window load event fired');
             init();
         });
-        
+
         // Also try calling init immediately in case page is already loaded
         console.log('Calling init immediately');
         if (document.readyState === 'loading') {
@@ -451,4 +453,5 @@
         }
     </script>
 </body>
+
 </html>

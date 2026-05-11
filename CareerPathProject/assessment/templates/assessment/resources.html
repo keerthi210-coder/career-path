@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,19 +11,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container nav-container">
             <div class="logo">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
-                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                    <circle cx="20" cy="20" r="18" fill="#FFD84D" />
+                    <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                 </svg>
                 <span>PersonalityPro</span>
             </div>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
-                <li><a href="/personalities/">Personalities Types</a></li>
                 <li><a href="/assessment/">Assessment</a></li>
                 <li><a href="/resources/" class="active">Resources</a></li>
                 <li><a href="/premium/">Premium</a></li>
@@ -50,7 +51,7 @@
                 <h2>What Your Personality Type Doesn't Tell You</h2>
                 <p class="section-subtitle">Now in a modern interactive slider format.</p>
             </div>
-            
+
             <div class="slider-wrapper">
                 <!-- Left Side: Card Content -->
                 <div class="slider-container">
@@ -109,13 +110,13 @@
                         <h3>Personality Doesn't Capture Adaptability</h3>
                         <p>Adaptability determines resilience, teamwork, learning ability and growth. Employers value adaptability more than personality.</p>
                     </div>
-                    
+
                     <div class="slider-controls">
                         <button class="slider-btn prev">←</button>
                         <button class="slider-btn next">→</button>
                     </div>
                 </div>
-                
+
                 <!-- Right Side: Image -->
                 <div class="slider-image-container">
                     <img src="{% static 'assessment/images/i_1.png' %}" alt="Personality Insight" class="slider-image active" data-slide="0">
@@ -137,7 +138,7 @@
                 <h2>The Science of Choosing the Right Career</h2>
                 <p class="section-subtitle">A Complete Guide for Students & Professionals</p>
             </div>
-            
+
             <div class="career-science-wrapper">
                 <!-- Left Side Images -->
                 <div class="side-images left-images">
@@ -210,7 +211,7 @@
                 <h2>Daily Motivation & Growth</h2>
                 <p class="section-subtitle">Your Daily Source of Inspiration, Growth & Confidence</p>
             </div>
-            
+
             <div class="motivation-grid">
                 <div class="motivation-card">
                     <h3>🔥 Daily Motivation Boost</h3>
@@ -257,7 +258,7 @@
                 <h2>Career Exploration Guide</h2>
                 <p class="section-subtitle">Explore careers, discover strengths and design your next steps.</p>
             </div>
-            
+
             <div class="exploration-grid">
                 <div class="exploration-card">
                     <h3>Aptitudes</h3>
@@ -294,7 +295,7 @@
                 <h2>Inspiring Success Stories</h2>
                 <p class="section-subtitle">Real people, real struggles, real success — quick lessons to inspire action.</p>
             </div>
-            
+
             <div class="stories-grid">
                 <div class="story-card">
                     <h3>Dr. A.P.J. Abdul Kalam</h3>
@@ -326,7 +327,7 @@
                 <h2>Career Myths vs Facts</h2>
                 <p class="section-subtitle">Common myths debunked — actionable truth for students and professionals.</p>
             </div>
-            
+
             <div class="myths-grid">
                 <div class="myth-card">
                     <div class="myth-label">❌ Myth #1</div>
@@ -425,8 +426,8 @@
             <div class="footer-section">
                 <div class="logo">
                     <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" fill="#FFD84D"/>
-                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111"/>
+                        <circle cx="20" cy="20" r="18" fill="#FFD84D" />
+                        <path d="M20 8L24 16L32 18L26 24L28 32L20 28L12 32L14 24L8 18L16 16L20 8Z" fill="#111111" />
                     </svg>
                     <span>PersonalityPro</span>
                 </div>
@@ -436,7 +437,6 @@
                 <h4>Product</h4>
                 <ul>
                     <li><a href="/assessment/">Take Test</a></li>
-                    <li><a href="/personalities/">Personality Types</a></li>
                     <li><a href="/premium/">Premium</a></li>
                 </ul>
             </div>
@@ -475,10 +475,10 @@
             // Remove active class from all slides and images
             slides.forEach(slide => slide.classList.remove('active'));
             sliderImages.forEach(img => img.classList.remove('active'));
-            
+
             // Calculate new slide index
             currentSlide = (n + slides.length) % slides.length;
-            
+
             // Add active class to current slide and image
             slides[currentSlide].classList.add('active');
             sliderImages[currentSlide].classList.add('active');
@@ -488,4 +488,5 @@
         nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
     </script>
 </body>
+
 </html>
